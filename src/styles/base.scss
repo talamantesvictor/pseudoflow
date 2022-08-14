@@ -4,9 +4,8 @@
    line-height: 24px;
    font-weight: 400;
 
-   color-scheme: light dark;
-   color: rgba(255, 255, 255, 0.87);
-   background-color: #242424;
+   color: white;
+   background-color: #282A36;
 
    font-synthesis: none;
    text-rendering: optimizeLegibility;
@@ -21,11 +20,12 @@ body {
    place-items: center;
    min-width: 320px;
    min-height: 100vh;
+   
+   #app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+   }
 }
 
-#app {
-   max-width: 1280px;
-   margin: 0 auto;
-   padding: 2rem;
-   text-align: center;
-}
