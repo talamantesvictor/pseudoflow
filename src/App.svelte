@@ -1,3 +1,5 @@
-<script></script>
-<div>Pseudoflow beginning</div>
+<script>
+   import Topbar from "./components/Topbar.svelte";
+</script>
+<Topbar />
 <style></style>
