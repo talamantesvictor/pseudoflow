@@ -13,10 +13,12 @@
 </div>
 
 <style lang="scss">
+   @import "../styles/variables.scss";
+
    #topbar {
       width: 100vw;
-      height: 3.3rem;
-      background-color: #2d303d;
+      height: $topbar-height;
+      background-color: $topbar-background;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -25,7 +27,8 @@
          display: flex;
 
          #fileinfo {
-            background-color: #3f4254;
+            background-color: $fileinfo-background;
+            color: $fileinfo-foreground;
             width: 300px;
             height: 2rem;
             border-radius: 0.5rem;
@@ -45,8 +48,8 @@
          }
 
          #runbutton {
-            background-color: black;
-            color: #00bbd3;
+            background-color: $runbutton-background;
+            color: $runbutton-foreground;
             height: 2rem;
             text-align: center;
             padding: 0 1.4rem;
