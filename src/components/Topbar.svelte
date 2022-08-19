@@ -15,7 +15,7 @@
 <style lang="scss">
    #topbar {
       width: 100vw;
-      height: 3rem;
+      height: 3.3rem;
       background-color: #2d303d;
       display: flex;
       justify-content: space-between;
@@ -27,7 +27,7 @@
          #fileinfo {
             background-color: #3f4254;
             width: 300px;
-            height: 1.8rem;
+            height: 2rem;
             border-radius: 0.5rem;
             padding: 0 0.8rem;
             display: flex;
@@ -47,12 +47,13 @@
          #runbutton {
             background-color: black;
             color: #00bbd3;
-            height: 1.8rem;
+            height: 2rem;
             text-align: center;
             padding: 0 1.4rem;
             border-radius: 1rem;
             display: flex;
             align-items: center;
+            cursor: pointer;
          }
       }
    }
