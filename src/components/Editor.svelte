@@ -16,6 +16,14 @@
    function keyDownController(e) {
       if (e.key === "Tab") {
          e.preventDefault();
+         var sel = document.getSelection();
+         var range = sel.getRangeAt(0);
+         var tabNodeValue = Array(4).join('\u00a0');
+         var tabNode = document.createTextNode(tabNodeValue);
+
+         range.insertNode(tabNode);
+         range.setStartAfter(tabNode);
+         range.setEndAfter(tabNode); 
       }
    }
    function focusOnEditableArea() {
@@ -59,6 +67,7 @@
       [contenteditable] {
          outline: 0px solid transparent;
          pointer-events: all;
+         white-space: pre-wrap;
       }
    }
 </style>
