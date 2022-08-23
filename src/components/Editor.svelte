@@ -4,30 +4,68 @@
    let editorHeight: number;
    $: drawLineNumbers(editorHeight / 24); // scss variable $line-height = 24
 
+   function getCaretCharacterOffsetWithin(element) {
+      const win = element.ownerDocument.defaultView;
+      let caretOffset = 0;
+      let sel;
+      if (typeof win.getSelection != "undefined") {
+         sel = win.getSelection();
+         if (sel.rangeCount > 0) {
+            let range = win.getSelection().getRangeAt(0);
+            let preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(element);
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            caretOffset = preCaretRange.toString().length;
+         }
+      }
+      return caretOffset;
+   }
    function drawLineNumbers(rows) {
       if (rows > 0) {
-         let rowsHtml: string = '';
+         let rowsHtml: string = "";
          for (let index = 0; index < rows; index++) {
-            rowsHtml += index + 1 + '<br>';
+            rowsHtml += index + 1 + "<br>";
          }
-         document.getElementsByClassName('line-numbers')[0].innerHTML = rowsHtml;
+         document.getElementsByClassName("line-numbers")[0].innerHTML =
+            rowsHtml;
       }
    }
    function keyDownController(e) {
       if (e.key === "Tab") {
          e.preventDefault();
-         var sel = document.getSelection();
-         var range = sel.getRangeAt(0);
-         var tabNodeValue = Array(4).join('\u00a0');
-         var tabNode = document.createTextNode(tabNodeValue);
-
+         let selection = document.getSelection();
+         let range = selection.getRangeAt(0);
+         let tabNodeValue = "\t";
+         let tabNode = document.createTextNode(tabNodeValue);
          range.insertNode(tabNode);
          range.setStartAfter(tabNode);
-         range.setEndAfter(tabNode); 
+         range.setEndAfter(tabNode);
+
+      } else if (e.key === "Enter") {
+         e.preventDefault();
+         let selection = document.getSelection();
+         let range = selection.getRangeAt(0);
+         let tabNodeValue = "\n";
+         let element = document.getElementById('editor-editable-area');
+         let caretPosition = getCaretCharacterOffsetWithin(element);
+         let substr = element.textContent.slice(0, caretPosition);
+
+         for (let i = substr.length - 1; i >= 0; i--) {
+            if (substr[i] === '\n') 
+               break;
+            else if (substr[i] === '\t') {
+               tabNodeValue += '\t'
+            }
+         }
+         
+         let tabNode = document.createTextNode(tabNodeValue);
+         range.insertNode(tabNode);
+         range.setStartAfter(tabNode);
+         range.setEndAfter(tabNode);
       }
    }
    function focusOnEditableArea() {
-      document.getElementById('editor-editable-area').focus();
+      document.getElementById("editor-editable-area").focus();
    }
 
    onMount(() => {
@@ -36,11 +74,16 @@
 </script>
 
 <div class="numbers-area">
-   <div class="line-numbers"></div>
+   <div class="line-numbers" />
 </div>
-<div class="editor-area" on:click="{focusOnEditableArea}">
-   <div bind:clientHeight="{editorHeight}">
-      <div id="editor-editable-area" contenteditable="true" spellcheck="false" on:keydown="{keyDownController}"></div>
+<div class="editor-area" on:click={focusOnEditableArea}>
+   <div bind:clientHeight={editorHeight}>
+      <div
+         id="editor-editable-area"
+         contenteditable="true"
+         spellcheck="false"
+         on:keydown={keyDownController}
+      />
    </div>
 </div>
 
