@@ -19,10 +19,11 @@
 
       #text-area {
          display: flex;
+         flex-direction: column;
          width: 70%;
          background-color: $editor-background;
          height: calc(100vh - $topbar-height);
-         overflow: scroll;
+         overflow: hidden;
       }
 
       #flowchart-area {
