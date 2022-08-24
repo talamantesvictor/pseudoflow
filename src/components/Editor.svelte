@@ -29,9 +29,7 @@
          if (nodeString) {
             let tabsToInsert = '';
             for (let i = nodeString.length - 1; i >= 0; i--) {
-               if (nodeString[i] === '\n') 
-                  break;
-               else if (nodeString[i] === '\t') {
+               if (nodeString[i] === '\t') {
                   tabsToInsert += '\t'
                }
             }
