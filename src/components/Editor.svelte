@@ -4,22 +4,6 @@
    let editorHeight: number;
    $: drawLineNumbers(editorHeight / 24); // scss variable $line-height = 24
 
-   function getCaretCharacterOffsetWithin(element) {
-      const win = element.ownerDocument.defaultView;
-      let caretOffset = 0;
-      let sel;
-      if (typeof win.getSelection != "undefined") {
-         sel = win.getSelection();
-         if (sel.rangeCount > 0) {
-            let range = win.getSelection().getRangeAt(0);
-            let preCaretRange = range.cloneRange();
-            preCaretRange.selectNodeContents(element);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
-            caretOffset = preCaretRange.toString().length;
-         }
-      }
-      return caretOffset;
-   }
    function drawLineNumbers(rows) {
       if (rows > 0) {
          let rowsHtml: string = "";
@@ -33,35 +17,28 @@
    function keyDownController(e) {
       if (e.key === "Tab") {
          e.preventDefault();
-         let selection = document.getSelection();
-         let range = selection.getRangeAt(0);
-         let tabNodeValue = "\t";
-         let tabNode = document.createTextNode(tabNodeValue);
-         range.insertNode(tabNode);
-         range.setStartAfter(tabNode);
-         range.setEndAfter(tabNode);
+         document.execCommand("InsertText", false, '\t');
 
-      } else if (e.key === "Enter") {
+      } 
+      else if (e.key === "Enter") {
          e.preventDefault();
-         let selection = document.getSelection();
-         let range = selection.getRangeAt(0);
-         let tabNodeValue = "\n";
-         let element = document.getElementById('editor-editable-area');
-         let caretPosition = getCaretCharacterOffsetWithin(element);
-         let substr = element.textContent.slice(0, caretPosition);
+         
+         let nodeString = window.getSelection().anchorNode.nodeValue;
+         document.execCommand('InsertLineBreak');
 
-         for (let i = substr.length - 1; i >= 0; i--) {
-            if (substr[i] === '\n') 
-               break;
-            else if (substr[i] === '\t') {
-               tabNodeValue += '\t'
+         if (nodeString) {
+            let tabsToInsert = '';
+            for (let i = nodeString.length - 1; i >= 0; i--) {
+               if (nodeString[i] === '\n') 
+                  break;
+               else if (nodeString[i] === '\t') {
+                  tabsToInsert += '\t'
+               }
+            }
+            if (tabsToInsert.length) {
+               document.execCommand("InsertHTML", false, tabsToInsert);
             }
          }
-         
-         let tabNode = document.createTextNode(tabNodeValue);
-         range.insertNode(tabNode);
-         range.setStartAfter(tabNode);
-         range.setEndAfter(tabNode);
       }
    }
    function focusOnEditableArea() {
