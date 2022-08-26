@@ -2,6 +2,7 @@
    import { onMount } from "svelte";
 
    let editorHeight: number;
+
    $: drawLineNumbers(editorHeight / 24); // scss variable $line-height = 24
 
    function drawLineNumbers(rows) {
@@ -14,6 +15,30 @@
             rowsHtml;
       }
    }
+   function changeController(e) {
+      // Tokenize ***
+      let str = document.getElementById("editor-editable-area").innerText;
+      let regex = /[^\s]+/g;
+      let tokens = str.match(regex);
+      console.log(tokens);
+
+      const varWord = /var\b/g;
+      const printWord = /print\b/g;
+      const forWord = /for\b/g;
+
+      let innerHTML = document.getElementById("editor-editable-area").innerHTML.toString();
+
+      // tokens?.forEach(token => {
+      //    innerHTML += '<span>' + token + '</span>';
+      // });
+
+
+      innerHTML = innerHTML.replace(varWord, '<span style="color: red;">var</span> ');
+      innerHTML = innerHTML.replace(printWord, '<span style="color: yellow;">print</span> ');
+      innerHTML = innerHTML.replace(forWord, '<span style="color: cyan;">for</span> ');
+      document.getElementById("editor-colored-area").innerHTML = innerHTML;
+      
+   }
    function keyDownController(e) {
       if (e.key === "Tab") {
          e.preventDefault();
@@ -22,7 +47,7 @@
       } 
       else if (e.key === "Enter") {
          e.preventDefault();
-         
+
          let nodeString = window.getSelection().anchorNode.nodeValue;
          document.execCommand('InsertLineBreak');
 
@@ -72,8 +97,10 @@
             id="editor-editable-area"
             contenteditable="true"
             spellcheck="false"
-            on:keydown={keyDownController}
+            on:input="{changeController}"
+            on:keydown="{keyDownController}"
          />
+         <div id="editor-colored-area"></div>
       </div>
    </div>
 </div>
@@ -127,11 +154,20 @@
       min-height: calc(100% - 2rem);
       color: white;
       padding: 1rem 1rem 1rem 0rem;
+      position: relative;
 
-      [contenteditable] {
+      #editor-editable-area {
          outline: 0px solid transparent;
          pointer-events: all;
          white-space: pre-wrap;
+         color: transparent;
+         caret-color: white;
+      }
+
+      #editor-colored-area {
+         position: absolute;
+         top: 0;
+         pointer-events: none;
       }
    }
 </style>
