@@ -1,0 +1,19 @@
+{
+   "CODE_VAR": "var",
+   "CODE_IF": "si",
+   "CODE_THEN": "entonces",
+   "CODE_ELSE": "sino",
+   "CODE_ENDIF": "finsi",
+   "CODE_SWITCH": "seleccion",
+   "CODE_CASE": "caso",
+   "CODE_ENDCASE": "fincaso",
+   "CODE_ENDSWITCH": "finseleccion",
+   "CODE_FOR": "para",
+   "CODE_ENDFOR": "finpara",
+   "CODE_WHILE": "mientras",
+   "CODE_ENDWHILE": "finmientras",
+   "CODE_DOWHILE": "hacermientras",
+   "CODE_ENDDOWHILE": "finhacermientras",
+   "CODE_PRINT": "imprimir",
+   "CODE_READ": "leer"
+}

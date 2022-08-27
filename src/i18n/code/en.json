@@ -1,0 +1,19 @@
+{
+   "CODE_VAR": "var",
+   "CODE_IF": "if",
+   "CODE_THEN": "then",
+   "CODE_ELSE": "else",
+   "CODE_ENDIF": "endif",
+   "CODE_SWITCH": "switch",
+   "CODE_CASE": "case",
+   "CODE_ENDCASE": "endcase",
+   "CODE_ENDSWITCH": "endswitch",
+   "CODE_FOR": "for",
+   "CODE_ENDFOR": "endfor",
+   "CODE_WHILE": "while",
+   "CODE_ENDWHILE": "endwhile",
+   "CODE_DOWHILE": "dowhile",
+   "CODE_ENDDOWHILE": "enddowhile",
+   "CODE_PRINT": "print",
+   "CODE_READ": "read"
+}
