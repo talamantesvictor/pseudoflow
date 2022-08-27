@@ -37,13 +37,13 @@
 
             for (let rowCharIndex = 0; rowCharIndex < rowString.length; rowCharIndex++) {
                if (rowString[rowCharIndex] == '\t') {
-                  calculatedPosition += 6 - (calculatedPosition % 6);
+                  calculatedPosition += 4 - (calculatedPosition % 4);
                }
                else {
                   calculatedPosition++;
                }
             }
-            tabsArray.push(6 - (calculatedPosition % 6));
+            tabsArray.push(4 - (calculatedPosition % 4));
          }
       }
 
@@ -176,7 +176,7 @@
       padding: 1rem 1rem 1rem 0rem;
       position: relative;
       font-size: 16px;
-      tab-size: 6;
+      tab-size: 4;
       
       #editor-editable-area {
          outline: 0px solid transparent;
