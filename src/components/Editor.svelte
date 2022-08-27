@@ -1,5 +1,6 @@
 <script lang="ts">
    import { onMount } from "svelte";
+   import codeWords from "../i18n/code/en.json"
 
    let editorHeight: number;
 
@@ -16,28 +17,48 @@
       }
    }
    function changeController(e) {
+
+      const editorElement = document.getElementById("editor-editable-area");
+      let innerHTML = editorElement.innerHTML.toString();
+      let tabsArray = [];
+
       // Tokenize ***
-      let str = document.getElementById("editor-editable-area").innerText;
-      let regex = /[^\s]+/g;
-      let tokens = str.match(regex);
-      console.log(tokens);
+      // let str = editorElement.innerText;
+      // let regex = /[^\s]+/g;
+      // let tokens = str.match(regex);
 
-      const varWord = /var\b/g;
-      const printWord = /print\b/g;
-      const forWord = /for\b/g;
+      for (let index = 0; index < innerHTML.length; index++) {
+         if (innerHTML[index] === '\t') {
+            const sub = innerHTML.substring(0, index);
+            const indexLastLineBreak = sub.lastIndexOf('<br>');
+            const rowStart = indexLastLineBreak >= 0? indexLastLineBreak + 4 : 0;
+            const rowString = sub.substring(rowStart);
+            let calculatedPosition = 0;
 
-      let innerHTML = document.getElementById("editor-editable-area").innerHTML.toString();
+            for (let rowCharIndex = 0; rowCharIndex < rowString.length; rowCharIndex++) {
+               if (rowString[rowCharIndex] == '\t') {
+                  calculatedPosition += 6 - (calculatedPosition % 6);
+               }
+               else {
+                  calculatedPosition++;
+               }
+            }
+            tabsArray.push(6 - (calculatedPosition % 6));
+         }
+      }
 
-      // tokens?.forEach(token => {
-      //    innerHTML += '<span>' + token + '</span>';
-      // });
+      tabsArray.forEach(spaces => {
+         const spacesString = '&nbsp;'.repeat(spaces);
+         innerHTML = innerHTML.replace(/\t/, spacesString);
+      });
 
+      innerHTML = innerHTML.replace(/\s/g, "&nbsp;");
 
-      innerHTML = innerHTML.replace(varWord, '<span style="color: red;">var</span> ');
-      innerHTML = innerHTML.replace(printWord, '<span style="color: yellow;">print</span> ');
-      innerHTML = innerHTML.replace(forWord, '<span style="color: cyan;">for</span> ');
+      for (const [key, value] of Object.entries(codeWords)) {
+         innerHTML = innerHTML.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+value+'">'+value+'</span> ');
+      };
+
       document.getElementById("editor-colored-area").innerHTML = innerHTML;
-      
    }
    function keyDownController(e) {
       if (e.key === "Tab") {
@@ -152,14 +173,15 @@
       width: 100%;
       flex-grow: 1;
       min-height: calc(100% - 2rem);
-      color: white;
       padding: 1rem 1rem 1rem 0rem;
       position: relative;
-
+      font-size: 16px;
+      tab-size: 6;
+      
       #editor-editable-area {
          outline: 0px solid transparent;
          pointer-events: all;
-         white-space: pre-wrap;
+         white-space: pre;
          color: transparent;
          caret-color: white;
       }
@@ -168,6 +190,8 @@
          position: absolute;
          top: 0;
          pointer-events: none;
+         white-space: pre;
+         color: white;
       }
    }
 </style>
