@@ -1,7 +1,13 @@
 @import "./variables.scss";
+@import "../styles/highlights.scss";
+
+@font-face {
+   font-family: 'Roboto';
+   src: url("../fonts/robotomono.otf") format("opentype");
+}
 
 :root {
-   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+   font-family: 'Roboto', Avenir, Helvetica, Arial, sans-serif;
    font-size: $font-size;
    line-height: $line-height;
    font-weight: 400;
