@@ -55,7 +55,7 @@
       innerHTML = innerHTML.replace(/\s/g, "&nbsp;");
 
       for (const [key, value] of Object.entries(codeWords)) {
-         innerHTML = innerHTML.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+value+'">'+value+'</span> ');
+         innerHTML = innerHTML.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+value+'">'+value+'</span>');
       };
 
       document.getElementById("editor-colored-area").innerHTML = innerHTML;
