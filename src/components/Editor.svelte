@@ -134,14 +134,17 @@
    @import "../styles/variables.scss";
 
    .commands-area {
-      background-color: #1C1F2D;
-      position: fixed;
-      width: inherit;
+      display: flex;
+      width: 100%;
+      background-color: $editor-background;
       z-index: 1;
       
       ul {
+         width: calc(100% - 1.6rem);
+         border-radius: 0.8rem;
+         background-color: #1C1F2D;
          list-style-type:none;
-         margin: 0;
+         margin: 0.8rem auto;
          padding: 0;
          li {
             color: #878992;
@@ -158,13 +161,11 @@
 
    .editor-area {
       display: flex;
-      padding: 2rem 0;
-      height: calc(100% - 4rem);
       overflow: scroll;
    }
 
    .numbers {
-      padding: 1rem 1rem 1rem 0.5rem;
+      padding: 0 1rem 1rem 0.5rem;
       .line-numbers {
          color: $linenumbers-foreground;
          background-color: $linenumbers-background;
@@ -177,7 +178,7 @@
       width: 100%;
       flex-grow: 1;
       min-height: calc(100% - 2rem);
-      padding: 1rem 1rem 1rem 0rem;
+      padding: 0 1rem 1rem 0rem;
       position: relative;
       font-size: 16px;
       tab-size: 4;
