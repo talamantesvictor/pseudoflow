@@ -146,7 +146,7 @@
             cursor: pointer;
 
             &:hover {
-               color: white;
+               color: $accent-color;
             }
          }
       }
@@ -177,13 +177,17 @@
       position: relative;
       font-size: 16px;
       tab-size: 4;
+
+      &::selection, ::-moz-selection {
+         background: $editor-selection;
+      }
       
       #editor-editable-area {
          outline: 0px solid transparent;
          pointer-events: all;
          white-space: pre;
          color: transparent;
-         caret-color: white;
+         caret-color: white;         
       }
 
       #editor-colored-area {

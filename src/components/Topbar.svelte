@@ -49,7 +49,7 @@
 
          #runbutton {
             background-color: $runbutton-background;
-            color: $runbutton-foreground;
+            color: $accent-color;
             height: 2rem;
             text-align: center;
             padding: 0 1.4rem;
