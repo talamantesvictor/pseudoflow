@@ -87,6 +87,10 @@
             }
          }
       }
+      else if (e.key === "Escape") {
+         const range = window.getSelection().getRangeAt(0);
+         range.setStart( range.endContainer, range.endOffset );
+      }
    }
    function focusOnEditableArea() {
       document.getElementById("editor-editable-area").focus();
