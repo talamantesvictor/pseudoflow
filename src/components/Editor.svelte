@@ -72,6 +72,7 @@
    .editor-wrapper {
       display: flex;
       overflow: scroll;
+      flex-grow: 1;
 
       .numbers-area {
          padding: 0 1rem 1rem 0.5rem;
