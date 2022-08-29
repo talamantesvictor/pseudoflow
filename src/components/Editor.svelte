@@ -1,6 +1,6 @@
 <script lang="ts">
    import { onMount } from "svelte";
-   import codeWords from "../i18n/code/en.json"
+   import codeWords from "../i18n/code/en.json";
 
    let editorHeight: number;
 

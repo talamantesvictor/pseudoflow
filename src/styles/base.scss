@@ -1,9 +1,9 @@
 @import "./variables.scss";
-@import "../styles/highlights.scss";
+@import "./highlights.scss";
 
 @font-face {
    font-family: 'Roboto';
-   src: url("../fonts/robotomono.ttf") format("truetype");
+   src: url("/static/fonts/robotomono.ttf") format("truetype");
 }
 
 :root {
