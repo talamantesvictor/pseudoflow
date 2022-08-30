@@ -44,7 +44,8 @@ export const getCodeHighlights = (code: string, reservedWords: object) : string 
    code = code.replace(/\s/g, "&nbsp;");
 
    for (const [key, value] of Object.entries(reservedWords)) {
-      code = code.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+value+'">'+value+'</span>');
+      const className = key.split("_")[1].toLowerCase();
+      code = code.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+className+'">'+value+'</span>');
    };
 
    return code;
