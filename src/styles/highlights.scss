@@ -1,3 +1,10 @@
+.line {
+   border-top: 1px solid transparent;
+   border-bottom: 1px solid transparent;
+   height: 22px;
+   display: flex;
+   align-items: center;
+}
 .hl-var, .hl-case, .hl-endcase {color: #ff79c6}
 .hl-print {color: cyan};
 .hl-read {color: cyan};
@@ -6,4 +13,4 @@
 .hl-for, .hl-endfor {color: #f1fa8c}
 .hl-while, .hl-endwhile {color: #f1fa8c}
 .hl-dowhile, .hl-enddowhile {color: #f1fa8c}
-
+.hl-activerow { border-color: #525572}

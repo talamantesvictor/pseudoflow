@@ -4,7 +4,7 @@ export const getLineNumbers = (rows: number) : string => {
    let rowsHtml: string = "";
    if (rows > 0) {
       for (let index = 0; index < rows; index++) {
-         rowsHtml += index + 1 + "<br>";
+         rowsHtml += "<div>" + (index + 1) + "</div>";
       }
    }
    return rowsHtml;
@@ -13,7 +13,7 @@ export const getLineNumbers = (rows: number) : string => {
 // Highlight the code by injecting spans
 // with the corresponding classes and
 // take care of spaces and tabs
-export const getCodeHighlights = (code: string, reservedWords: object) : string => {
+export const getBeautifiedCode = (code: string, reservedWords: object, highlightedRow: number) : string => {
    let tabsArray: number[] = [];
 
    for (let index = 0; index < code.length; index++) {
@@ -48,7 +48,17 @@ export const getCodeHighlights = (code: string, reservedWords: object) : string 
       code = code.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+className+'">'+value+'</span>');
    };
 
-   return code;
+   let lines = code.split('<br>');
+   for (let index = 0; index < lines.length; index++) {
+      if (index == highlightedRow - 1) {
+         lines[index] = '<div class="line hl-activerow">' + lines[index] + '</div>';
+      }
+      else {
+         lines[index] = '<div class="line">' + lines[index] + '</div>';
+      }
+   }
+
+   return lines.join('');
 }
 
 // Insert tab character
@@ -81,4 +91,54 @@ export const insertLineBreak = (selection: Selection) => {
 export const unselectText = (selection: Selection) => {
    const range = selection.getRangeAt(0);
    range.setStart( range.endContainer, range.endOffset );
+   // console.log(range);
+   // if (range.endContainer !== ancestor) {
+   // }
+   // else {
+   //    const node = ancestor.childNodes[ancestor.childNodes.length - 1];
+   //    if (node) {
+   //       const offset = node.textContent!.length;
+   //       range.setStart( node, offset );
+   //       range.setEnd( node, offset );
+   //    }
+   // }
+}
+
+// Based in the current caret position
+// determine which row is active
+export const getCurrentLineNumber = (selection: Selection, element: Element) : number => {
+   let calculatedRow = 0;
+
+   if (selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset) {
+      if (selection.anchorNode === element) {
+         calculatedRow = selection.anchorOffset;
+         if (calculatedRow && element.childNodes[calculatedRow-1].nodeName === '#text') {
+            calculatedRow -= 1;
+         }
+      }
+      else {
+         for (let index = 0; index < element.childNodes.length - 1; index++) {
+            if (element.childNodes[index].isSameNode(selection.anchorNode)) {
+               break;
+            }
+            calculatedRow++;
+         }
+      }
+      
+      let lineBreaksToDiscount = 0;
+      for (let index = 0; index < calculatedRow; index++) {
+         if (index && element.childNodes[index].nodeName === 'BR') {
+            if (element.childNodes[index-1].nodeName === '#text') {
+               lineBreaksToDiscount++;
+            }
+         }
+      }
+   
+      if (calculatedRow === element.childNodes.length) {
+         calculatedRow -= 1; // calculatedRow > rowLimit? rowLimit : calculatedRow;
+      }
+      calculatedRow += 1 - lineBreaksToDiscount;
+   }
+   
+   return calculatedRow;
 }
