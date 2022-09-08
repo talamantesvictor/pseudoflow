@@ -9,6 +9,8 @@
    "CODE_ENDCASE": "fincaso",
    "CODE_ENDSWITCH": "finseleccion",
    "CODE_FOR": "para",
+   "CODE_FORTO": "a",
+   "CODE_FORSTEP": "pasos",
    "CODE_ENDFOR": "finpara",
    "CODE_WHILE": "mientras",
    "CODE_ENDWHILE": "finmientras",

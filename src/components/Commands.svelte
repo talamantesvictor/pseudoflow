@@ -27,7 +27,7 @@
    }
    function forCmd() {
       command = {
-         template: 'for xyz=1 to 10 step 1\n\nendfor',
+         template: 'for xyz=1 to 10 steps 1\n\nendfor',
          timestamp: Date.now()
       }
    }

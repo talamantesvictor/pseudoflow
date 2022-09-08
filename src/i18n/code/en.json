@@ -9,6 +9,8 @@
    "CODE_ENDCASE": "endcase",
    "CODE_ENDSWITCH": "endswitch",
    "CODE_FOR": "for",
+   "CODE_FORTO": "to",
+   "CODE_FORSTEP": "steps",
    "CODE_ENDFOR": "endfor",
    "CODE_WHILE": "while",
    "CODE_ENDWHILE": "endwhile",
