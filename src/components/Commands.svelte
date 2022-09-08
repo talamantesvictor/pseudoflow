@@ -7,17 +7,53 @@
          timestamp: Date.now()
       }
    }
+   function readCmd() {
+      command = {
+         template: 'read variable_name ',
+         timestamp: Date.now()
+      }
+   }
+   function ifCmd() {
+      command = {
+         template: 'if xyz == 1 then\n\nendif',
+         timestamp: Date.now()
+      }
+   }
+   function switchCmd() {
+      command = {
+         template: 'switch xyz\ncase 1:\nendcase\ncase 2:\nendcase\nendswitch',
+         timestamp: Date.now()
+      }
+   }
+   function forCmd() {
+      command = {
+         template: 'for xyz=1 to 10 step 1\n\nendfor',
+         timestamp: Date.now()
+      }
+   }
+   function whileCmd() {
+      command = {
+         template: 'while xyz>0\n\nendwhile',
+         timestamp: Date.now()
+      }
+   }
+   function dowhileCmd() {
+      command = {
+         template: 'dowhile xyz>0\n\nenddowhile',
+         timestamp: Date.now()
+      }
+   }
 </script>
 
 <div class="commands-area">
    <ul>
       <li on:click="{printCmd}">Print</li>
-      <li>Read</li>
-      <li>If</li>
-      <li>Switch</li>
-      <li>For</li>
-      <li>While</li>
-      <li>Do-While</li>
+      <li on:click="{readCmd}">Read</li>
+      <li on:click="{ifCmd}">If</li>
+      <li on:click="{switchCmd}">Switch</li>
+      <li on:click="{forCmd}">For</li>
+      <li on:click="{whileCmd}">While</li>
+      <li on:click="{dowhileCmd}">Do-While</li>
    </ul>
 </div>
 
