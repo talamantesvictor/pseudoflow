@@ -1,7 +1,7 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
    import reservedWords from "../i18n/code/en.json";
-   import { getLineNumbers, getBeautifiedCode, insertTab, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor/helpers";
+   import { getLineNumbers, getBeautifiedCode, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor/helpers";
    import { onMount } from "svelte";
 
    let editorElement: HTMLElement;
@@ -10,6 +10,9 @@
    let editorHeight: number;
    let activeRowNumber: number;
    let lastRowNumber: number;
+   let commandToInsert: any;
+   let lastInsertedCommand: any;
+   let lastRange: any;
    // Redraw line numbers when editorHeight changes.
    // The defined line-height is 24.
    $: { 
@@ -18,9 +21,20 @@
       }
    }
 
+   $: {
+      if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
+         lastInsertedCommand = commandToInsert;
+         editorElement.focus();
+         window.getSelection().getRangeAt(0).setStart( lastRange.startContainer, lastRange.startOffset );
+         window.getSelection().getRangeAt(0).setEnd( lastRange.endContainer, lastRange.endOffset );
+         insertTemplate(commandToInsert.template);
+      }
+   }
+
    function beautifier() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
+      lastRange = window.getSelection().getRangeAt(0);
       coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, reservedWords, activeRowNumber);
    }
 
@@ -70,7 +84,7 @@
    });
 </script>
 
-<Commands />
+<Commands bind:command={commandToInsert} />
 <div class="editor-wrapper">
    <div class="numbers-area">
       <div class="line-numbers" />

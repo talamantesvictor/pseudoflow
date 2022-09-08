@@ -1,11 +1,20 @@
-<script></script>
+<script lang="ts">
+   export let command: object = {};
+
+   function printCmd() {
+      command = {
+         template: 'print "EJEMPLO DE TEXTO A IMPRIMIR EN CONSOLA"',
+         timestamp: Date.now()
+      }
+   }
+</script>
 
 <div class="commands-area">
    <ul>
-      <li>Print</li>
+      <li on:click="{printCmd}">Print</li>
       <li>Read</li>
       <li>If</li>
-      <li>Else</li>
+      <li>Switch</li>
       <li>For</li>
       <li>While</li>
       <li>Do-While</li>

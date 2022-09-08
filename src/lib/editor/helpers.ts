@@ -66,6 +66,15 @@ export const insertTab = () => {
    document.execCommand("InsertText", false, '\t');
 }
 
+// Insert specific text
+export const insertTemplate = (template: string) => {
+   const templateArray = template.split('\n');
+   templateArray.forEach(element => {
+      document.execCommand("InsertHTML", false, element);
+      insertLineBreak(window.getSelection());
+   });
+}
+
 // Insert line break keeping 
 // trail tab characters
 export const insertLineBreak = (selection: Selection) => {
