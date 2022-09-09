@@ -12,7 +12,6 @@
    let lastRowNumber: number;
    let commandToInsert: any;
    let lastInsertedCommand: any;
-   let lastRange: any;
    // Redraw line numbers when editorHeight changes.
    // The defined line-height is 24.
    $: { 
@@ -24,9 +23,6 @@
    $: {
       if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
          lastInsertedCommand = commandToInsert;
-         editorElement.focus();
-         window.getSelection().getRangeAt(0).setStart( lastRange.startContainer, lastRange.startOffset );
-         window.getSelection().getRangeAt(0).setEnd( lastRange.endContainer, lastRange.endOffset );
          insertTemplate(commandToInsert.template);
       }
    }
@@ -34,7 +30,6 @@
    function beautifier() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      lastRange = window.getSelection().getRangeAt(0);
       coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, reservedWords, activeRowNumber);
    }
 
@@ -115,6 +110,11 @@
 
       .numbers-area {
          padding: 0 1rem 1rem 0.5rem;
+         -webkit-user-select: none; /* Safari */
+         -moz-user-select: none;
+         user-select: none;
+         pointer-events: none;
+
          .line-numbers {
             color: $linenumbers-foreground;
             background-color: $linenumbers-background;
@@ -149,7 +149,7 @@
             pointer-events: all;
             white-space: pre;
             color: transparent;
-            caret-color: white;         
+            caret-color: white;
          }
 
          #editor-colored-area {
@@ -159,7 +159,6 @@
             white-space: pre;
             color: white;
             min-width: 100%;
-
          }  
       }
    }
