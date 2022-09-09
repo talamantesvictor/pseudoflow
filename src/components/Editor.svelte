@@ -23,6 +23,17 @@
    $: {
       if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
          lastInsertedCommand = commandToInsert;
+
+         if (editorElement !== document.activeElement) {
+            // If the editor area isn't focused, focus it
+            focusOnEditableArea();
+            // and set the caret at the end of the text
+            window.getSelection().removeAllRanges();
+            let newRange = document.createRange();
+            newRange.selectNodeContents(editorElement);
+            newRange.collapse(false);
+            window.getSelection().addRange(newRange);
+         }
          insertTemplate(commandToInsert.template);
       }
    }
@@ -94,6 +105,7 @@
             on:keydown="{keyDownController}"
             on:keyup="{keyUpController}"
             on:mousemove="{mouseEvent}"
+            on:blur="{beautifier}"
          />
          <div id="editor-colored-area"></div>
       </div>

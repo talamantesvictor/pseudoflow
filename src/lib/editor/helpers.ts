@@ -118,7 +118,10 @@ export const unselectText = (selection: Selection) => {
 export const getCurrentLineNumber = (selection: Selection, element: Element) : number => {
    let calculatedRow = 0;
 
-   if (selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset) {
+   if (selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && 
+         selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset &&
+            element === document.activeElement) {
+               
       if (selection.anchorNode === element) {
          calculatedRow = selection.anchorOffset;
          if (calculatedRow && element.childNodes[calculatedRow-1].nodeName === '#text') {
