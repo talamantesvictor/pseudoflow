@@ -100,17 +100,6 @@ export const insertLineBreak = (selection: Selection) => {
 export const unselectText = (selection: Selection) => {
    const range = selection.getRangeAt(0);
    range.setStart( range.endContainer, range.endOffset );
-   // console.log(range);
-   // if (range.endContainer !== ancestor) {
-   // }
-   // else {
-   //    const node = ancestor.childNodes[ancestor.childNodes.length - 1];
-   //    if (node) {
-   //       const offset = node.textContent!.length;
-   //       range.setStart( node, offset );
-   //       range.setEnd( node, offset );
-   //    }
-   // }
 }
 
 // Based in the current caret position
