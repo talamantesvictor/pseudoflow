@@ -2,6 +2,7 @@
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
 </script>
+
 <Topbar />
 <div id="wrapper">
    <div id="flowchart-area"></div>
@@ -9,6 +10,7 @@
       <Editor />
    </div>
 </div>
+
 <style lang="scss">
    @import "./styles/variables.scss";
 

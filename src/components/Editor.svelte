@@ -12,6 +12,7 @@
    let lastRowNumber: number;
    let commandToInsert: any;
    let lastInsertedCommand: any;
+   
    // Redraw line numbers when editorHeight changes.
    // The defined line-height is 24.
    $: { 
