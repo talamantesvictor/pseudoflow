@@ -71,7 +71,7 @@ export const insertTemplate = (template: string) => {
    const templateArray = template.split('\n');
    templateArray.forEach(element => {
       document.execCommand("InsertHTML", false, element);
-      insertLineBreak(window.getSelection());
+      insertLineBreak(window.getSelection() as Selection);
    });
 }
 

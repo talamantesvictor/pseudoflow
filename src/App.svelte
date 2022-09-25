@@ -1,13 +1,25 @@
 <script lang="ts">
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
+   import { arrayEquals } from "./lib/helpers"
+
+   let currentTokens: string[] = [];
+   let lastTokens: string[] = [];
+
+   $: {
+
+      if (!arrayEquals(currentTokens, lastTokens)) {
+         lastTokens = currentTokens;
+         console.log('tokens', currentTokens);
+      }
+   }
 </script>
 
 <Topbar />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="text-area">
-      <Editor />
+      <Editor bind:tokens={currentTokens} />
    </div>
 </div>
 
