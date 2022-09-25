@@ -7,10 +7,9 @@
    let lastTokens: string[] = [];
 
    $: {
-
       if (!arrayEquals(currentTokens, lastTokens)) {
          lastTokens = currentTokens;
-         console.log('tokens', currentTokens);
+         // Here goes code to analyze code and show errors if wanted
       }
    }
 </script>
