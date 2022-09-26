@@ -1,4 +1,11 @@
-<script></script>
+<script>
+   import { createEventDispatcher } from "svelte";
+
+   const topbarDispatcher = createEventDispatcher();
+   const runButtonClick = () => {
+      topbarDispatcher("runButtonClick", "hola");
+   };
+</script>
 
 <div id="topbar">
    <div class="left" />
@@ -7,7 +14,7 @@
          <span>File:</span>
          <span>pseudocode.pff</span>
       </div>
-      <div id="runbutton">Run</div>
+      <div id="runbutton" on:click={runButtonClick}>Run</div>
    </div>
    <div class="right" />
 </div>

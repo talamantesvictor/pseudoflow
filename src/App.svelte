@@ -9,12 +9,16 @@
    $: {
       if (!arrayEquals(currentTokens, lastTokens)) {
          lastTokens = currentTokens;
-         // Here goes code to analyze code and show errors if wanted
+         // Here goes code to analyze pseudocode and show errors if wanted
       }
+   }
+
+   function runCode(e) {
+      console.log(e);
    }
 </script>
 
-<Topbar />
+<Topbar on:runButtonClick={runCode} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="text-area">
