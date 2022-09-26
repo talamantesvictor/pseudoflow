@@ -48,8 +48,17 @@ export const getBeautifiedCode = (code: string, reservedWords: object, highlight
       code = code.replace(new RegExp(`\\b${value}\\b`, "g"), '<span class="hl-'+className+'">'+value+'</span>');
    };
 
+   
+   
    let lines = code.split('<br>');
    for (let index = 0; index < lines.length; index++) {
+      let comments = lines[index].match(/\/\/.*/g);
+
+      if (comments?.length) {
+         console.log('comment found');
+         lines[index] = lines[index].replace(comments[0], '<span class="hl-comments">' + comments[0] + '</span>');
+      }
+      
       if (index == highlightedRow - 1) {
          lines[index] = '<div class="line hl-activerow">' + lines[index] + '</div>';
       }
