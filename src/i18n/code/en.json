@@ -1,7 +1,6 @@
 {
    "CODE_VAR": "var",
    "CODE_IF": "if",
-   "CODE_THEN": "then",
    "CODE_ELSE": "else",
    "CODE_ENDIF": "endif",
    "CODE_SWITCH": "switch",

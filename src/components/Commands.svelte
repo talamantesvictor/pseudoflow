@@ -18,35 +18,35 @@
    function ifCmd(e) {
       e.preventDefault();
       command = {
-         template: 'if xyz == 1 then\n\nendif',
+         template: 'if (xyz == 1)\n\nendif',
          timestamp: Date.now()
       }
    }
    function switchCmd(e) {
       e.preventDefault();
       command = {
-         template: 'switch xyz\ncase 1:\nendcase\ncase 2:\nendcase\nendswitch',
+         template: 'switch (xyz)\ncase 1:\nendcase\ncase 2:\nendcase\nendswitch',
          timestamp: Date.now()
       }
    }
    function forCmd(e) {
       e.preventDefault();
       command = {
-         template: 'for xyz=1 to 10 steps 1\n\nendfor',
+         template: 'for (xyz = 1 to 10 steps 1)\n\nendfor',
          timestamp: Date.now()
       }
    }
    function whileCmd(e) {
       e.preventDefault();
       command = {
-         template: 'while xyz>0\n\nendwhile',
+         template: 'while (xyz > 0)\n\nendwhile',
          timestamp: Date.now()
       }
    }
    function dowhileCmd(e) {
       e.preventDefault();
       command = {
-         template: 'dowhile xyz>0\n\nenddowhile',
+         template: 'dowhile (xyz > 0)\n\nenddowhile',
          timestamp: Date.now()
       }
    }

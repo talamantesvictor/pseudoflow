@@ -1,7 +1,6 @@
 {
    "CODE_VAR": "var",
    "CODE_IF": "si",
-   "CODE_THEN": "entonces",
    "CODE_ELSE": "sino",
    "CODE_ENDIF": "finsi",
    "CODE_SWITCH": "seleccion",
