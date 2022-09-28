@@ -16,5 +16,7 @@
    "CODE_DOWHILE": "hacermientras",
    "CODE_ENDDOWHILE": "finhacermientras",
    "CODE_PRINT": "imprimir",
-   "CODE_READ": "leer"
+   "CODE_READ": "leer",
+   "CODE_AND": "y",
+   "CODE_OR": "o"
 }
