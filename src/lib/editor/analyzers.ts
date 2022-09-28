@@ -1,27 +1,34 @@
+import { _reservedWords } from "../stores"
+
+let reservedWords;
+_reservedWords.subscribe(value => {
+   reservedWords = value;
+});
+
 export type Token = {name: string, rule: RegExp, value?: string };
 
 const tokenStringMap: Array<Token> = [
-   { name: 'DeclarationToken',      rule: /^var$/g },
-   { name: 'ReadToken',             rule: /^read$/g },
-   { name: 'PrintToken',            rule: /^print$/g },
+   { name: 'DeclarationToken',      rule: new RegExp('^' + reservedWords.CODE_VAR + '$', 'g') },
+   { name: 'ReadToken',             rule: new RegExp('^' + reservedWords.CODE_READ + '$', 'g') },
+   { name: 'PrintToken',            rule: new RegExp('^' + reservedWords.CODE_PRINT + '$', 'g') },
    { name: 'AssignmentToken',       rule: /^\=$/g },
    { name: 'OpenParenToken',        rule: /^\($/g },
    { name: 'CloseParenToken',       rule: /^\)$/g },
-   { name: 'OpenIfToken',           rule: /^if$/g },
-   { name: 'CloseIfToken',          rule: /^endif$/g },
-   { name: 'OpenSwitchToken',       rule: /^switch$/g },
-   { name: 'CloseSwitchToken',      rule: /^endswitch$/g },
-   { name: 'OpenCaseToken',         rule: /^case$/g },
-   { name: 'CloseCaseToken',        rule: /^endcase$/g },
-   { name: 'OpenForToken',          rule: /^for$/g },
-   { name: 'CloseForToken',         rule: /^endfor$/g },
-   { name: 'OpenWhileToken',        rule: /^while$/g },
-   { name: 'CloseWhileToken',       rule: /^endwhile$/g },
-   { name: 'OpenDowhileToken',      rule: /^dowhile$/g },
-   { name: 'CloseDowhileToken',     rule: /^enddowhile$/g },
+   { name: 'OpenIfToken',           rule: new RegExp('^' + reservedWords.CODE_IF + '$', 'g') },
+   { name: 'CloseIfToken',          rule: new RegExp('^' + reservedWords.CODE_ENDIF + '$', 'g') },
+   { name: 'OpenSwitchToken',       rule: new RegExp('^' + reservedWords.CODE_SWITCH + '$', 'g') },
+   { name: 'CloseSwitchToken',      rule: new RegExp('^' + reservedWords.CODE_ENDSWITCH + '$', 'g') },
+   { name: 'OpenCaseToken',         rule: new RegExp('^' + reservedWords.CODE_CASE + '$', 'g') },
+   { name: 'CloseCaseToken',        rule: new RegExp('^' + reservedWords.CODE_ENDCASE + '$', 'g') },
+   { name: 'OpenForToken',          rule: new RegExp('^' + reservedWords.CODE_FOR + '$', 'g') },
+   { name: 'CloseForToken',         rule: new RegExp('^' + reservedWords.CODE_ENDFOR + '$', 'g') },
+   { name: 'OpenWhileToken',        rule: new RegExp('^' + reservedWords.CODE_WHILE + '$', 'g') },
+   { name: 'CloseWhileToken',       rule: new RegExp('^' + reservedWords.CODE_ENDWHILE + '$', 'g') },
+   { name: 'OpenDowhileToken',      rule: new RegExp('^' + reservedWords.CODE_DOWHILE + '$', 'g') },
+   { name: 'CloseDowhileToken',     rule: new RegExp('^' + reservedWords.CODE_ENDDOWHILE + '$', 'g') },
    { name: 'ArithmeticToken',       rule: /[\/\+\-\*\%]=?/g },
    { name: 'RelationalToken',       rule: /[\>\<]=?|[\=\!]\=/g },
-   { name: 'BooleanToken',          rule: /^and$|^or$/g },
+   { name: 'BooleanToken',          rule: new RegExp('^' + reservedWords.CODE_AND + '$|^' + reservedWords.CODE_OR + '$', 'g') },
    { name: 'StringToken',           rule: /(["'])(?:(?=(\\?))\2.)*?\1/g },
    { name: 'NumericToken',          rule: /^(\d?)+\.?\d+$/g },
    { name: 'LiteralToken',          rule: /\w+/g },

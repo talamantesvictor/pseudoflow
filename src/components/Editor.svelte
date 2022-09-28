@@ -1,7 +1,7 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
-   import reservedWords from "../i18n/code/en.json";
    import { getLineNumbers, getBeautifiedCode, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor/editor";
+   import { _reservedWords } from "../lib/stores";
    import { tokenize } from "../lib/editor/analyzers";
    import { onMount } from "svelte";
 
@@ -15,7 +15,7 @@
    let lastInsertedCommand: any;
 
    export let tokens: string[] = [];
-   
+
    // Redraw line numbers when editorHeight changes.
    // The defined line-height is 24.
    $: { 
@@ -45,7 +45,7 @@
    function beautifier() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, reservedWords, activeRowNumber);
+      coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, $_reservedWords, activeRowNumber);
       tokens = tokenize(editorElement.innerText);
    }
 
