@@ -6,15 +6,15 @@
    let currentTokens: string[] = [];
    let lastTokens: string[] = [];
 
-   $: {
-      if (!arrayEquals(currentTokens, lastTokens)) {
-         lastTokens = currentTokens;
-         // Here goes code to analyze pseudocode and show errors if wanted
-      }
-   }
+   // $: {
+   //    if (!arrayEquals(currentTokens, lastTokens)) {
+   //       lastTokens = currentTokens;
+   //       // Here goes code to analyze pseudocode and show errors if wanted
+   //    }
+   // }
 
    function runCode(e) {
-      console.log(e);
+      console.log(currentTokens);
    }
 </script>
 
