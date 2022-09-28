@@ -21,7 +21,7 @@ const tokenStringMap: Array<Token> = [
    { name: 'CloseDowhileToken',     rule: /^enddowhile$/g },
    { name: 'ArithmeticToken',       rule: /[\/\+\-\*\%]=?/g },
    { name: 'RelationalToken',       rule: /[\>\<]=?|[\=\!]\=/g },
-   { name: 'BooleanToken',          rule: /and|or/g },
+   { name: 'BooleanToken',          rule: /^and$|^or$/g },
    { name: 'StringToken',           rule: /(["'])(?:(?=(\\?))\2.)*?\1/g },
    { name: 'NumericToken',          rule: /^(\d?)+\.?\d+$/g },
    { name: 'LiteralToken',          rule: /\w+/g },
