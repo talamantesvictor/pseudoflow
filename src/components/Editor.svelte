@@ -1,10 +1,11 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
-   import { getLineNumbers, getBeautifiedCode, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor/editor";
+   import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
+   import { getBeautifiedCode } from "../lib/code";
    import { _reservedWords } from "../lib/stores";
-   import { tokenize } from "../lib/editor/analyzers";
    import { onMount } from "svelte";
 
+   export let editorText: String = '';
    let editorElement: HTMLElement;
    let coloredElement: HTMLElement;
    let numbersElement: Element;
@@ -13,8 +14,6 @@
    let lastRowNumber: number;
    let commandToInsert: any;
    let lastInsertedCommand: any;
-
-   export let tokens: string[] = [];
 
    // Redraw line numbers when editorHeight changes.
    // The defined line-height is 24.
@@ -46,7 +45,7 @@
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
       coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, $_reservedWords, activeRowNumber);
-      tokens = tokenize(editorElement.innerText);
+      editorText = editorElement.innerText;
    }
 
    function keyDownController(e) {

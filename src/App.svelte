@@ -1,20 +1,16 @@
 <script lang="ts">
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
-   import { arrayEquals } from "./lib/helpers"
-
-   let currentTokens: string[] = [];
-   let lastTokens: string[] = [];
-
-   // $: {
-   //    if (!arrayEquals(currentTokens, lastTokens)) {
-   //       lastTokens = currentTokens;
-   //       // Here goes code to analyze pseudocode and show errors if wanted
-   //    }
-   // }
+   import { getTokens } from "./lib/code";
+   
+   let pseudocode: string;
+   let lastPseudocode: string;
 
    function runCode(e) {
-      console.log(currentTokens);
+      if (pseudocode !== lastPseudocode) {
+         lastPseudocode = pseudocode;
+         console.log(getTokens(pseudocode));
+      }
    }
 </script>
 
@@ -22,7 +18,7 @@
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="text-area">
-      <Editor bind:tokens={currentTokens} />
+      <Editor bind:editorText={pseudocode} />
    </div>
 </div>
 
