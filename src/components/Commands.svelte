@@ -33,7 +33,7 @@
    function forCmd(e) {
       e.preventDefault();
       command = {
-         template: $_reservedWords.CODE_FOR + ' (xyz = 1 ' + $_reservedWords.CODE_FORTO + ' 10 ' + $_reservedWords.CODE_FORSTEP + ' 1)\n\n' + $_reservedWords.CODE_ENDFOR,
+         template: $_reservedWords.CODE_FOR + ' (' + $_reservedWords.CODE_VAR + ' xyz = 1 ' + $_reservedWords.CODE_FORTO + ' 10 ' + $_reservedWords.CODE_FORSTEP + ' 1)\n\n' + $_reservedWords.CODE_ENDFOR,
          timestamp: Date.now()
       }
    }

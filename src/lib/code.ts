@@ -1,7 +1,19 @@
+import * as atype from "./analyzers/atypes"
 import { tokenize } from "./analyzers/lexer";
+import { parser } from "./analyzers/parser";
 
 export function getTokens(code: string) {
    return tokenize(code);
+}
+
+export function getAST(tokens: Array<atype.Token>) {
+   return parser(tokens);
+}
+
+export function analyze(code: string) {
+   let tokens = tokenize(code);
+   let syntaxTree = parser(tokens);
+   console.log(syntaxTree);
 }
 
 // Highlight the code by injecting spans

@@ -1,5 +1,5 @@
-import { _reservedWords } from "../stores";
 import * as atype from "./atypes"
+import { _reservedWords } from "../stores";
 
 let reservedWords;
 
@@ -26,13 +26,17 @@ const tokenStringMap: Array<atype.Token> = [
    { name: 'CloseWhileToken',          rule: new RegExp('^' + reservedWords.CODE_ENDWHILE + '$', 'g') },
    { name: 'OpenDowhileToken',         rule: new RegExp('^' + reservedWords.CODE_DOWHILE + '$', 'g') },
    { name: 'CloseDowhileToken',        rule: new RegExp('^' + reservedWords.CODE_ENDDOWHILE + '$', 'g') },
-   { name: 'ArithmeticToken',          rule: /[\/\+\-\*\%]=?/g },
+   { name: 'AdditionToken',            rule: /^\+$/g },
+   { name: 'SubstractionToken',        rule: /^\-$/g },
+   { name: 'MultiplicationToken',      rule: /^\*$/g },
+   { name: 'DivisionToken',            rule: /^\/$/g },
+   { name: 'ModuleToken',              rule: /^\%$/g },
    { name: 'RelationalToken',          rule: /[\>\<]=?|[\=\!]\=/g },
    { name: 'BooleanToken',             rule: new RegExp('^' + reservedWords.CODE_AND + '$|^' + reservedWords.CODE_OR + '$', 'g') },
    { name: 'StringToken',              rule: /(["'])(?:(?=(\\?))\2.)*?\1/g },
    { name: 'NumericToken',             rule: /^(\d?)+\.?\d+$/g },
    { name: 'IdentifierToken',          rule: /\w+/g },
-   { name: 'UnknownToken',             rule: /./g }
+   { name: 'OtherToken',               rule: /./g }
 ];
 
 export const tokenize = (code: string) : any => {
@@ -45,7 +49,7 @@ export const tokenize = (code: string) : any => {
    code.match(regex)?.forEach((value) => {
       for (const { name, rule } of tokenStringMap) {
          if (value.match(rule!)) {
-            tokens.push({name: name, value: value});
+            tokens.push({name: name, value: value} as atype.Token);
             break;
          }
       }

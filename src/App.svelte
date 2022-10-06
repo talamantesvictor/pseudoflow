@@ -1,7 +1,7 @@
 <script lang="ts">
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
-   import { getTokens } from "./lib/code";
+   import { analyze } from "./lib/code";
    
    let pseudocode: string;
    let lastPseudocode: string;
@@ -9,7 +9,7 @@
    function runCode(e) {
       if (pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
-         console.log(getTokens(pseudocode));
+         analyze(pseudocode);
       }
    }
 </script>
