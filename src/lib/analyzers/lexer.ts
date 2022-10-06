@@ -34,7 +34,7 @@ const tokenStringMap: Array<atype.Token> = [
    { name: 'RelationalToken',          rule: /[\>\<]=?|[\=\!]\=/g },
    { name: 'BooleanToken',             rule: new RegExp('^' + reservedWords.CODE_AND + '$|^' + reservedWords.CODE_OR + '$', 'g') },
    { name: 'StringToken',              rule: /(["'])(?:(?=(\\?))\2.)*?\1/g },
-   { name: 'NumericToken',             rule: /^(\d?)+\.?\d+$/g },
+   { name: 'NumericToken',             rule: /^\-?(\d?)+\.?\d+$/g },
    { name: 'IdentifierToken',          rule: /\w+/g },
    { name: 'OtherToken',               rule: /./g }
 ];
@@ -43,8 +43,8 @@ export const tokenize = (code: string) : any => {
    // remove comments
    code = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
    // separate values to tokenize
-   const regex = /(["'])(?:(?=(\\?))\2.)*?\1|(?:[\\(){}[\]=&|^+<>/*%;\:?!~-]{1,2}|(\d?)+\.?\d+|(?:\w+))|[^\s]/g;
-   
+   const regex = /(["'])(?:(?=(\\?))\2.)*?\1|\-?(\d?)+\.?\d+|(?:[\\(){}[\]=&|^+<>/*%;\:?!~-]{1,2}|(?:\w+))|[^\s]/g;
+
    let tokens : Array<atype.Token> = [];
    code.match(regex)?.forEach((value) => {
       for (const { name, rule } of tokenStringMap) {
