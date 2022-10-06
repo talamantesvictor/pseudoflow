@@ -43,7 +43,7 @@ export const tokenize = (code: string) : any => {
    // remove comments
    code = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
    // separate values to tokenize
-   const regex = /(["'])(?:(?=(\\?))\2.)*?\1|\-?(\d?)+\.?\d+|(?:[=&|^+<>/*%!~-]{1,2})|(?:[\\(){}[\];\:\?]|(?:\w+))|[^\s]/g;
+   const regex = /(["'])(?:(?=(\\?))\2.)*?\1|(\d?)+\.?\d+|(?:[=&|^+<>/*%!~-]{1,2})|(?:[\\(){}[\];\:\?]|(?:\w+))|[^\s]/g;
 
    let tokens : Array<atype.Token> = [];
    code.match(regex)?.forEach((value) => {
