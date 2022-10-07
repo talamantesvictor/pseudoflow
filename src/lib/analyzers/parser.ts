@@ -69,7 +69,18 @@ function tokenToNode(token: atype.Token) : atype.Node {
 }
 
 function expressionParser() : atype.Node {
+
    let value = tokenToNode(parserTokens[parserIndex]);
+
+   if (parserTokens[parserIndex].name == 'OpenParenToken') {
+      nextIndex();
+      value = {
+         name: 'GroupNode',
+         body: expressionParser()
+      }
+      nextIndex();
+   }
+
    let nextToken = parserTokens[parserIndex + 1];
    if (nextToken) {
       const validTokens = [
