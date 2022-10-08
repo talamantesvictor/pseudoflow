@@ -1,17 +1,22 @@
 <script lang="ts">
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
-   import { analyze } from "./lib/code";
+   import { getSyntaxTokens, getSyntaxTree } from "./lib/code";
    
    let isRunning: boolean = false;
    let pseudocode: string;
    let lastPseudocode: string;
+   let syntaxTree: object;
 
    function runCode(e) {
       isRunning = e.detail;
-      if (isRunning && pseudocode !== lastPseudocode) {
-         lastPseudocode = pseudocode;
-         analyze(pseudocode);
+      if (isRunning) {
+         if (pseudocode !== lastPseudocode) {
+            lastPseudocode = pseudocode;
+            const tokens = getSyntaxTokens(pseudocode);
+            syntaxTree = getSyntaxTree(tokens);
+         }
+         console.log((syntaxTree));
       }
    }
 </script>

@@ -1,4 +1,4 @@
-import * as atype from './atypes'
+import type * as atype from './atypes'
 import { _reservedWords } from "../stores";
 
 let reservedWords;
