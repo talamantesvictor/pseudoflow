@@ -1,7 +1,7 @@
 <script lang="ts">
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
-   import { getSyntaxTokens, getSyntaxTree } from "./lib/code";
+   import { getSyntaxTokens, getSyntaxTree, treeNodeInterpreter } from "./lib/code";
    
    let isRunning: boolean = false;
    let pseudocode: string;
@@ -16,7 +16,10 @@
             const tokens = getSyntaxTokens(pseudocode);
             syntaxTree = getSyntaxTree(tokens);
          }
-         console.log((syntaxTree));
+
+         for (const [key, value] of Object.entries(syntaxTree['body'])) {
+            treeNodeInterpreter(value as object);
+         }
       }
    }
 </script>

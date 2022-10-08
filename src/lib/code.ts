@@ -2,12 +2,16 @@ import type * as atype from "./analyzers/atypes"
 import { tokenize } from "./analyzers/lexer";
 import { parser } from "./analyzers/parser";
 
-export function getSyntaxTokens(code: string) {
+export function getSyntaxTokens(code: string) : Array<atype.Token> {
    return tokenize(code);
 }
 
-export function getSyntaxTree(tokens: Array<atype.Token>) {
+export function getSyntaxTree(tokens: Array<atype.Token>) : object {
    return parser(tokens);
+}
+
+export function treeNodeInterpreter(node: object) {
+   console.log('node: ', node);
 }
 
 // Highlight the code by injecting spans
