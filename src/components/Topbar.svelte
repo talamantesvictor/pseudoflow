@@ -1,9 +1,19 @@
-<script>
+<script lang="ts">
    import { createEventDispatcher } from "svelte";
+   import playButton  from '../../static/images/play_button.svg';
+   import stopButton  from '../../static/images/stop_button.svg';
+
+   let executeButtonImage: any = playButton;
+   let isRunning: boolean = false;
 
    const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {
-      topbarDispatcher("runButtonClick", "hola");
+      isRunning = !isRunning;
+      executeButtonImage = playButton;
+      if (isRunning) {
+         executeButtonImage = stopButton;
+      }
+      topbarDispatcher("runButtonClick", isRunning);
    };
 </script>
 
@@ -14,7 +24,10 @@
          <span>File:</span>
          <span>pseudocode.pff</span>
       </div>
-      <div id="runbutton" on:click={runButtonClick}>Run</div>
+      <div id="runbutton" on:click={runButtonClick}>
+         <img src="{executeButtonImage}" alt="Play Button" />
+         {isRunning? "Stop" : "Run"}
+      </div>
    </div>
    <div class="right" />
 </div>
@@ -58,12 +71,18 @@
             background-color: $runbutton-background;
             color: $accent-color;
             height: 2rem;
-            text-align: center;
+            display: flex;
+            justify-content: center;
             padding: 0 1.4rem;
             border-radius: 1rem;
             display: flex;
             align-items: center;
             cursor: pointer;
+
+            img {
+               width: 0.9rem;
+               margin-right: 0.6rem;
+            }
          }
       }
    }
