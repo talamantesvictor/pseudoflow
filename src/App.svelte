@@ -3,7 +3,7 @@
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
    import Output from "./components/Output.svelte";
-   import { tokenize } from "./lib/analyzers/lexer";
+   import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter } from "./lib/code/interpreter"
    
@@ -18,7 +18,7 @@
       if (isRunning) {
          if (pseudocode !== lastPseudocode) {
             lastPseudocode = pseudocode;
-            const tokens = tokenize(pseudocode);
+            const tokens = lexer(pseudocode);
             syntaxTree = parser(tokens);
          }
 
