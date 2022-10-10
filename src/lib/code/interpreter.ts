@@ -1,7 +1,20 @@
 import type * as atype from "../analyzers/atypes"
 
-export function treeNodeInterpreter(node: atype.SentencesNode) {
-   if (node.name === "PrintNode") {
+let programVariables : Array<Object>;
+
+export function interpreter(sentences: Array<atype.SentencesNode>) {
+   let text = '';
+   for (const sentence of sentences) {
+      const newNode = intepretTreeNode(sentence);
+      text += newNode!.print;
+   }
+
+   return text;
+}
+
+export function intepretTreeNode(node: atype.SentencesNode) {
+   
+   if (node.name === 'PrintNode') {
       if (node.value.name === 'ExpressionNode') {
          let value = expressionBuilder(node.value);
          return { print: eval(value) + '<br>' };

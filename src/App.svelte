@@ -5,7 +5,7 @@
    import Output from "./components/Output.svelte";
    import { tokenize } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
-   import { treeNodeInterpreter } from "./lib/code/interpreter"
+   import { interpreter } from "./lib/code/interpreter"
    
    let isRunning: boolean = false;
    let pseudocode: string;
@@ -23,12 +23,7 @@
          }
 
          outputText = "Program started ***<br>";
-
-         for (const [key, value] of Object.entries(syntaxTree['body'])) {
-            let newNode = treeNodeInterpreter(value as atype.SentencesNode);
-            outputText += newNode.print;
-         }
-
+         outputText += interpreter(syntaxTree['body']);
          outputText += "Program finished ***";
       }
    }
