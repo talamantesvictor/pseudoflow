@@ -1,25 +1,35 @@
 <script lang="ts">
+   import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
-   import { getSyntaxTokens, getSyntaxTree, treeNodeInterpreter } from "./lib/code";
+   import Output from "./components/Output.svelte";
+   import { tokenize } from "./lib/analyzers/lexer";
+   import { parser } from "./lib/analyzers/parser";
+   import { treeNodeInterpreter } from "./lib/code/interpreter"
    
    let isRunning: boolean = false;
    let pseudocode: string;
    let lastPseudocode: string;
    let syntaxTree: object;
+   let outputText: string;
 
    function runCode(e) {
       isRunning = e.detail;
       if (isRunning) {
          if (pseudocode !== lastPseudocode) {
             lastPseudocode = pseudocode;
-            const tokens = getSyntaxTokens(pseudocode);
-            syntaxTree = getSyntaxTree(tokens);
+            const tokens = tokenize(pseudocode);
+            syntaxTree = parser(tokens);
          }
 
+         outputText = "Program started ***<br>";
+
          for (const [key, value] of Object.entries(syntaxTree['body'])) {
-            treeNodeInterpreter(value as object);
+            let newNode = treeNodeInterpreter(value as atype.SentencesNode);
+            outputText += newNode.print;
          }
+
+         outputText += "Program finished ***";
       }
    }
 </script>
@@ -27,7 +37,9 @@
 <Topbar on:runButtonClick={runCode} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
-   <div id="running-area" class:active="{isRunning}"></div>
+   <div id="output-area" class:active="{isRunning}">
+      <Output content="{outputText}" />
+   </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
    </div>
@@ -50,7 +62,7 @@
          overflow: hidden;
       }
 
-      #running-area {
+      #output-area {
          width: 70%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;

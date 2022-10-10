@@ -97,8 +97,7 @@ export type SentencesNode =
    SwitchNode                 | 
    ForNode                    | 
    WhileNode                  | 
-   DowhileNode                | 
-   null;
+   DowhileNode;
 
 export type Node = 
    StringExpressionNode       | 
@@ -109,8 +108,7 @@ export type Node =
    GroupNode                  | 
    IdentifierNode             | 
    StringNode                 | 
-   NumericNode                | 
-   null;
+   NumericNode;
 
 // *******************************************
 // Expressions

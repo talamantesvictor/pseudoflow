@@ -21,6 +21,8 @@ export const parser = (tokens: Array<atype.Token>) => {
          parserIndex++;
    }
 
+   console.log(program);
+
    return program;
 };
 

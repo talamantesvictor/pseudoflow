@@ -1,7 +1,7 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
    import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
-   import { getBeautifiedCode } from "../lib/code";
+   import { getBeautifiedCode } from "../lib/code/beautifier";
    import { _reservedWords } from "../lib/stores";
    import { onMount } from "svelte";
 
