@@ -2,7 +2,7 @@ import type * as atype from "../analyzers/atypes"
 
 export function treeNodeInterpreter(node: atype.SentencesNode) {
    if (node.name === "PrintNode") {
-      if (node.value.name === 'GenericExpressionNode') {
+      if (node.value.name === 'ExpressionNode') {
          let value = expressionBuilder(node.value);
          return { print: eval(value) + '<br>' };
       }
@@ -14,7 +14,7 @@ export function treeNodeInterpreter(node: atype.SentencesNode) {
 function groupBuilder(groupNode: atype.GroupNode) {
    let groupExpression = '(';
 
-   if (groupNode.body.name === 'GenericExpressionNode') {
+   if (groupNode.body.name === 'ExpressionNode') {
       groupExpression += expressionBuilder(groupNode.body);
    }
    else {
@@ -24,7 +24,7 @@ function groupBuilder(groupNode: atype.GroupNode) {
    return groupExpression += ')';
 }
 
-function expressionBuilder(node: atype.GenericExpressionNode) {
+function expressionBuilder(node: atype.ExpressionNode) {
    let expression: string;
 
    if (node.left.name === 'GroupNode') {
@@ -39,7 +39,7 @@ function expressionBuilder(node: atype.GenericExpressionNode) {
    if (node.right.name === 'GroupNode') {
       expression += groupBuilder(node.right);
    }
-   else if (node.right['name'] === 'GenericExpressionNode') {
+   else if (node.right['name'] === 'ExpressionNode') {
       expression += expressionBuilder(node.right);
    }
    else {

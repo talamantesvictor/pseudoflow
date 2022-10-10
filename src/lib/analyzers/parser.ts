@@ -99,7 +99,7 @@ function expressionParser() : atype.Node {
          let operator = parserTokens[parserIndex] as atype.OperatorToken;
          nextIndex();
          let right = expressionParser();
-         value = {name: 'GenericExpressionNode',  left: value, right: right, operator: operator}
+         value = {name: 'ExpressionNode',  left: value, right: right, operator: operator}
       }
    }
 

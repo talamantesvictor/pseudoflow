@@ -104,7 +104,7 @@ export type Node =
    ArithmeticExpressionNode   | 
    RelationalExpressionNode   | 
    BooleanExpressionNode      | 
-   GenericExpressionNode      | 
+   ExpressionNode      | 
    GroupNode                  | 
    IdentifierNode             | 
    StringNode                 | 
@@ -118,10 +118,5 @@ export type StringExpressionNode =     { name: 'StringExpressionNode', left: Str
 export type ArithmeticExpressionNode = { name: 'ArithmeticExpressionNode', left: NumericNode | IdentifierNode, right: Node, operator: ArithmeticToken };
 export type RelationalExpressionNode = { name: 'RelationalExpressionNode', left: Node, right: Node, operator: RelationalToken };
 export type BooleanExpressionNode =    { name: 'BooleanExpressionNode', left: Node, right: Node, operator: BooleanToken };
-export type GenericExpressionNode =    { name: 'GenericExpressionNode', left: Node, right: Node, operator: OperatorToken};
-
-export type ConditionalExpressionNode ={ name: 'ConditionalExpressionNode', left: Node, right: Node, operator: RelationalToken, and?: ExpressionNode, or?: ExpressionNode};
-
-export type ExpressionNode = 
-   ConditionalExpressionNode  | 
-   Node;
+export type ExpressionNode =           { name: 'ExpressionNode', left: Node, right: Node, operator: OperatorToken};
+export type ConditionalExpressionNode ={ name: 'ConditionalExpressionNode', left: Node, right: Node, operator: RelationalToken, and?: ConditionalExpressionNode | Node, or?: ConditionalExpressionNode | Node};
