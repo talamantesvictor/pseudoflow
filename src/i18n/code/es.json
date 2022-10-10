@@ -1,5 +1,5 @@
 {
-   "CODE_VAR": "var",
+   "CODE_VAR": "declarar",
    "CODE_IF": "si",
    "CODE_ELSE": "sino",
    "CODE_ENDIF": "finsi",

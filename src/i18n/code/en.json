@@ -1,5 +1,5 @@
 {
-   "CODE_VAR": "var",
+   "CODE_VAR": "declare",
    "CODE_IF": "if",
    "CODE_ELSE": "else",
    "CODE_ENDIF": "endif",
