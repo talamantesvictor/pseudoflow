@@ -32,6 +32,9 @@ function parse() : atype.SentencesNode {
    if (token.name === 'DeclarationToken') {
       return declarationParser();
    }
+   else if (token.name === 'IdentifierToken') {
+      return assignmentParser();
+   }
    else if (token.name === 'PrintToken') {
       return printParser();
    }
@@ -118,6 +121,22 @@ function declarationParser() : atype.DeclarationNode {
 
    return { 
       name: 'DeclarationNode',
+      identifier: identifier.value!,
+      value: value
+   };
+}
+
+function assignmentParser() : atype.AssignmentNode {
+   const identifier = parserTokens[parserIndex];
+   nextIndex();
+   if (parserTokens[parserIndex].name !== 'AssignmentToken') {
+      throw new SyntaxError('Identifier must be followed by assignment operator.');
+   }
+   nextIndex();
+   let value = expressionParser();
+
+   return { 
+      name: 'AssignmentNode',
       identifier: identifier.value!,
       value: value
    };
