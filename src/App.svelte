@@ -5,7 +5,7 @@
    import Output from "./components/Output.svelte";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
-   import { interpreter } from "./lib/code/interpreter"
+   import { intepretTreeNode } from "./lib/code/interpreter"
    
    let isRunning: boolean = false;
    let pseudocode: string;
@@ -23,9 +23,21 @@
          }
 
          outputText = "<div class=\"hl-comments\">Program started ***</div>";
-         outputText += interpreter(syntaxTree['body']);
+         for (const sentence of syntaxTree['body']) {
+            if (sentence.name === 'ReadNode') {
+
+            }
+            else {
+               const newNode = intepretTreeNode(sentence);
+               outputText += newNode!.print;
+            }
+         }
          outputText += "<div class=\"hl-comments\">Program end ***</div>";
       }
+   }
+
+   function outputCapturedMessage(e) {
+      console.log(e.detail.text);
    }
 </script>
 
@@ -33,7 +45,7 @@
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" />
+      <Output content="{outputText}" isOpen="{isRunning}" on:message={outputCapturedMessage} />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
