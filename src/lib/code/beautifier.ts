@@ -41,7 +41,9 @@ export const getBeautifiedCode = (code: string, reservedWords: object, highlight
       let comments = lines[index].match(/\/\/.*/g);
 
       if (comments?.length) {
-         console.log('comment found');
+         lines[index] = lines[index].replace(/<span.*?>/g, '');
+         lines[index] = lines[index].replace(/<\/span>/g, '');
+         comments = lines[index].match(/\/\/.*/g);
          lines[index] = lines[index].replace(comments[0], '<span class="hl-comments">' + comments[0] + '</span>');
       }
       
