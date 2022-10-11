@@ -1,9 +1,10 @@
 import type * as atype from "../analyzers/atypes"
 
-let programVariables : Array<Object>;
+let programVariables = new Array<Object>;
 
 export function interpreter(sentences: Array<atype.SentencesNode>) {
    let text = '';
+
    for (const sentence of sentences) {
       const newNode = intepretTreeNode(sentence);
       text += newNode!.print;
@@ -14,13 +15,37 @@ export function interpreter(sentences: Array<atype.SentencesNode>) {
 
 export function intepretTreeNode(node: atype.SentencesNode) {
    
-   if (node.name === 'PrintNode') {
+   if (node.name === 'DeclarationNode') {
       if (node.value.name === 'ExpressionNode') {
-         let value = expressionBuilder(node.value);
-         return { print: eval(value) + '<br>' };
+         programVariables.push({
+            identifier: node.identifier,
+            value: eval(expressionBuilder(node.value))
+         });
+      }
+      else if (node.value.name === 'GroupNode') {
+         programVariables.push({
+            identifier: node.identifier,
+            value: eval(groupBuilder(node.value))
+         });
+      }
+      else {
+         programVariables.push({
+            identifier: node.identifier,
+            value: node.value['value']
+         });
       }
 
-      return { print: node.value['value'] + '<br>' };
+      return { print: '' };
+   }
+   else if (node.name === 'PrintNode') {
+      if (node.value.name === 'ExpressionNode') {
+         return { print: eval(expressionBuilder(node.value)) + '<br>' };
+      }
+      else if (node.value.name === 'GroupNode') {
+         return { print: eval(groupBuilder(node.value)) + '<br>' };
+      }
+
+      return { print: valueBuilder(node.value) + '<br>' };
    }
 }
 
@@ -31,7 +56,7 @@ function groupBuilder(groupNode: atype.GroupNode) {
       groupExpression += expressionBuilder(groupNode.body);
    }
    else {
-      groupExpression += groupNode.body['value'];
+      groupExpression += valueBuilder(groupNode.body);
    }
 
    return groupExpression += ')';
@@ -44,7 +69,7 @@ function expressionBuilder(node: atype.ExpressionNode) {
       expression = groupBuilder(node.left);
    }
    else {
-      expression = node.left['value'];
+      expression = valueBuilder(node.left);
    }
 
    expression += node.operator.value;
@@ -56,8 +81,25 @@ function expressionBuilder(node: atype.ExpressionNode) {
       expression += expressionBuilder(node.right);
    }
    else {
-      expression += node.right['value'];
+      expression += valueBuilder(node.right);
    }
 
    return expression;
+}
+
+function valueBuilder(node) {
+   let value: any;
+
+   if (node.name === 'IdentifierNode') {
+      programVariables.forEach(storedVariable => {
+         if (storedVariable['identifier'] === node.value) {
+            value = storedVariable['value'];
+         }
+      });
+   }
+   else {
+      value = node.value;
+   }
+
+   return value;
 }

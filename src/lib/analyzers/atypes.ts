@@ -75,7 +75,7 @@ export type Token =
 // Nodes
 // *******************************************
 
-export type DeclarationNode =          { name: 'DeclarationNode', identifier: string, value: Node | string };
+export type DeclarationNode =          { name: 'DeclarationNode', identifier: string, value: Node };
 export type PrintNode =                { name: 'PrintNode', value: Node };
 export type ReadNode =                 { name: 'ReadNode', identifier: IdentifierToken };
 export type IfNode =                   { name: 'IfNode', argument: Node, body: SentencesNode[] };
@@ -104,7 +104,7 @@ export type Node =
    ArithmeticExpressionNode   | 
    RelationalExpressionNode   | 
    BooleanExpressionNode      | 
-   ExpressionNode      | 
+   ExpressionNode             | 
    GroupNode                  | 
    IdentifierNode             | 
    StringNode                 | 
