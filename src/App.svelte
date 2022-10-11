@@ -22,9 +22,9 @@
             syntaxTree = parser(tokens);
          }
 
-         outputText = "Program started ***<br>";
+         outputText = "<div class=\"hl-comments\">Program started ***</div>";
          outputText += interpreter(syntaxTree['body']);
-         outputText += "Program finished ***";
+         outputText += "<div class=\"hl-comments\">Program end ***</div>";
       }
    }
 </script>
