@@ -37,6 +37,23 @@ export function intepretTreeNode(node: atype.SentencesNode) {
 
       return { print: '' };
    }
+   else if (node.name === 'AssignmentNode') {
+      for (let index = 0; index < programVariables.length; index++) {
+         if (programVariables[index]['identifier'] === node.identifier) {
+            if (node.value.name === 'ExpressionNode') {
+               programVariables[index]['value'] = eval(expressionBuilder(node.value));
+            }
+            else if (node.value.name === 'GroupNode') {
+               programVariables[index]['value'] = eval(groupBuilder(node.value));
+            }
+            else {
+               programVariables[index]['value'] = node.value['value'];
+            }
+         }
+      }
+
+      return { print: '' };
+   }
    else if (node.name === 'PrintNode') {
       if (node.value.name === 'ExpressionNode') {
          return { print: eval(expressionBuilder(node.value)) + '<br>' };
