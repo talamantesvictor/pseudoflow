@@ -14,55 +14,27 @@ export function interpreter(sentences: Array<atype.SentencesNode>) {
 }
 
 export function intepretTreeNode(node: atype.SentencesNode) {
-   
    if (node.name === 'DeclarationNode') {
-      if (node.value.name === 'ExpressionNode') {
-         programVariables.push({
-            identifier: node.identifier,
-            value: eval(expressionBuilder(node.value))
-         });
-      }
-      else if (node.value.name === 'GroupNode') {
-         programVariables.push({
-            identifier: node.identifier,
-            value: eval(groupBuilder(node.value))
-         });
-      }
-      else {
-         programVariables.push({
-            identifier: node.identifier,
-            value: node.value['value']
-         });
-      }
+      programVariables.push({
+         identifier: node.identifier,
+         value: eval(valueBuilder(node.value))
+      });
 
       return { print: '' };
    }
    else if (node.name === 'AssignmentNode') {
       for (let index = 0; index < programVariables.length; index++) {
          if (programVariables[index]['identifier'] === node.identifier) {
-            if (node.value.name === 'ExpressionNode') {
-               programVariables[index]['value'] = eval(expressionBuilder(node.value));
-            }
-            else if (node.value.name === 'GroupNode') {
-               programVariables[index]['value'] = eval(groupBuilder(node.value));
-            }
-            else {
-               programVariables[index]['value'] = node.value['value'];
-            }
+            programVariables[index]['value'] = eval(valueBuilder(node.value));
          }
       }
 
       return { print: '' };
    }
    else if (node.name === 'PrintNode') {
-      if (node.value.name === 'ExpressionNode') {
-         return { print: eval(expressionBuilder(node.value)) + '<br>' };
-      }
-      else if (node.value.name === 'GroupNode') {
-         return { print: eval(groupBuilder(node.value)) + '<br>' };
-      }
-
-      return { print: valueBuilder(node.value) + '<br>' };
+      return { 
+         print: eval(valueBuilder(node.value)) + '<br>' 
+      };
    }
 }
 
@@ -113,6 +85,12 @@ function valueBuilder(node) {
             value = storedVariable['value'];
          }
       });
+   }
+   else if (node.name === 'ExpressionNode') {
+      value = expressionBuilder(node);
+   }
+   else if (node.name === 'GroupNode') {
+      value = groupBuilder(node);
    }
    else {
       value = node.value;
