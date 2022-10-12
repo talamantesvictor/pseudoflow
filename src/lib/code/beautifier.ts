@@ -41,17 +41,16 @@ export const getBeautifiedCode = (code: string, reservedWords: object, highlight
       let comments = lines[index].match(/\/\/.*/g);
 
       if (comments?.length) {
-         lines[index] = lines[index].replace(/<span.*?>/g, '');
-         lines[index] = lines[index].replace(/<\/span>/g, '');
+         lines[index] = lines[index].replace(/<span.*?>/g, '').replace(/<\/span>/g, '');
          comments = lines[index].match(/\/\/.*/g);
-         lines[index] = lines[index].replace(comments[0], '<span class="hl-comments">' + comments[0] + '</span>');
+         if (comments) {
+            lines[index] = lines[index].replace(comments[0], '<span class="hl-comments">' + comments[0] + '</span>');
+         }
       }
       
+      lines[index] = '<div class="line">' + lines[index] + '</div>';
       if (index == highlightedRow - 1) {
          lines[index] = '<div class="line hl-activerow">' + lines[index] + '</div>';
-      }
-      else {
-         lines[index] = '<div class="line">' + lines[index] + '</div>';
       }
    }
 
