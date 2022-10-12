@@ -8,13 +8,15 @@
 
    const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {
-      isRunning = !isRunning;
-      executeButtonImage = playButton;
-      if (isRunning) {
-         executeButtonImage = stopButton;
-      }
-      topbarDispatcher("runButtonClick", isRunning);
+      topbarDispatcher("runButtonClick", !isRunning);
    };
+
+   $: if (isRunning) {
+      executeButtonImage = stopButton;
+   }
+   else {
+      executeButtonImage = playButton;
+   }
 </script>
 
 <div id="topbar">
