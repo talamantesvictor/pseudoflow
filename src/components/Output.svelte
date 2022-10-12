@@ -9,9 +9,30 @@
 
    document.onkeydown = function (event) {
       if (activateInput) {
-         if (event.code.indexOf('Key') == 0 || event.code.indexOf('Digit') == 0) {
-            capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
-            capturedInput++;
+         if (
+            event.code.indexOf('Key') == 0      || 
+            event.code.indexOf('Digit') == 0    || 
+            event.code === 'NumpadMultiply'     || 
+            event.code === 'NumpadAdd'          || 
+            event.code === 'NumpadSubtract'     || 
+            event.code === 'NumpadDecimal'      || 
+            event.code === 'NumpadDivide'       || 
+            event.code === 'Semicolon'          || 
+            event.code === 'Equal'              || 
+            event.code === 'Comma'              || 
+            event.code === 'Minus'              || 
+            event.code === 'Period'             || 
+            event.code === 'Slash'              || 
+            event.code === 'Backquote'          || 
+            event.code === 'BracketLeft'        || 
+            event.code === 'Backslash'          || 
+            event.code === 'BracketRight'       || 
+            event.code === 'Quote'
+            ) {
+               if (event.key !== 'Dead') {
+                  capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
+                  capturedInput++;
+               }
          }
          else if (event.code === 'Space') {
             capturedMessage = capturedMessage.slice(0, capturedInput) + ' ' + capturedMessage.slice(capturedInput);
