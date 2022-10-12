@@ -12,8 +12,35 @@
    let pseudocode: string;
    let lastPseudocode: string;
    let syntaxTree: object;
+   let runningSentences: atype.SentencesNode[];
    let outputText: string;
-   let outputTextBeforeInput: string;
+
+
+   function startProgram() {
+      outputText = "<div class=\"hl-comments\">Program started ***</div>";
+   }
+
+   function endProgram() {
+      outputText += "<div class=\"hl-comments\">Program end ***</div>";
+   }
+
+   function readSentences() {
+      while (runningSentences.length) {
+         const sentence = runningSentences.shift();
+         if (sentence.name === 'ReadNode') {
+            activateOutputInput = true;
+            break;
+         }
+         else if(!activateOutputInput) {
+            const newNode = intepretTreeNode(sentence);
+            outputText += newNode!.print;
+         }
+      }
+
+      if(!activateOutputInput) {
+         endProgram();
+      }
+   }
 
    function runCode(e) {
       isRunning = e.detail;
@@ -24,33 +51,25 @@
             lastPseudocode = pseudocode;
             const tokens = lexer(pseudocode);
             syntaxTree = parser(tokens);
+            runningSentences = syntaxTree['body'];
          }
-
-         outputText = "<div class=\"hl-comments\">Program started ***</div>";
-         for (const sentence of syntaxTree['body']) {
-            if (sentence.name === 'ReadNode') {
-               activateOutputInput = true;
-               outputTextBeforeInput = outputText;
-            }
-            else if(!activateOutputInput) {
-               const newNode = intepretTreeNode(sentence);
-               outputText += newNode!.print;
-            }
-         }
-
-         if(!activateOutputInput) {
-            outputText += "<div class=\"hl-comments\">Program end ***</div>";
-         }
+         startProgram();
+         readSentences();
       }
    }
 
+   function outputCapturedMessage(e) {
+      activateOutputInput = false;
+      outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
+      readSentences();
+   }
 </script>
 
 <Topbar on:runButtonClick={runCode} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" activateInput="{activateOutputInput}" />
+      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={outputCapturedMessage} />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />

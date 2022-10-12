@@ -37,10 +37,13 @@
          else if (event.code === 'End' || event.code === 'ArrowDown') {
             capturedInput = capturedMessage.length;
          }
+         else if (event.code === 'Enter') {
+            activateInput = false;
+            dispatch('message', {
+               text: capturedMessage
+            });
+         }
          
-         dispatch('message', {
-            text: capturedMessage
-         });
       }
    };
 
