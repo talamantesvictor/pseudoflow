@@ -15,7 +15,7 @@ export function intepretTreeNode(node: atype.SentencesNode) {
    else if (node.name === 'AssignmentNode') {
       for (let index = 0; index < programVariables.length; index++) {
          if (programVariables[index]['identifier'] === node.identifier) {
-            const value = eval(valueBuilder(node.value));
+            const value = valueBuilder(node.value);
             programVariables[index]['value'] = isNaN(value) ? '"' + value + '"' : value;
          }
       }
