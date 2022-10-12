@@ -68,6 +68,12 @@
 
    function outputCapturedMessage(e) {
       activateOutputInput = false;
+      const readSentenceIndex = syntaxTree['body'].length - runningSentences.length - 1;
+      runningSentences.unshift({ 
+         name: 'AssignmentNode', 
+         identifier: syntaxTree['body'][readSentenceIndex].identifier.value, 
+         value: { name: 'StringNode', value:  e.detail.text as string } 
+      });
       outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
       readSentences();
    }
