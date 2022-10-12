@@ -2,22 +2,12 @@ import type * as atype from "../analyzers/atypes"
 
 let programVariables = new Array<Object>;
 
-export function interpreter(sentences: Array<atype.SentencesNode>) {
-   let text = '';
-
-   for (const sentence of sentences) {
-      const newNode = intepretTreeNode(sentence);
-      text += newNode!.print;
-   }
-
-   return text;
-}
-
 export function intepretTreeNode(node: atype.SentencesNode) {
    if (node.name === 'DeclarationNode') {
+      const value = eval(valueBuilder(node.value));
       programVariables.push({
          identifier: node.identifier,
-         value: eval(valueBuilder(node.value))
+         value: isNaN(value) ? '"' + value + '"' : value
       });
 
       return { print: '' };
@@ -25,7 +15,8 @@ export function intepretTreeNode(node: atype.SentencesNode) {
    else if (node.name === 'AssignmentNode') {
       for (let index = 0; index < programVariables.length; index++) {
          if (programVariables[index]['identifier'] === node.identifier) {
-            programVariables[index]['value'] = eval(valueBuilder(node.value));
+            const value = eval(valueBuilder(node.value));
+            programVariables[index]['value'] = isNaN(value) ? '"' + value + '"' : value;
          }
       }
 
