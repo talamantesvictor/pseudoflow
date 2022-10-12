@@ -1,40 +1,41 @@
 <script lang="ts">
    import { createEventDispatcher } from 'svelte';
    export let content: string;
-   export let isOpen: boolean;
+   export let activateInput: boolean;
    const dispatch = createEventDispatcher();
+   const cursor = '|';
    let capturedMessage: string = '';
-   let capturedPrompt: number = 0;
+   let capturedInput: number = 0;
 
    document.onkeydown = function (event) {
-      if (isOpen) {
+      if (activateInput) {
          if (event.code.indexOf('Key') == 0 || event.code.indexOf('Digit') == 0) {
-            capturedMessage = capturedMessage.slice(0, capturedPrompt) + event.key + capturedMessage.slice(capturedPrompt);
-            capturedPrompt++;
+            capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
+            capturedInput++;
          }
          else if (event.code === 'Space') {
-            capturedMessage = capturedMessage.slice(0, capturedPrompt) + ' ' + capturedMessage.slice(capturedPrompt);
-            capturedPrompt++;
+            capturedMessage = capturedMessage.slice(0, capturedInput) + ' ' + capturedMessage.slice(capturedInput);
+            capturedInput++;
          }
          else if (event.code === 'Backspace') {
-            const newPrompt = capturedPrompt - 1 >=0 ? capturedPrompt - 1 : 0;
-            capturedMessage = capturedMessage.slice(0, newPrompt) + capturedMessage.slice(capturedPrompt);
-            capturedPrompt = newPrompt;
+            const newPrompt = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
+            capturedMessage = capturedMessage.slice(0, newPrompt) + capturedMessage.slice(capturedInput);
+            capturedInput = newPrompt;
          }
          else if (event.code === 'Delete') {
-            capturedMessage = capturedMessage.slice(0, capturedPrompt) + capturedMessage.slice(capturedPrompt + 1);
+            capturedMessage = capturedMessage.slice(0, capturedInput) + capturedMessage.slice(capturedInput + 1);
          }
          else if (event.code === 'ArrowLeft') {
-            capturedPrompt = capturedPrompt - 1 >=0 ? capturedPrompt - 1 : 0;
+            capturedInput = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
          }
          else if (event.code === 'ArrowRight') {
-            capturedPrompt = capturedPrompt + 1 < capturedMessage.length ? capturedPrompt + 1 : capturedMessage.length;
+            capturedInput = capturedInput + 1 < capturedMessage.length ? capturedInput + 1 : capturedMessage.length;
          }
          else if (event.code === 'Home' || event.code === 'ArrowUp') {
-            capturedPrompt = 0;
+            capturedInput = 0;
          }
          else if (event.code === 'End' || event.code === 'ArrowDown') {
-            capturedPrompt = capturedMessage.length;
+            capturedInput = capturedMessage.length;
          }
          
          dispatch('message', {
@@ -43,17 +44,34 @@
       }
    };
 
-   $: if (!isOpen) {
+   $: if (!activateInput) {
       capturedMessage = '';
+      capturedInput = 0;
    }
 
 </script>
 <div id="output-content">
    {@html content}
+   <span id="cursor">{@html "&nbsp;".repeat(capturedInput)}{cursor}</span>
 </div>
 <style lang="scss">
    #output-content {
       padding: 1rem;
       color: white;
    }
+
+   #cursor {
+      position: absolute;
+      left: 0.7rem;
+      animation: cursor-animation 1s infinite;
+   }
+
+   @keyframes cursor-animation {
+      0% {
+         opacity: 1;
+      }
+      50% {
+         opacity: 0;
+      }
+   } 
 </style>

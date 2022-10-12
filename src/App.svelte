@@ -8,13 +8,17 @@
    import { intepretTreeNode } from "./lib/code/interpreter"
    
    let isRunning: boolean = false;
+   let activateOutputInput: boolean = false;
    let pseudocode: string;
    let lastPseudocode: string;
    let syntaxTree: object;
    let outputText: string;
+   let outputTextBeforeInput: string;
 
    function runCode(e) {
       isRunning = e.detail;
+      activateOutputInput = false;
+
       if (isRunning) {
          if (pseudocode !== lastPseudocode) {
             lastPseudocode = pseudocode;
@@ -25,19 +29,23 @@
          outputText = "<div class=\"hl-comments\">Program started ***</div>";
          for (const sentence of syntaxTree['body']) {
             if (sentence.name === 'ReadNode') {
-
+               activateOutputInput = true;
+               outputTextBeforeInput = outputText;
             }
-            else {
+            else if(!activateOutputInput) {
                const newNode = intepretTreeNode(sentence);
                outputText += newNode!.print;
             }
          }
-         outputText += "<div class=\"hl-comments\">Program end ***</div>";
+
+         if(!activateOutputInput) {
+            outputText += "<div class=\"hl-comments\">Program end ***</div>";
+         }
       }
    }
 
    function outputCapturedMessage(e) {
-      console.log(e.detail.text);
+      outputText = outputTextBeforeInput + "<span class=\"hl-read\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span>";
    }
 </script>
 
@@ -45,7 +53,7 @@
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" isOpen="{isRunning}" on:message={outputCapturedMessage} />
+      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={outputCapturedMessage} />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
