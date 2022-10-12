@@ -52,26 +52,44 @@
 </script>
 <div id="output-content">
    {@html content}
-   <span id="cursor">{@html "&nbsp;".repeat(capturedInput)}{cursor}</span>
+   {#if activateInput}
+      <div id="dynamic-wrapper">
+         <div class="dynamic-content hl-read">
+            {@html capturedMessage.replaceAll(' ', '&nbsp;') }
+         </div>
+         <div class="dynamic-content" id="cursor">
+            {@html "&nbsp;".repeat(capturedInput)}{cursor}
+         </div>
+      </div>
+   {/if}
 </div>
 <style lang="scss">
    #output-content {
+      width: calc(100% - 2rem);
+      min-height: calc(100% - 2rem);
       padding: 1rem;
       color: white;
-   }
+      word-wrap: break-word;
+      overflow-x: hidden;
 
-   #cursor {
-      position: absolute;
-      left: 0.7rem;
-      animation: cursor-animation 1s infinite;
+      #dynamic-wrapper {
+         position: relative;
+
+         .dynamic-content {
+            width: 100% !important;
+            position: absolute;
+         }
+
+         #cursor {
+            left: -.3rem;
+            animation: cursor-animation 1s infinite;
+         }
+      }
+
    }
 
    @keyframes cursor-animation {
-      0% {
-         opacity: 1;
-      }
-      50% {
-         opacity: 0;
-      }
+      0%  { opacity: 1; }
+      50% { opacity: 0; }
    } 
 </style>

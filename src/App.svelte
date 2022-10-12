@@ -44,16 +44,13 @@
       }
    }
 
-   function outputCapturedMessage(e) {
-      outputText = outputTextBeforeInput + "<span class=\"hl-read\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span>";
-   }
 </script>
 
 <Topbar on:runButtonClick={runCode} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={outputCapturedMessage} />
+      <Output content="{outputText}" activateInput="{activateOutputInput}" />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
