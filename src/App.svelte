@@ -45,14 +45,14 @@
    function runCode(e) {
       isRunning = e.detail;
       activateOutputInput = false;
-
+      
       if (isRunning) {
          if (pseudocode !== lastPseudocode) {
             lastPseudocode = pseudocode;
             const tokens = lexer(pseudocode);
             syntaxTree = parser(tokens);
-            runningSentences = syntaxTree['body'];
          }
+         runningSentences = [...syntaxTree['body']];
          startProgram();
          readSentences();
       }
