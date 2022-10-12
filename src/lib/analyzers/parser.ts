@@ -112,12 +112,15 @@ function expressionParser() : atype.Node {
 function declarationParser() : atype.DeclarationNode {
    nextIndex();
    const identifier = parserTokens[parserIndex];
-   nextIndex();
-   if (parserTokens[parserIndex].name !== 'AssignmentToken') {
-      throw new SyntaxError('Identifier must be followed by assignment operator.');
+   let value: any;
+   if (parserTokens[parserIndex+1].name === 'AssignmentToken') {
+      nextIndex();
+      nextIndex();
+      value = expressionParser();
    }
-   nextIndex();
-   let value = expressionParser();
+   else {
+      value = { name: 'StringNode', value: undefined };
+   }
 
    return { 
       name: 'DeclarationNode',
