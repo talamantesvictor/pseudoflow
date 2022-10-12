@@ -3,8 +3,8 @@
    import playButton  from '../../static/images/play_button.svg';
    import stopButton  from '../../static/images/stop_button.svg';
 
+   export let isRunning: boolean;
    let executeButtonImage: any = playButton;
-   let isRunning: boolean = false;
 
    const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {

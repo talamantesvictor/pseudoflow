@@ -15,6 +15,14 @@
    let runningSentences: atype.SentencesNode[];
    let outputText: string;
 
+   window.onkeydown = function (event) {
+      if (event.code === 'Escape') {
+         if (isRunning) {
+            activateOutputInput = false;
+            isRunning = false;
+         }
+      }
+   }
 
    function startProgram() {
       outputText = "<div class=\"hl-comments\">Program started ***</div>";
@@ -65,7 +73,7 @@
    }
 </script>
 
-<Topbar on:runButtonClick={runCode} />
+<Topbar on:runButtonClick={runCode} bind:isRunning={isRunning} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
