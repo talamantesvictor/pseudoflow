@@ -78,6 +78,7 @@
          .dynamic-content {
             width: 100% !important;
             position: absolute;
+            user-select: none;
          }
 
          #cursor {
