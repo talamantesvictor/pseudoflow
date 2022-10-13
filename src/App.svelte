@@ -16,20 +16,17 @@
    let outputText: string;
 
    window.onkeydown = function (event) {
-      if (event.code === 'Escape') {
-         if (isRunning) {
-            activateOutputInput = false;
-            isRunning = false;
+      if (event.code === 'F5') {
+         event.preventDefault();
+         if (!isRunning) {
+            isRunning = true;
+            runCode();
          }
       }
-   }
-
-   function startProgram() {
-      outputText = "<div class=\"hl-comments\">Program started ***</div>";
-   }
-
-   function endProgram() {
-      outputText += "<div class=\"hl-comments\">Program end ***</div>";
+      else if (event.code === 'Escape' && isRunning) {
+         activateOutputInput = false;
+         isRunning = false;
+      }
    }
 
    function readSentences() {
@@ -46,27 +43,31 @@
       }
 
       if(!activateOutputInput) {
-         endProgram();
+         outputText += "<div class=\"hl-comments\">Program end ***</div>";
       }
    }
 
-   function runCode(e) {
+   function runCode() {
+      if (pseudocode !== lastPseudocode) {
+         lastPseudocode = pseudocode;
+         const tokens = lexer(pseudocode);
+         syntaxTree = parser(tokens);
+      }
+      runningSentences = [...syntaxTree['body']];
+      outputText = "<div class=\"hl-comments\">Program started ***</div>";
+      readSentences();
+   }
+
+   function runButtonClick(e) {
       isRunning = e.detail;
       activateOutputInput = false;
       
       if (isRunning) {
-         if (pseudocode !== lastPseudocode) {
-            lastPseudocode = pseudocode;
-            const tokens = lexer(pseudocode);
-            syntaxTree = parser(tokens);
-         }
-         runningSentences = [...syntaxTree['body']];
-         startProgram();
-         readSentences();
+         runCode();
       }
    }
 
-   function outputCapturedMessage(e) {
+   function capturedMessage(e) {
       activateOutputInput = false;
       const readSentenceIndex = syntaxTree['body'].length - runningSentences.length - 1;
       runningSentences.unshift({ 
@@ -79,11 +80,11 @@
    }
 </script>
 
-<Topbar on:runButtonClick={runCode} bind:isRunning={isRunning} />
+<Topbar on:runButtonClick={runButtonClick} bind:isRunning={isRunning} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
    <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={outputCapturedMessage} />
+      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={capturedMessage} />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
