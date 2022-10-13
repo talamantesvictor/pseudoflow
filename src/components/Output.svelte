@@ -26,8 +26,7 @@
             event.code === 'Backquote'          || 
             event.code === 'BracketLeft'        || 
             event.code === 'Backslash'          || 
-            event.code === 'BracketRight'       || 
-            event.code === 'Quote'
+            event.code === 'BracketRight'
             ) {
                if (event.key !== 'Dead') {
                   capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
