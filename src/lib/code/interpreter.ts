@@ -4,6 +4,7 @@ let interpreterPrints: string;
 let interpreterVariables = new Array<Object>;
 let shouldReadInput: boolean;
 let runningSentences: atype.SentencesNode[];
+let lastNode: atype.SentencesNode;
 
 export function interpreter(sentences: atype.SentencesNode[] = runningSentences) {
    interpreterPrints = '';
@@ -11,20 +12,22 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
    runningSentences = [...sentences];
 
    while (runningSentences.length) {
-      const sentence = runningSentences.shift();
-      if (sentence.name === 'ReadNode') {
+      const node = runningSentences.shift();
+      lastNode = node;
+      if (node.name === 'ReadNode') {
          shouldReadInput = true;
          break;
       }
 
-      const newNode = intepretTreeNode(sentence);
+      const newNode = intepretTreeNode(node);
       interpreterPrints += newNode!.print;
    }
 
    return {
       prints: interpreterPrints, 
       interruptedForInput: shouldReadInput,
-      pendingSentences: runningSentences
+      pendingSentences: runningSentences,
+      lastNode: lastNode
    };
 }
 
@@ -56,6 +59,17 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { 
          print: eval(valueBuilder(node.value)) + '<br>' 
       };
+   }
+   else if (node.name === 'IfNode') {
+      const isTrueStatement = eval(valueBuilder(node.argument));
+
+      if (isTrueStatement) {
+         node.body.reverse().forEach(element => {
+            addSentence(element, 0);
+         });
+      }
+      
+      return { print: '' };
    }
 }
 

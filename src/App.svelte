@@ -14,6 +14,7 @@
    let syntaxTree: object;
    let outputText: string;
    let pendingSentencesToExecute: atype.SentencesNode[];
+   let lastExecutedSentence: atype.SentencesNode;
 
    window.onkeydown = function (event) {
       if (event.code === 'F5') {
@@ -43,6 +44,7 @@
       outputText += execution.prints;
       enableUserInput = execution.interruptedForInput;
       pendingSentencesToExecute = execution.pendingSentences;
+      lastExecutedSentence = execution.lastNode;
 
       if (!enableUserInput && !pendingSentencesToExecute.length) {
          outputText += "<div class=\"hl-comments\">Program end ***</div>";
@@ -56,11 +58,11 @@
    }
 
    function capturedMessage(e) {
-      const readSentenceIndex = syntaxTree['body'].length - pendingSentencesToExecute.length - 1;
+      const value = e.detail.text? e.detail.text : false;
       addSentence({ 
          name: 'AssignmentNode', 
-         identifier: syntaxTree['body'][readSentenceIndex].identifier.value, 
-         value: { name: 'StringNode', value:  e.detail.text as string } 
+         identifier: lastExecutedSentence['identifier'].value, 
+         value: { name: 'StringNode', value:  value as string } 
       }, 0)
 
       outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
