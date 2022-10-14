@@ -1,14 +1,14 @@
 <script lang="ts">
    import { createEventDispatcher } from 'svelte';
    export let content: string;
-   export let activateInput: boolean;
+   export let isInputPromptEnabled: boolean;
    const dispatch = createEventDispatcher();
    const cursor = '|';
    let capturedMessage: string = '';
    let capturedInput: number = 0;
 
    document.onkeydown = function (event) {
-      if (activateInput) {
+      if (isInputPromptEnabled) {
          if (
             event.code.indexOf('Key') == 0      || 
             event.code.indexOf('Digit') == 0    || 
@@ -58,24 +58,20 @@
             capturedInput = capturedMessage.length;
          }
          else if (event.code === 'Enter') {
-            activateInput = false;
             dispatch('message', {
                text: capturedMessage
             });
+            capturedMessage = '';
+            capturedInput = 0;
          }
          
       }
    };
 
-   $: if (!activateInput) {
-      capturedMessage = '';
-      capturedInput = 0;
-   }
-
 </script>
 <div id="output-content">
    {@html content}
-   {#if activateInput}
+   {#if isInputPromptEnabled}
       <div id="dynamic-wrapper">
          <div class="dynamic-content hl-read">
             {@html capturedMessage.replaceAll(' ', '&nbsp;') }

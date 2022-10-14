@@ -3,15 +3,15 @@
    import playButton  from '../../static/images/play_button.svg';
    import stopButton  from '../../static/images/stop_button.svg';
 
-   export let isRunning: boolean;
+   export let isProgramRunning: boolean;
    let executeButtonImage: any = playButton;
 
    const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {
-      topbarDispatcher("runButtonClick", !isRunning);
+      topbarDispatcher("runButtonClick", !isProgramRunning);
    };
 
-   $: if (isRunning) {
+   $: if (isProgramRunning) {
       executeButtonImage = stopButton;
    }
    else {
@@ -28,7 +28,7 @@
       </div>
       <div id="runbutton" on:click={runButtonClick}>
          <img src="{executeButtonImage}" alt="Play Button" />
-         {isRunning? "Stop" : "Run"}
+         {isProgramRunning? "Stop" : "Run"}
       </div>
    </div>
    <div class="right" />

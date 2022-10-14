@@ -5,86 +5,74 @@
    import Output from "./components/Output.svelte";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
-   import { intepretTreeNode } from "./lib/code/interpreter"
+   import { interpreter, addSentence } from "./lib/code/interpreter"
    
-   let isRunning: boolean = false;
-   let activateOutputInput: boolean = false;
+   let isProgramRunning: boolean = false;
+   let enableUserInput: boolean;
    let pseudocode: string;
    let lastPseudocode: string;
    let syntaxTree: object;
-   let runningSentences: atype.SentencesNode[];
    let outputText: string;
+   let pendingSentencesToExecute: atype.SentencesNode[];
 
    window.onkeydown = function (event) {
       if (event.code === 'F5') {
          event.preventDefault();
-         if (!isRunning) {
-            isRunning = true;
-            runCode();
+         if (!isProgramRunning) {
+            isProgramRunning = true;
+            prepare();
          }
-      }
-      else if (event.code === 'Escape' && isRunning) {
-         activateOutputInput = false;
-         isRunning = false;
+      } else if (event.code === 'Escape' && isProgramRunning) {
+         enableUserInput = false;
+         isProgramRunning = false;
       }
    }
 
-   function readSentences() {
-      while (runningSentences.length) {
-         const sentence = runningSentences.shift();
-         if (sentence.name === 'ReadNode') {
-            activateOutputInput = true;
-            break;
-         }
-         else if(!activateOutputInput) {
-            const newNode = intepretTreeNode(sentence);
-            outputText += newNode!.print;
-         }
-      }
-
-      if(!activateOutputInput) {
-         outputText += "<div class=\"hl-comments\">Program end ***</div>";
-      }
-   }
-
-   function runCode() {
+   function prepare() {
       if (pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
          const tokens = lexer(pseudocode);
          syntaxTree = parser(tokens);
       }
-      runningSentences = [...syntaxTree['body']];
       outputText = "<div class=\"hl-comments\">Program started ***</div>";
-      readSentences();
+      execute(syntaxTree['body']);
+   }
+
+   function execute(sentences?: atype.SentencesNode[]) {
+      const execution = interpreter(sentences);
+      outputText += execution.prints;
+      enableUserInput = execution.interruptedForInput;
+      pendingSentencesToExecute = execution.pendingSentences;
+
+      if (!enableUserInput && !pendingSentencesToExecute.length) {
+         outputText += "<div class=\"hl-comments\">Program end ***</div>";
+      }
    }
 
    function runButtonClick(e) {
-      isRunning = e.detail;
-      activateOutputInput = false;
-      
-      if (isRunning) {
-         runCode();
+      if (isProgramRunning = e.detail) {
+         prepare();
       }
    }
 
    function capturedMessage(e) {
-      activateOutputInput = false;
-      const readSentenceIndex = syntaxTree['body'].length - runningSentences.length - 1;
-      runningSentences.unshift({ 
+      const readSentenceIndex = syntaxTree['body'].length - pendingSentencesToExecute.length - 1;
+      addSentence({ 
          name: 'AssignmentNode', 
          identifier: syntaxTree['body'][readSentenceIndex].identifier.value, 
          value: { name: 'StringNode', value:  e.detail.text as string } 
-      });
+      }, 0)
+
       outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
-      readSentences();
+      execute();
    }
 </script>
 
-<Topbar on:runButtonClick={runButtonClick} bind:isRunning={isRunning} />
+<Topbar on:runButtonClick={runButtonClick} bind:isProgramRunning={isProgramRunning} />
 <div id="wrapper">
    <div id="flowchart-area"></div>
-   <div id="output-area" class:active="{isRunning}">
-      <Output content="{outputText}" activateInput="{activateOutputInput}" on:message={capturedMessage} />
+   <div id="output-area" class:active="{isProgramRunning}">
+      <Output content="{outputText}" isInputPromptEnabled="{enableUserInput}" on:message={capturedMessage} />
    </div>
    <div id="text-area">
       <Editor bind:editorText={pseudocode} />
