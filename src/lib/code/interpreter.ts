@@ -1,7 +1,7 @@
 import type * as atype from "../analyzers/atypes"
 
 let interpreterPrints: string;
-let interpreterVariables = new Array<Object>;
+let interpreterVariables: Array<Object>;
 let shouldReadInput: boolean;
 let runningSentences: atype.SentencesNode[];
 let lastNode: atype.SentencesNode;
@@ -29,6 +29,13 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
       pendingSentences: runningSentences,
       lastNode: lastNode
    };
+}
+
+export function interpreterReset() {
+   interpreterPrints = '';
+   shouldReadInput = false;
+   interpreterVariables = [];
+   runningSentences = [];
 }
 
 export function addSentence(sentence: atype.SentencesNode, index: number) {
@@ -64,7 +71,7 @@ function intepretTreeNode(node: atype.SentencesNode) {
       const isTrueStatement = eval(valueBuilder(node.argument));
 
       if (isTrueStatement) {
-         node.body.reverse().forEach(element => {
+         [...node.body].reverse().forEach(element => {
             addSentence(element, 0);
          });
       }

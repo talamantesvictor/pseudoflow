@@ -5,7 +5,7 @@
    import Output from "./components/Output.svelte";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
-   import { interpreter, addSentence } from "./lib/code/interpreter"
+   import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter"
    
    let isProgramRunning: boolean = false;
    let enableUserInput: boolean;
@@ -36,6 +36,7 @@
          syntaxTree = parser(tokens);
       }
       outputText = "<div class=\"hl-comments\">Program started ***</div>";
+      interpreterReset();
       execute(syntaxTree['body']);
    }
 
@@ -59,6 +60,7 @@
 
    function capturedMessage(e) {
       const value = e.detail.text? e.detail.text : false;
+      enableUserInput = false;
       addSentence({ 
          name: 'AssignmentNode', 
          identifier: lastExecutedSentence['identifier'].value, 
