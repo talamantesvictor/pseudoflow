@@ -71,11 +71,26 @@ function intepretTreeNode(node: atype.SentencesNode) {
       const isTrueStatement = eval(valueBuilder(node.argument));
 
       if (isTrueStatement) {
-         [...node.body].reverse().forEach(element => {
-            addSentence(element, 0);
+         [...node.body].reverse().forEach(bodyNode => {
+            addSentence(bodyNode, 0);
          });
       }
       
+      return { print: '' };
+   }
+   else if (node.name === 'SwitchNode') {
+      const switchValue = eval(valueBuilder(node.argument));
+
+      node.cases.forEach(caseElement => {
+         const caseValue = eval(valueBuilder(caseElement.argument));
+
+         if (switchValue === caseValue) {
+            [...caseElement.body].reverse().forEach(bodyNode => {
+               addSentence(bodyNode, 0);
+            });
+         }
+      });
+
       return { print: '' };
    }
 }
