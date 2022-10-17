@@ -93,6 +93,47 @@ function intepretTreeNode(node: atype.SentencesNode) {
 
       return { print: '' };
    }
+   else if (node.name === 'ForNode') {
+      console.log(node.to);
+      const declarationValue = eval(valueBuilder(node.declaration.value));
+      const toValue = eval(valueBuilder(node.to));
+      const stepsValue = eval(valueBuilder(node.steps));
+
+      console.log('declarationValue', declarationValue);
+      console.log('toValue', toValue);
+
+      if (declarationValue <= toValue) {
+         addSentence({
+            body: node.body,
+            declaration: {
+               name: 'DeclarationNode',
+               identifier: node.declaration.identifier,
+               value: {
+                  name: 'NumericNode',
+                  value: declarationValue + stepsValue
+               }
+            },
+            name: node.name,
+            steps: {name: 'NumericNode', value: stepsValue},
+            to: {name: 'NumericNode', value: toValue}
+         } as atype.ForNode, 0);
+
+         [...node.body].reverse().forEach(bodyNode => {
+            addSentence(bodyNode, 0);
+         });
+
+         addSentence({
+            name: 'DeclarationNode',
+            identifier: node.declaration.identifier,
+            value: {
+               name: 'NumericNode',
+               value: declarationValue
+            }
+         } as atype.DeclarationNode, 0);
+      } 
+
+      return { print: '' };
+   }
 }
 
 function groupBuilder(groupNode: atype.GroupNode) {
