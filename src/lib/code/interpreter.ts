@@ -55,8 +55,8 @@ function intepretTreeNode(node: atype.SentencesNode) {
    else if (node.name === 'AssignmentNode') {
       for (let index = 0; index < interpreterVariables.length; index++) {
          if (interpreterVariables[index]['identifier'] === node.identifier) {
-            const value = valueBuilder(node.value);
-            interpreterVariables[index]['value'] = isNaN(value) ? '"' + value + '"' : value;
+            const value = eval(valueBuilder(node.value));
+            interpreterVariables[index]['value'] = value;
          }
       }
 
@@ -94,13 +94,9 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { print: '' };
    }
    else if (node.name === 'ForNode') {
-      console.log(node.to);
       const declarationValue = eval(valueBuilder(node.declaration.value));
       const toValue = eval(valueBuilder(node.to));
       const stepsValue = eval(valueBuilder(node.steps));
-
-      console.log('declarationValue', declarationValue);
-      console.log('toValue', toValue);
 
       if (declarationValue <= toValue) {
          addSentence({
@@ -131,6 +127,23 @@ function intepretTreeNode(node: atype.SentencesNode) {
             }
          } as atype.DeclarationNode, 0);
       } 
+
+      return { print: '' };
+   }
+   else if (node.name === 'WhileNode') {
+      const argumentValue = eval(valueBuilder(node.argument));
+
+      if (argumentValue) {
+         addSentence({
+            argument: node.argument,
+            body: node.body,
+            name: node.name
+         } as atype.WhileNode, 0);
+   
+         [...node.body].reverse().forEach(bodyNode => {
+            addSentence(bodyNode, 0);
+         });
+      }
 
       return { print: '' };
    }
