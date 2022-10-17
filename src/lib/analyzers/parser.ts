@@ -329,6 +329,7 @@ function dowhileParser() : atype.DowhileNode {
    return {
       name: 'DowhileNode',
       argument: expression,
-      body: dowhileSentences
+      body: dowhileSentences,
+      do: true
    }
 }

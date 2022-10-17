@@ -147,6 +147,24 @@ function intepretTreeNode(node: atype.SentencesNode) {
 
       return { print: '' };
    }
+   else if (node.name === 'DowhileNode') {
+      const argumentValue = eval(valueBuilder(node.argument));
+
+      if (argumentValue || node.do) {
+         addSentence({
+            argument: node.argument,
+            body: node.body,
+            name: node.name,
+            do: false
+         } as atype.DowhileNode, 0);
+   
+         [...node.body].reverse().forEach(bodyNode => {
+            addSentence(bodyNode, 0);
+         });
+      }
+
+      return { print: '' };
+   }
 }
 
 function groupBuilder(groupNode: atype.GroupNode) {
