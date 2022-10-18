@@ -8,10 +8,10 @@
 .hl-case, .hl-endcase, .hl-forto, .hl-forstep, .hl-and, .hl-or {color: #ff7070}
 .hl-print {color: #24a7ff}
 .hl-var, .hl-read {color: #00ff95}
-.hl-if, .hl-else, .hl-endif {color: #ffd23e}
-.hl-switch, .hl-endswitch {color: #ffd23e}
-.hl-for, .hl-endfor {color: #ED49D3}
-.hl-while, .hl-endwhile {color: #ED49D3}
-.hl-dowhile, .hl-enddowhile {color: #ED49D3}
+.hl-if, .hl-else, .hl-endif, .hl-switch, .hl-endswitch {color: #ffd23e}
+.hl-for, .hl-endfor {color: #ff66e5}
+.hl-while, .hl-endwhile {color: #ff66e5}
+.hl-dowhile, .hl-enddowhile {color: #ff66e5}
 .hl-activerow {border-color: #525572}
 .hl-comments {color: #7B89B8}
+.hl-string {color: #fdabab}

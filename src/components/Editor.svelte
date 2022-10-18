@@ -1,7 +1,7 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
    import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
-   import { getBeautifiedCode } from "../lib/code/beautifier";
+   import { beautifier } from "../lib/code/beautifier";
    import { _reservedWords } from "../lib/stores";
    import { onMount } from "svelte";
 
@@ -41,10 +41,10 @@
       }
    }
 
-   function beautifier() {
+   function beautifyCode() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      coloredElement.innerHTML = getBeautifiedCode(editorElement.innerHTML, $_reservedWords, activeRowNumber);
+      coloredElement.innerHTML = beautifier(editorElement.innerHTML, $_reservedWords, activeRowNumber);
       editorText = editorElement.innerText;
    }
 
@@ -70,20 +70,20 @@
 
    function keyUpController(e) {
       if (e.key === 'Escape' || e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'ArrowLeft' || (e.ctrlKey && e.key === 'a')) {
-         beautifier();
+         beautifyCode();
       }
    }
 
    function mouseEvent() {
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
       if (activeRowNumber !== lastRowNumber) {
-         beautifier();
+         beautifyCode();
       }
    }
 
    function focusOnEditableArea() {
       editorElement.focus();
-      beautifier();
+      beautifyCode();
    }
 
    onMount(() => {
@@ -105,11 +105,11 @@
             id="editor-editable-area"
             contenteditable="true"
             spellcheck="false"
-            on:input="{beautifier}"
+            on:input="{beautifyCode}"
             on:keydown="{keyDownController}"
             on:keyup="{keyUpController}"
             on:mousemove="{mouseEvent}"
-            on:blur="{beautifier}"
+            on:blur="{beautifyCode}"
          />
          <div id="editor-colored-area"></div>
       </div>
