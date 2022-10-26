@@ -8,7 +8,8 @@
 
    const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {
-      topbarDispatcher("runButtonClick", !isProgramRunning);
+      isProgramRunning = !isProgramRunning;
+      topbarDispatcher("runButtonClick", isProgramRunning);
    };
 
    $: if (isProgramRunning) {
