@@ -133,6 +133,7 @@ function assignmentParser() : atype.AssignmentNode {
    const identifier = parserTokens[parserIndex];
    nextIndex();
    if (parserTokens[parserIndex].name !== 'AssignmentToken') {
+      console.log(parserTokens[parserIndex]);
       throw new SyntaxError('Identifier must be followed by assignment operator.');
    }
    nextIndex();
@@ -178,15 +179,30 @@ function ifParser() : atype.IfNode {
    }
    nextIndex();
    let body = new Array<atype.SentencesNode>;
+   let alternative = new Array<atype.SentencesNode>;
+   let storeSentencesInBody = true;
    while (parserTokens[parserIndex].name !== 'CloseIfToken') {
-      body.push(parse());
+
+      if (parserTokens[parserIndex].name === 'OpenIfElseToken') {
+         storeSentencesInBody = false;
+      }
+      else {
+         if (storeSentencesInBody) {
+            body.push(parse());
+         }
+         else {
+            alternative.push(parse());
+         }
+      }
+
       nextIndex();
    }
 
    return {
       name: 'IfNode',
       argument: expression,
-      body: body
+      body: body,
+      alternative: alternative
    }
 }
 

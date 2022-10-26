@@ -15,6 +15,7 @@ const tokenStringMap: Array<atype.Token> = [
    { name: 'OpenParenToken',           rule: /^\($/g },
    { name: 'CloseParenToken',          rule: /^\)$/g },
    { name: 'OpenIfToken',              rule: new RegExp('^' + reservedWords.CODE_IF + '$', 'g') },
+   { name: 'OpenIfElseToken',          rule: new RegExp('^' + reservedWords.CODE_ELSE + '$', 'g') },
    { name: 'CloseIfToken',             rule: new RegExp('^' + reservedWords.CODE_ENDIF + '$', 'g') },
    { name: 'OpenSwitchToken',          rule: new RegExp('^' + reservedWords.CODE_SWITCH + '$', 'g') },
    { name: 'CloseSwitchToken',         rule: new RegExp('^' + reservedWords.CODE_ENDSWITCH + '$', 'g') },

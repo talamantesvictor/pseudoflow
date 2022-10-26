@@ -9,6 +9,7 @@ export type AssignmentToken =          { name: 'AssignmentToken', rule?: RegExp,
 export type OpenParenToken =           { name: 'OpenParenToken', rule?: RegExp, value?: string };
 export type CloseParenToken =          { name: 'CloseParenToken', rule?: RegExp, value?: string };
 export type OpenIfToken =              { name: 'OpenIfToken', rule?: RegExp, value?: string };
+export type OpenIfElseToken =          { name: 'OpenIfElseToken', rule?: RegExp, value?: string };
 export type CloseIfToken =             { name: 'CloseIfToken', rule?: RegExp, value?: string };
 export type OpenSwitchToken =          { name: 'OpenSwitchToken', rule?: RegExp, value?: string };
 export type CloseSwitchToken =         { name: 'CloseSwitchToken', rule?: RegExp, value?: string };
@@ -52,6 +53,7 @@ export type Token =
    OpenParenToken             | 
    CloseParenToken            | 
    OpenIfToken                | 
+   OpenIfElseToken            | 
    CloseIfToken               | 
    OpenSwitchToken            | 
    CloseSwitchToken           | 
@@ -79,7 +81,7 @@ export type DeclarationNode =          { name: 'DeclarationNode', identifier: st
 export type AssignmentNode =           { name: 'AssignmentNode', identifier: string, value: Node };
 export type PrintNode =                { name: 'PrintNode', value: Node };
 export type ReadNode =                 { name: 'ReadNode', identifier: IdentifierToken };
-export type IfNode =                   { name: 'IfNode', argument: Node, body: SentencesNode[] };
+export type IfNode =                   { name: 'IfNode', argument: Node, body: SentencesNode[], alternative: SentencesNode[] };
 export type SwitchNode =               { name: 'SwitchNode', argument: Node, cases: CaseNode[] };
 export type CaseNode =                 { name: 'CaseNode', argument: Node, body: SentencesNode[]};
 export type ForNode =                  { name: 'ForNode', declaration: DeclarationNode, to: Node, steps: Node, body: SentencesNode[] };

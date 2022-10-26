@@ -75,6 +75,11 @@ function intepretTreeNode(node: atype.SentencesNode) {
             addSentence(bodyNode, 0);
          });
       }
+      else {
+         [...node.alternative].reverse().forEach(bodyNode => {
+            addSentence(bodyNode, 0);
+         });
+      }
       
       return { print: '' };
    }
