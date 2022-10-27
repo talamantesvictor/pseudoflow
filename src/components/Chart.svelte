@@ -1,5 +1,6 @@
 <script lang="ts">
    import { onMount } from "svelte";
+   import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, arrowSymbol } from "../lib/chart/symbols"
    import Konva from 'konva';
 
    let konvaContainer, konvaStage, konvaSize;
@@ -17,6 +18,10 @@
          height: konvaSize.height,
       });
 
+      chartLayer.add(terminatorSymbol(konvaSize.width));
+      chartLayer.add(taskSymbol(konvaSize.width));
+      chartLayer.add(decisionSymbol(konvaSize.width));
+      chartLayer.add(dataSymbol(konvaSize.width));
       konvaStage.add(chartLayer);
    });
 
