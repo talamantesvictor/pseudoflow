@@ -3,6 +3,7 @@
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
    import Output from "./components/Output.svelte";
+   import Chart from "./components/Chart.svelte";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter"
@@ -74,7 +75,9 @@
 
 <Topbar on:runButtonClick={runButtonClick} bind:isProgramRunning={isProgramRunning} />
 <div id="wrapper">
-   <div id="flowchart-area"></div>
+   <div id="flowchart-area">
+      <Chart></Chart>
+   </div>
    <div id="output-area" class:active="{isProgramRunning}">
       <Output content="{outputText}" isInputPromptEnabled="{enableUserInput}" on:message={capturedMessage} />
    </div>
