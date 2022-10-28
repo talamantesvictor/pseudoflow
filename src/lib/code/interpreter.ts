@@ -1,4 +1,4 @@
-import type * as atype from "../analyzers/atypes"
+import type * as atype from "../analyzers/atypes";
 
 let interpreterPrints: string;
 let interpreterVariables: Array<Object>;
