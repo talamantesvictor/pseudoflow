@@ -12,7 +12,7 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
    runningSentences = [...sentences];
 
    while (runningSentences.length) {
-      const node = runningSentences.shift();
+      const node = runningSentences.shift()!;
       lastNode = node;
       if (node.name === 'ReadNode') {
          shouldReadInput = true;
