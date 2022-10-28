@@ -6,23 +6,28 @@
    import Chart from "./components/Chart.svelte";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
-   import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter"
+   import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
    
    let isProgramRunning: boolean = false;
    let enableUserInput: boolean;
    let pseudocode: string;
    let lastPseudocode: string;
-   let syntaxTree: object;
+   let syntaxTree: object = { body: null };
    let outputText: string;
    let pendingSentencesToExecute: atype.SentencesNode[];
    let lastExecutedSentence: atype.SentencesNode;
 
+   let timeoutToParse: any;
+
    window.onkeydown = function (event) {
+      clearTimeout(timeoutToParse);
+      timeoutToParse = setTimeout(generateTree, 350);
+
       if (event.code === 'F5') {
          event.preventDefault();
          if (!isProgramRunning) {
             isProgramRunning = true;
-            prepare();
+            prepareExecution();
          }
       } else if (event.code === 'Escape' && isProgramRunning) {
          enableUserInput = false;
@@ -30,12 +35,16 @@
       }
    }
 
-   function prepare() {
+   function generateTree() {
       if (pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
          const tokens = lexer(pseudocode);
          syntaxTree = parser(tokens);
       }
+   }
+
+   function prepareExecution() {
+      generateTree()
       outputText = "<div class=\"hl-comments\">Program started ***</div>";
       interpreterReset();
       execute(syntaxTree['body']);
@@ -55,7 +64,7 @@
 
    function runButtonClick(e) {
       if (isProgramRunning = e.detail) {
-         prepare();
+         prepareExecution();
       }
    }
 
@@ -74,9 +83,9 @@
 </script>
 
 <Topbar on:runButtonClick={runButtonClick} bind:isProgramRunning={isProgramRunning} />
-<div id="wrapper">
+<div id="wrapper" on:mousedown={generateTree}>
    <div id="flowchart-area">
-      <Chart></Chart>
+      <Chart sintaxTree="{syntaxTree['body']}"></Chart>
    </div>
    <div id="output-area" class:active="{isProgramRunning}">
       <Output content="{outputText}" isInputPromptEnabled="{enableUserInput}" on:message={capturedMessage} />

@@ -1,10 +1,20 @@
 <script lang="ts">
    import { onMount } from "svelte";
-   import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, arrowSymbol } from "../lib/chart/symbols"
    import Konva from 'konva';
+   import { drawer } from "../lib/chart/drawer"
+   import type { SentencesNode } from "src/lib/analyzers/atypes";
 
+   export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage, konvaSize;
    const chartLayer = new Konva.Layer();
+   
+   $: {
+      let vspace = drawer(sintaxTree || [], chartLayer, konvaSize?.width);
+
+      if (konvaStage) {
+         konvaStage.height(vspace);
+      }
+   }
 
    onMount(() => { 
       konvaSize = {
@@ -18,10 +28,6 @@
          height: konvaSize.height,
       });
 
-      chartLayer.add(terminatorSymbol(konvaSize.width));
-      chartLayer.add(taskSymbol(konvaSize.width));
-      chartLayer.add(decisionSymbol(konvaSize.width));
-      chartLayer.add(dataSymbol(konvaSize.width));
       konvaStage.add(chartLayer);
    });
 
