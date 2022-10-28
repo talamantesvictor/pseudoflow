@@ -1,9 +1,9 @@
 import Konva from 'konva';
 
-export function terminatorSymbol(baseSize: number) {
+export function terminatorSymbol(baseSize: number, vspace: number) {
    return new Konva.Rect({
       x: baseSize * 0.4,
-      y: 20,
+      y: vspace,
       width: baseSize * 0.2,
       height: baseSize * 0.1,
       fill: '#3f4254',
@@ -12,10 +12,10 @@ export function terminatorSymbol(baseSize: number) {
    });
 }
 
-export function taskSymbol(baseSize: number) {
+export function taskSymbol(baseSize: number, vspace: number) {
    return new Konva.Rect({
       x: baseSize * 0.25,
-      y: 100,
+      y: vspace,
       width: baseSize * 0.5,
       height: baseSize * 0.15,
       fill: '#00ff95',
@@ -23,36 +23,36 @@ export function taskSymbol(baseSize: number) {
    });
 }
 
-export function decisionSymbol(baseSize: number) {
+export function decisionSymbol(baseSize: number, vspace: number) {
    return new Konva.Line({
       points: [
-         baseSize * 0.5,  200, 
-         baseSize * 0.75, 200 + baseSize * 0.2,
-         baseSize * 0.5,  200 + baseSize * 0.4,
-         baseSize * 0.25, 200 + baseSize * 0.2,
+         baseSize * 0.5,  vspace, 
+         baseSize * 0.75, vspace + baseSize * 0.2,
+         baseSize * 0.5,  vspace + baseSize * 0.4,
+         baseSize * 0.25, vspace + baseSize * 0.2,
       ],
       fill: '#f1c232',
       closed: true,
    });
 }
 
-export function dataSymbol(baseSize: number) {
+export function dataSymbol(baseSize: number, vspace: number) {
    return new Konva.Line({
       points: [
-         baseSize * 0.3,  550, 
-         baseSize * 0.75, 550, 
-         baseSize * 0.7,  550 + baseSize * 0.15,
-         baseSize * 0.25, 550 + baseSize * 0.15
+         baseSize * 0.3,  vspace, 
+         baseSize * 0.75, vspace, 
+         baseSize * 0.7,  vspace + baseSize * 0.15,
+         baseSize * 0.25, vspace + baseSize * 0.15
       ],
       fill: '#00D2FF',
       closed: true,
    });
 }
 
-export function arrowSymbol(baseSize: number) {
-   new Konva.Arrow({
+export function arrowSymbol(baseSize: number, vspace: number) {
+   return new Konva.Arrow({
       x: baseSize * 0.5,
-      y: 400 + baseSize * 0.1,
+      y: vspace,
       points: [0, 0, baseSize * 0.4, 0, baseSize * 0.4, 50],
       pointerLength: 10,
       pointerWidth: 10,
