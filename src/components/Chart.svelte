@@ -1,7 +1,7 @@
 <script lang="ts">
    import { onMount } from "svelte";
    import Konva from 'konva';
-   import { drawer } from "../lib/chart/drawer"
+   import { grapher } from "../lib/chart/grapher"
    import type { SentencesNode } from "src/lib/analyzers/atypes";
 
    export let sintaxTree: SentencesNode[];
@@ -9,7 +9,7 @@
    const chartLayer = new Konva.Layer();
    
    $: {
-      let vspace = drawer(sintaxTree || [], chartLayer, konvaSize?.width);
+      let vspace = grapher(sintaxTree || [], chartLayer, konvaSize?.width);
 
       if (konvaStage) {
          konvaStage.height(vspace);

@@ -7,7 +7,7 @@ let vspace: number;
 let spaceBetween: number = 30;
 
 // Draws the flow chart symbols and returns the vertical space used
-export function drawer(sentences: atype.SentencesNode[], layer: Konva.Layer, baseSize: number): number {
+export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, baseSize: number): number {
    layer.removeChildren();
    vspace = spaceBetween;
    runningSentences = [...sentences];
