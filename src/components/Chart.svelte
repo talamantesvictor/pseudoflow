@@ -6,14 +6,20 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage, konvaSize;
+   let konvaScale = 1;
    const chartLayer = new Konva.Layer();
    
    $: {
       let vspace = grapher(sintaxTree || [], chartLayer, konvaSize?.width);
 
       if (konvaStage) {
-         konvaStage.height(vspace);
+         konvaStage.height(vspace * konvaScale);
       }
+
+      chartLayer.scale({
+         x: konvaScale, 
+         y: konvaScale
+      });
    }
 
    onMount(() => { 
