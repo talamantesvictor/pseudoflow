@@ -82,7 +82,7 @@
          margin: 0.8rem auto;
          padding: 0;
          li {
-            color: #878992;
+            color: rgba(255, 255, 255, 0.5);
             display: inline-block;
             padding: 0.3rem 0.9rem;
             cursor: pointer;
