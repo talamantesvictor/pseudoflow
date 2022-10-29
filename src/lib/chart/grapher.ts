@@ -4,7 +4,7 @@ import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, arrowSymbol }
 
 let runningSentences: atype.SentencesNode[];
 let spaceKeeper: {x: number, y: number};
-let spaceBetween: number = 40;
+let spaceBetween: number = 50;
 let konvaLayer: Konva.Layer;
 let commonSize: number;
 
@@ -32,15 +32,22 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
    return spaceKeeper.y + spaceBetween + baseSize * 0.1;
 }
 
-function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}) {
+function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, shouldCenterVertically: boolean = false) {
+   const verticalSpaceToCenter = shouldCenterVertically? commonSize * 0.075 : 0;
    let addVerticalSpace = 0;
 
    if (node.name === 'PrintNode' || node.name === 'ReadNode') {
-      konvaLayer.add(dataSymbol(commonSize, space));
+      konvaLayer.add(dataSymbol(commonSize, {
+         x: space.x,
+         y: space.y + verticalSpaceToCenter
+      }));
       addVerticalSpace = spaceBetween + commonSize * 0.15;
    }
    else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
-      konvaLayer.add(taskSymbol(commonSize, space));
+      konvaLayer.add(taskSymbol(commonSize, {
+         x: space.x,
+         y: space.y + verticalSpaceToCenter
+      }));
       addVerticalSpace = spaceBetween + commonSize * 0.15;
    }
    else if (node.name === 'IfNode') {
@@ -63,8 +70,8 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}) {
             const alternativeNode = alternativeSentences.shift()!;
             addAlternateSpace += addTreeNode(alternativeNode, {
                x: space.x + commonSize * 0.7,
-               y: space.y + commonSize * 0.075 + addAlternateSpace
-            });
+               y: space.y + addAlternateSpace
+            }, true);
          }
          if (addAlternateSpace > addVerticalSpace) {
             addVerticalSpace = addAlternateSpace + spaceBetween;
@@ -89,8 +96,8 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}) {
             const caseNode = caseSentences.shift()!;
             addCaseSpace += addTreeNode(caseNode, {
                x: space.x + commonSize * 0.7,
-               y: space.y + commonSize * 0.075 + addCaseSpace
-            });
+               y: space.y + addCaseSpace
+            }, true);
          }
          if (addCaseSpace > addVerticalSpace) {
             addVerticalSpace = addCaseSpace + spaceBetween;
