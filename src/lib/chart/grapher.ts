@@ -33,6 +33,32 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
             layer.add(taskSymbol(baseSize, space));
             space.y += spaceBetween + baseSize * 0.15;
          }
+         else if (node.name === 'SwitchNode') {
+            layer.add(taskSymbol(baseSize, space));
+            space.y += spaceBetween + baseSize * 0.15;
+            node.cases.forEach(caseElement => {
+               layer.add(decisionSymbol(baseSize, space));
+               space.y += spaceBetween + baseSize * 0.3;
+            });
+         }
+         else if (node.name === 'ForNode') {
+            layer.add(decisionSymbol(baseSize, space));
+            space.x += baseSize * 0.6;
+            space.y += baseSize * 0.075;
+            layer.add(taskSymbol(baseSize, space));
+            space.y += spaceBetween * 2 + baseSize * 0.15;
+         }
+         else if (node.name === 'WhileNode') {
+            layer.add(decisionSymbol(baseSize, space));
+            space.y += spaceBetween + baseSize * 0.3;
+         }
+         else if (node.name === 'DowhileNode') {
+            // node body sentences should be first
+            layer.add(decisionSymbol(baseSize, space));
+            space.y += spaceBetween + baseSize * 0.3;
+         }
+
+         space.x = 0;
       }
    
       layer.add(terminatorSymbol(baseSize, space));
