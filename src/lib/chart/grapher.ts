@@ -107,9 +107,30 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
    else if (node.name === 'ForNode') {
       konvaLayer.add(decisionSymbol(commonSize, space));
       space.x += commonSize * 0.7;
-      addVerticalSpace += commonSize * 0.075;
-      konvaLayer.add(taskSymbol(commonSize, space));
       addVerticalSpace += spaceBetween * 2 + commonSize * 0.15;
+
+      let addForSpace = commonSize * 0.075
+
+      konvaLayer.add(taskSymbol(commonSize, {
+         x: space.x,
+         y: space.y + addForSpace
+      }));
+
+      addForSpace = commonSize * 0.15;
+
+      let forSentences = [...node.body];
+
+      while(forSentences.length) {
+         const caseNode = forSentences.shift()!;
+         addForSpace += addTreeNode(caseNode, {
+            x: space.x,
+            y: space.y + spaceBetween + addForSpace
+         }, true);
+      }
+      if (addForSpace > addVerticalSpace) {
+         addVerticalSpace = addForSpace + spaceBetween;
+      }
+
    }
    else if (node.name === 'WhileNode') {
       konvaLayer.add(decisionSymbol(commonSize, space));
