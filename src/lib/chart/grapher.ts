@@ -5,6 +5,8 @@ import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, arrowSymbol }
 let runningSentences: atype.SentencesNode[];
 let space: {x: number, y: number};
 let spaceBetween: number = 30;
+let konvaLayer: Konva.Layer;
+let commonSize: number;
 
 // Draws the flow chart symbols and returns the vertical space used
 export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, baseSize: number): number {
@@ -12,6 +14,8 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
    space = {x: 0, y: 0};
    space.y = spaceBetween;
    runningSentences = [...sentences];
+   konvaLayer = layer;
+   commonSize = baseSize;
    let shouldDraw : boolean = runningSentences.length > 0;
 
    if (shouldDraw) {
@@ -20,44 +24,7 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
    
       while (runningSentences.length) {
          const node = runningSentences.shift()!;
-   
-         if (node.name === 'PrintNode' || node.name === 'ReadNode') {
-            layer.add(dataSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.15;
-         }
-         else if (node.name === 'IfNode') {
-            layer.add(decisionSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.3;
-         }
-         else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
-            layer.add(taskSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.15;
-         }
-         else if (node.name === 'SwitchNode') {
-            layer.add(taskSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.15;
-            node.cases.forEach(caseElement => {
-               layer.add(decisionSymbol(baseSize, space));
-               space.y += spaceBetween + baseSize * 0.3;
-            });
-         }
-         else if (node.name === 'ForNode') {
-            layer.add(decisionSymbol(baseSize, space));
-            space.x += baseSize * 0.6;
-            space.y += baseSize * 0.075;
-            layer.add(taskSymbol(baseSize, space));
-            space.y += spaceBetween * 2 + baseSize * 0.15;
-         }
-         else if (node.name === 'WhileNode') {
-            layer.add(decisionSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.3;
-         }
-         else if (node.name === 'DowhileNode') {
-            // node body sentences should be first
-            layer.add(decisionSymbol(baseSize, space));
-            space.y += spaceBetween + baseSize * 0.3;
-         }
-
+         addTreeNode(node);
          space.x = 0;
       }
    
@@ -65,4 +32,44 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
    }
 
    return space.y + spaceBetween + baseSize * 0.1;
+}
+
+function addTreeNode(node: atype.SentencesNode) {
+   if (node.name === 'PrintNode' || node.name === 'ReadNode') {
+      konvaLayer.add(dataSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.15;
+   }
+   else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
+      konvaLayer.add(taskSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.15;
+   }
+   else if (node.name === 'IfNode') {
+      konvaLayer.add(decisionSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.3;
+   }
+   else if (node.name === 'SwitchNode') {
+      konvaLayer.add(taskSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.15;
+      node.cases.forEach(caseElement => {
+         konvaLayer.add(decisionSymbol(commonSize, space));
+         space.y += spaceBetween + commonSize * 0.3;
+      });
+   }
+   else if (node.name === 'ForNode') {
+      konvaLayer.add(decisionSymbol(commonSize, space));
+      space.x += commonSize * 0.6;
+      space.y += commonSize * 0.075;
+      konvaLayer.add(taskSymbol(commonSize, space));
+      space.y += spaceBetween * 2 + commonSize * 0.15;
+   }
+   else if (node.name === 'WhileNode') {
+      konvaLayer.add(decisionSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.3;
+   }
+   else if (node.name === 'DowhileNode') {
+      // node body sentences should be first
+      konvaLayer.add(decisionSymbol(commonSize, space));
+      space.y += spaceBetween + commonSize * 0.3;
+   }
+
 }
