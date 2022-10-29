@@ -116,7 +116,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
          y: space.y + addForSpace
       }));
 
-      addForSpace = commonSize * 0.15;
+      addForSpace = commonSize * 0.075 + spaceBetween;
 
       let forSentences = [...node.body];
 
@@ -125,7 +125,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
          addForSpace += addTreeNode(caseNode, {
             x: space.x,
             y: space.y + spaceBetween + addForSpace
-         }, true);
+         });
       }
       if (addForSpace > addVerticalSpace) {
          addVerticalSpace = addForSpace + spaceBetween;
