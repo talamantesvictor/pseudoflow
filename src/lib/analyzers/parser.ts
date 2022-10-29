@@ -113,7 +113,7 @@ function declarationParser() : atype.DeclarationNode {
    nextIndex();
    const identifier = parserTokens[parserIndex];
    let value: any;
-   if (parserTokens[parserIndex+1].name === 'AssignmentToken') {
+   if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
       nextIndex();
       nextIndex();
       value = expressionParser();
