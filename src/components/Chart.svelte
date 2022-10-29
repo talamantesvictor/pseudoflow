@@ -43,7 +43,7 @@
 <div id="konvaContainer" bind:this={konvaContainer} />
 <div id="scaler">
    <div>
-      <span>Zoom:</span> {userScale}%
+      <span>Scale:</span> {userScale}%
    </div>
    <input type="range" min="10" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
 </div>
@@ -53,13 +53,13 @@
 
    #konvaContainer {
       width: 100%;
-      height: calc(100% - 60px);
+      height: calc(100% - 55px);
       overflow: auto;
    }
 
    #scaler {
       width: 100%;
-      height: 60px;
+      height: 55px;
       background: #1C1F2D;
       text-align: center;
       display: flex;
@@ -96,16 +96,11 @@
          width: 20px;
          height: 20px;
          background: #00bbd3;
-         border: 0px solid rgba(0, 0, 30, 0);
          border: 0;
          border-radius: 15px;
          cursor: pointer;
          -webkit-appearance: none;
       } 
-
-      input[type=range]:focus::-webkit-slider-runnable-track {
-         background: #4e5268;
-      }
 
       input[type=range]::-moz-range-track {
          background: rgba(63, 66, 84, 0.78);
@@ -120,7 +115,6 @@
          width: 20px;
          height: 20px;
          background: #00bbd3;
-         border: 0px solid rgba(0, 0, 30, 0);
          border: 0;
          border-radius: 15px;
          cursor: pointer;
