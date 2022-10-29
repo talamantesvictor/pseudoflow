@@ -135,10 +135,30 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
    else if (node.name === 'WhileNode') {
       konvaLayer.add(decisionSymbol(commonSize, space));
       addVerticalSpace += spaceBetween + commonSize * 0.3;
+
+      let bodySentences = [...node.body];
+      while (bodySentences.length) {
+         const bodyNode = bodySentences.shift()!;
+         addVerticalSpace += addTreeNode(bodyNode, {
+            x: space.x,
+            y: space.y + addVerticalSpace
+         });
+      }
    }
    else if (node.name === 'DowhileNode') {
-      // node body sentences should be first
-      konvaLayer.add(decisionSymbol(commonSize, space));
+      let bodySentences = [...node.body];
+      while (bodySentences.length) {
+         const bodyNode = bodySentences.shift()!;
+         addVerticalSpace += addTreeNode(bodyNode, {
+            x: space.x,
+            y: space.y + addVerticalSpace
+         });
+      }
+
+      konvaLayer.add(decisionSymbol(commonSize, {
+         x: space.x,
+         y: space.y + addVerticalSpace
+      }));
       addVerticalSpace += spaceBetween + commonSize * 0.3;
    }
 
