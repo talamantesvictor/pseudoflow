@@ -75,8 +75,26 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}) {
       konvaLayer.add(taskSymbol(commonSize, space));
       addVerticalSpace += spaceBetween + commonSize * 0.15;
       node.cases.forEach(caseElement => {
-         konvaLayer.add(decisionSymbol(commonSize, space));
+         konvaLayer.add(decisionSymbol(commonSize, {
+            x: space.x,
+            y: space.y + addVerticalSpace
+         }));
+
+         let caseSentences =  [...caseElement.body];
+         let addCaseSpace = addVerticalSpace;
+
          addVerticalSpace += spaceBetween + commonSize * 0.3;
+
+         while(caseSentences.length) {
+            const caseNode = caseSentences.shift()!;
+            addCaseSpace += addTreeNode(caseNode, {
+               x: space.x + commonSize * 0.7,
+               y: space.y + commonSize * 0.075 + addCaseSpace
+            });
+         }
+         if (addCaseSpace > addVerticalSpace) {
+            addVerticalSpace = addCaseSpace + spaceBetween;
+         }
       });
    }
    else if (node.name === 'ForNode') {
