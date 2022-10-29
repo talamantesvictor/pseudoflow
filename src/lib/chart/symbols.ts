@@ -27,9 +27,9 @@ export function decisionSymbol(baseSize: number, vspace: number) {
    return new Konva.Line({
       points: [
          baseSize * 0.5,  vspace, 
-         baseSize * 0.75, vspace + baseSize * 0.2,
-         baseSize * 0.5,  vspace + baseSize * 0.4,
-         baseSize * 0.25, vspace + baseSize * 0.2,
+         baseSize * 0.65, vspace + baseSize * 0.15,
+         baseSize * 0.5,  vspace + baseSize * 0.3,
+         baseSize * 0.35, vspace + baseSize * 0.15,
       ],
       fill: '#f1c232',
       closed: true,

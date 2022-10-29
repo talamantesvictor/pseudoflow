@@ -26,7 +26,7 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, ba
          }
          else if (node.name === 'IfNode') {
             layer.add(decisionSymbol(baseSize, vspace));
-            vspace += spaceBetween + baseSize * 0.4;
+            vspace += spaceBetween + baseSize * 0.3;
          }
          else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
             layer.add(taskSymbol(baseSize, vspace));
