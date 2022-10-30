@@ -47,7 +47,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
       
       konvaLayer.add(textLabel(textValue, commonSize, {
          x: space.x + commonSize * 0.31,
-         y: space.y
+         y: space.y + verticalSpaceToCenter
       }));
 
       addVerticalSpace = spaceBetween + commonSize * 0.15;
@@ -66,7 +66,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
 
       konvaLayer.add(textLabel(textValue, commonSize, {
          x: space.x + commonSize * 0.31,
-         y: space.y
+         y: space.y + verticalSpaceToCenter
       }));
 
       addVerticalSpace = spaceBetween + commonSize * 0.15;
