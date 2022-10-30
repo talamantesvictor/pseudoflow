@@ -79,13 +79,13 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
       }
    }
    else if (node.name === 'SwitchNode') {
-      konvaLayer.add(taskSymbol(commonSize, space));
+      konvaLayer.add(taskSymbol(commonSize, space, '#ffd23e'));
       addVerticalSpace += spaceBetween + commonSize * 0.15;
       node.cases.forEach(caseElement => {
          konvaLayer.add(decisionSymbol(commonSize, {
             x: space.x,
             y: space.y + addVerticalSpace
-         }));
+         }, '#ff7070'));
 
          let caseSentences =  [...caseElement.body];
          let addCaseSpace = addVerticalSpace;
@@ -105,7 +105,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
       });
    }
    else if (node.name === 'ForNode') {
-      konvaLayer.add(decisionSymbol(commonSize, space));
+      konvaLayer.add(decisionSymbol(commonSize, space, '#ff66e5'));
       space.x += commonSize * 0.7;
       addVerticalSpace += spaceBetween * 2 + commonSize * 0.15;
 
@@ -133,7 +133,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
 
    }
    else if (node.name === 'WhileNode') {
-      konvaLayer.add(decisionSymbol(commonSize, space));
+      konvaLayer.add(decisionSymbol(commonSize, space, '#ff66e5'));
       addVerticalSpace += spaceBetween + commonSize * 0.3;
 
       let bodySentences = [...node.body];
@@ -158,7 +158,7 @@ function addTreeNode(node: atype.SentencesNode, space: {x: number, y: number}, s
       konvaLayer.add(decisionSymbol(commonSize, {
          x: space.x,
          y: space.y + addVerticalSpace
-      }));
+      }, '#ff66e5'));
       addVerticalSpace += spaceBetween + commonSize * 0.3;
    }
 
