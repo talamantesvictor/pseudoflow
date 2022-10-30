@@ -6,8 +6,8 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage, konvaSize;
-   let konvaScale = 1;
-   let userScale = 100;
+   let konvaScale = 0.5;
+   let userScale = 100 * konvaScale;
    const chartLayer = new Konva.Layer();
    
    $: {
@@ -43,9 +43,9 @@
 <div id="konvaContainer" bind:this={konvaContainer} />
 <div id="scaler">
    <div>
-      <span>Scale:</span> {userScale}%
+      <span>Zoom:</span> {userScale * 2}%
    </div>
-   <input type="range" min="10" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
+   <input type="range" min="0" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
 </div>
 
 <style lang="scss">
@@ -112,11 +112,12 @@
       }
 
       input[type=range]::-moz-range-thumb {
-         width: 20px;
+         width: 10px;
          height: 20px;
          background: #00bbd3;
          border: 0;
          border-radius: 15px;
+         // transform: translateX(50%);
          cursor: pointer;
       }
       
