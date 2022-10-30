@@ -36,7 +36,7 @@ export function decisionSymbol(baseSize: number, space: {x: number, y: number}, 
    });
 }
 
-export function dataSymbol(baseSize: number, space: {x: number, y: number}, color: string = '#00D2FF') {
+export function dataSymbol(baseSize: number, space: {x: number, y: number}, color: string = '#24a7ff') {
    return new Konva.Line({
       points: [
          space.x + baseSize * 0.3,  space.y, 
