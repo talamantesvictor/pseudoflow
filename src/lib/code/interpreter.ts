@@ -210,10 +210,10 @@ function expressionBuilder(node: atype.ExpressionNode) {
    return expression;
 }
 
-function valueBuilder(node) {
+export function valueBuilder(node, enableVariables = true) {
    let value: any;
 
-   if (node.name === 'IdentifierNode') {
+   if (node.name === 'IdentifierNode' && enableVariables && interpreterVariables) {
       interpreterVariables.forEach(storedVariable => {
          if (storedVariable['identifier'] === node.value) {
             value = storedVariable['value'];

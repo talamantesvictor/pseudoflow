@@ -61,3 +61,20 @@ export function arrowSymbol(baseSize: number, space: {x: number, y: number}, col
       strokeWidth: 2,
     });
 }
+
+export function textLabel(label: string, baseSize: number, space: {x: number, y: number}, width?: number) {
+   width = !width? baseSize * 0.38 : width
+   return new Konva.Text({
+      x: space.x,
+      y: space.y,
+      text: label,
+      fontSize: 20,
+      fontFamily: 'Calibri',
+      align: 'center',
+      // fill: 'white',
+      verticalAlign: 'middle',
+      ellipsis: true,
+      width: width,
+      height: baseSize * 0.15
+    });
+}
