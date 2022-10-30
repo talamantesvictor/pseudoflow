@@ -172,39 +172,39 @@ function intepretTreeNode(node: atype.SentencesNode) {
    }
 }
 
-function groupBuilder(groupNode: atype.GroupNode) {
+function groupBuilder(groupNode: atype.GroupNode, enableVariables = true) {
    let groupExpression = '(';
 
    if (groupNode.body.name === 'ExpressionNode') {
-      groupExpression += expressionBuilder(groupNode.body);
+      groupExpression += expressionBuilder(groupNode.body, enableVariables);
    }
    else {
-      groupExpression += valueBuilder(groupNode.body);
+      groupExpression += valueBuilder(groupNode.body, enableVariables);
    }
 
    return groupExpression += ')';
 }
 
-function expressionBuilder(node: atype.ExpressionNode) {
+function expressionBuilder(node: atype.ExpressionNode, enableVariables = true) {
    let expression: string;
 
    if (node.left.name === 'GroupNode') {
-      expression = groupBuilder(node.left);
+      expression = groupBuilder(node.left, enableVariables);
    }
    else {
-      expression = valueBuilder(node.left);
+      expression = valueBuilder(node.left, enableVariables);
    }
 
    expression += node.operator.value;
 
    if (node.right.name === 'GroupNode') {
-      expression += groupBuilder(node.right);
+      expression += groupBuilder(node.right, enableVariables);
    }
    else if (node.right['name'] === 'ExpressionNode') {
-      expression += expressionBuilder(node.right);
+      expression += expressionBuilder(node.right, enableVariables);
    }
    else {
-      expression += valueBuilder(node.right);
+      expression += valueBuilder(node.right, enableVariables);
    }
 
    return expression;
@@ -221,10 +221,10 @@ export function valueBuilder(node, enableVariables = true) {
       });
    }
    else if (node.name === 'ExpressionNode') {
-      value = expressionBuilder(node);
+      value = expressionBuilder(node, enableVariables);
    }
    else if (node.name === 'GroupNode') {
-      value = groupBuilder(node);
+      value = groupBuilder(node, enableVariables);
    }
    else {
       value = node.value;
