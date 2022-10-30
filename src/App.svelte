@@ -30,6 +30,7 @@
             prepareExecution();
          }
       } else if (event.code === 'Escape' && isProgramRunning) {
+         interpreterReset();
          enableUserInput = false;
          isProgramRunning = false;
       }
@@ -65,6 +66,10 @@
    function runButtonClick(e) {
       if (isProgramRunning = e.detail) {
          prepareExecution();
+      }
+      else {
+         interpreterReset();
+         enableUserInput = false;
       }
    }
 
