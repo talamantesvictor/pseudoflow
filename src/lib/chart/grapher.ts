@@ -5,7 +5,7 @@ import { valueBuilder } from "../code/interpreter";
 
 let runningSentences: atype.SentencesNode[];
 let spaceKeeper: {x: number, y: number};
-let spaceBetween: number = 50;
+let spaceBetween: number = 80;
 let konvaLayer: Konva.Layer;
 let commonSize: number;
 
