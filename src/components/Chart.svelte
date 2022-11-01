@@ -1,38 +1,31 @@
 <script lang="ts">
-   import { onMount } from "svelte";
    import Konva from 'konva';
+   import { onMount } from "svelte";
    import { grapher } from "../lib/chart/grapher"
    import type { SentencesNode } from "src/lib/analyzers/atypes";
 
    export let sintaxTree: SentencesNode[];
-   let konvaContainer, konvaStage, konvaSize;
+   let konvaContainer, konvaStage;
    let konvaScale = 0.5;
-   let userScale = 100 * konvaScale;
+   let userScale = konvaScale * 100;
    const chartLayer = new Konva.Layer();
    
    $: {
-      let vspace = grapher(sintaxTree || [], chartLayer, konvaSize?.width);
-
-      if (konvaStage) {
+      if (sintaxTree && konvaStage) {
+         let vspace = grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
          konvaStage.height(vspace * konvaScale);
+         chartLayer.scale({
+            x: konvaScale, 
+            y: konvaScale
+         });
       }
-
-      chartLayer.scale({
-         x: konvaScale, 
-         y: konvaScale
-      });
    }
 
    onMount(() => { 
-      konvaSize = {
-         width: konvaContainer.offsetWidth,
-         height: konvaContainer.offsetHeight
-      }
-
       konvaStage = new Konva.Stage({
          container: konvaContainer,
-         width: konvaSize.width,
-         height: konvaSize.height,
+         width: konvaContainer.offsetWidth,
+         height: konvaContainer.offsetHeight
       });
 
       konvaStage.add(chartLayer);
