@@ -12,8 +12,24 @@
    
    $: {
       if (sintaxTree && konvaStage) {
-         let vspace = grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
-         konvaStage.height(vspace * konvaScale);
+         grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
+
+         let maxWidth = konvaContainer.offsetWidth;
+         let maxHeight = konvaContainer.offsetHeight;
+         
+         chartLayer.children.forEach(element => {
+            const width = element.attrs.width + element.attrs.x + konvaContainer.offsetWidth * 0.3;
+            if (width > maxWidth) {
+               maxWidth = width;
+            }
+            const height = element.attrs.height + element.attrs.y + konvaContainer.offsetWidth * 0.2;
+            if (height > maxHeight) {
+               maxHeight = height;
+            }
+         });
+
+         konvaStage.width(maxWidth * konvaScale);
+         konvaStage.height(maxHeight * konvaScale);
          chartLayer.scale({
             x: konvaScale, 
             y: konvaScale

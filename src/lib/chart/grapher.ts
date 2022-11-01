@@ -11,7 +11,7 @@ let defaultVerticalSpace: number;
 let defaultHorizontalSpace: number;
 
 // Draws the flow chart symbols and returns the vertical space used
-export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, size: number): number {
+export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, size: number) {
    layer.removeChildren();
    runningSentences = [...sentences];
    konvaLayer = layer;
@@ -27,11 +27,9 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, si
       while (runningSentences.length) {
          const node = runningSentences.shift()!;
          spaceKeeper.y += addTreeNode(node, spaceKeeper);
-         spaceKeeper.x = 0;
       }
       layer.add(terminatorSymbol(baseSize, spaceKeeper));
    }
-   return spaceKeeper.y + defaultVerticalSpace + baseSize * 0.1;
 }
 
 function addTreeNode(
