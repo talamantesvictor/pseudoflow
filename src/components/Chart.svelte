@@ -6,38 +6,31 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
-   let konvaScale = 0.5;
+   let konvaScale = 0.3;
    let userScale = konvaScale * 100;
+   let chartDimensions;
    const chartLayer = new Konva.Layer();
    
-   $: {
-      if (sintaxTree && konvaStage) {
-         grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
+   $: if (sintaxTree && konvaContainer) {
+      chartDimensions = grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
+   }
 
-         let maxWidth = konvaContainer.offsetWidth;
-         let maxHeight = konvaContainer.offsetHeight;
-         
-         chartLayer.children.forEach(element => {
-            const width = element.attrs.width + element.attrs.x + konvaContainer.offsetWidth * 0.3;
-            if (width > maxWidth) {
-               maxWidth = width;
-            }
-            const height = element.attrs.height + element.attrs.y + konvaContainer.offsetWidth * 0.2;
-            if (height > maxHeight) {
-               maxHeight = height;
-            }
-         });
+   $: if (konvaStage) {
+      konvaStage.width(chartDimensions.x * konvaScale);
+      konvaStage.height(chartDimensions.y * konvaScale);
 
-         konvaStage.width(maxWidth * konvaScale);
-         konvaStage.height(maxHeight * konvaScale);
-         chartLayer.scale({
-            x: konvaScale, 
-            y: konvaScale
-         });
-      }
+      chartLayer.scale({
+         x: konvaScale, 
+         y: konvaScale
+      });
    }
 
    onMount(() => { 
+      chartDimensions = {
+         x: konvaContainer.offsetWidth,
+         y: konvaContainer.offsetHeight
+      }
+
       konvaStage = new Konva.Stage({
          container: konvaContainer,
          width: konvaContainer.offsetWidth,

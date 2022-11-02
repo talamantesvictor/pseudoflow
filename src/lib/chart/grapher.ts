@@ -5,230 +5,234 @@ import { valueBuilder } from "../code/interpreter";
 
 let konvaLayer: Konva.Layer;
 let runningSentences: atype.SentencesNode[];
-let spaceKeeper: {x: number, y: number};
 let baseSize: number;
 let defaultVerticalSpace: number;
 let defaultHorizontalSpace: number;
+let horizontalSpacing: number;
 
 // Draws the flow chart symbols and returns the vertical space used
-export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, size: number) {
+export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, size: number) : any {
    layer.removeChildren();
    runningSentences = [...sentences];
    konvaLayer = layer;
    baseSize = size;
    defaultVerticalSpace = baseSize * 0.2;
    defaultHorizontalSpace = baseSize * 0.7;
-   spaceKeeper = {x: 0, y: defaultVerticalSpace};
+   horizontalSpacing = baseSize;
+   
+   let dimensions = {x: baseSize * 0.5, y: defaultVerticalSpace};
 
    if (runningSentences.length > 0) {
-      layer.add(terminatorSymbol(baseSize, spaceKeeper));
-      spaceKeeper.y += defaultVerticalSpace + baseSize * 0.1;
+      const startSymbol = terminatorSymbol(baseSize, dimensions);
+      layer.add(startSymbol);
+      dimensions.y += defaultVerticalSpace + baseSize * 0.2;
    
       while (runningSentences.length) {
          const node = runningSentences.shift()!;
-         spaceKeeper.y += addTreeNode(node, spaceKeeper);
+         dimensions.y += addTreeNodeSymbol(node, dimensions);
       }
-      layer.add(terminatorSymbol(baseSize, spaceKeeper));
+
+      layer.add(terminatorSymbol(baseSize, dimensions));
+      dimensions.y += defaultVerticalSpace;
    }
+
+   dimensions.x = horizontalSpacing;
+
+   return dimensions;
 }
 
-function addTreeNode(
+function addTreeNodeSymbol(
    node: atype.SentencesNode, 
-   space: {x: number, y: number}, 
-   shouldCenterVertically: boolean = false
+   position: {x: number, y: number}
 ) {
-   const verticalSpaceToCenter = shouldCenterVertically? baseSize * 0.075 : 0;
-   let addVerticalSpace = 0;
+
+   let verticalSpace = 0;
 
    if (node.name === 'PrintNode' || node.name === 'ReadNode') {
-      konvaLayer.add(dataSymbol(baseSize, {
-         x: space.x,
-         y: space.y + verticalSpaceToCenter
-      }));
-
+      const symbol = dataSymbol(baseSize, position);
+      updateHorizontalSpacing(symbol, position);
+      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       const textValue = node.name === 'PrintNode'? valueBuilder(node.value, false) : node.identifier['value'];
-      
-      konvaLayer.add(textLabel(textValue, baseSize, {
-         x: space.x + baseSize * 0.31,
-         y: space.y + verticalSpaceToCenter
-      }));
+      konvaLayer.add(symbol)
+      konvaLayer.add(textLabel(textValue, position, dimensions));
+      verticalSpace = symbol.attrs.height;
 
-      addVerticalSpace = defaultVerticalSpace + baseSize * 0.15;
    }
    else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
-      konvaLayer.add(taskSymbol(baseSize, {
-         x: space.x,
-         y: space.y + verticalSpaceToCenter
-      }));
-
+      const symbol = taskSymbol(baseSize, position);
+      updateHorizontalSpacing(symbol, position);
+      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       let textValue = node.identifier;
       let builtValue = valueBuilder(node.value, false);
       if (builtValue !== undefined) {
          textValue += '=' + builtValue;
       }
+      
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(textValue, position, dimensions));
+      verticalSpace = symbol.attrs.height;
 
-      konvaLayer.add(textLabel(textValue, baseSize, {
-         x: space.x + baseSize * 0.31,
-         y: space.y + verticalSpaceToCenter
-      }));
-
-      addVerticalSpace = defaultVerticalSpace + baseSize * 0.15;
    }
    else if (node.name === 'IfNode') {
-      konvaLayer.add(decisionSymbol(baseSize, space));
-
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), baseSize, {
-         x: space.x + baseSize * 0.4,
-         y: space.y + baseSize * 0.075
-      }, baseSize * 0.2));
-
-      addVerticalSpace += defaultVerticalSpace + baseSize * 0.3;
+      const symbol = decisionSymbol(baseSize, position);
+      updateHorizontalSpacing(symbol, position);
+      const dimensions = {width: symbol.attrs.width * 0.55, height: symbol.attrs.height * 0.3};
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
+      verticalSpace = symbol.attrs.height + defaultVerticalSpace;
       
       let bodySentences = [...node.body];
       while (bodySentences.length) {
          const bodyNode = bodySentences.shift()!;
-         addVerticalSpace += addTreeNode(bodyNode, {
-            x: space.x,
-            y: space.y + addVerticalSpace
+         verticalSpace += addTreeNodeSymbol(bodyNode, {
+            x: position.x,
+            y: position.y + verticalSpace 
          });
       }
 
       if (node.alternative.length) {
          let alternativeSentences = [...node.alternative];
-         let addAlternateSpace = 0;
+         let alternateSpace = 0;
          while (alternativeSentences.length) {
             const alternativeNode = alternativeSentences.shift()!;
-            addAlternateSpace += addTreeNode(alternativeNode, {
-               x: space.x + baseSize * 0.7,
-               y: space.y + addAlternateSpace
-            }, true);
+            alternateSpace += addTreeNodeSymbol(alternativeNode, {
+               x: position.x + defaultHorizontalSpace,
+               y: position.y + alternateSpace
+            });
          }
-         if (addAlternateSpace > addVerticalSpace) {
-            addVerticalSpace = addAlternateSpace + defaultVerticalSpace;
+
+         if (alternateSpace > verticalSpace) {
+            verticalSpace = alternateSpace;
          }
       }
+
+      verticalSpace -= defaultVerticalSpace;
    }
    else if (node.name === 'SwitchNode') {
-      konvaLayer.add(taskSymbol(baseSize, space, '#ffd23e'));
+      const symbol = taskSymbol(baseSize, position, '#ffd23e');
+      updateHorizontalSpacing(symbol, position);
+      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
+      verticalSpace = symbol.attrs.height;
 
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), baseSize, {
-         x: space.x + baseSize * 0.31,
-         y: space.y
-      }));
-
-      addVerticalSpace += defaultVerticalSpace + baseSize * 0.15;
       node.cases.forEach(caseElement => {
-         konvaLayer.add(decisionSymbol(baseSize, {
-            x: space.x,
-            y: space.y + addVerticalSpace
-         }, '#ff7070'));
+         verticalSpace += defaultVerticalSpace;
+         const caseNode = decisionSymbol(baseSize, {
+            x: position.x,
+            y: position.y + verticalSpace
+         }, '#ff7070');
+         konvaLayer.add(caseNode);
 
-         konvaLayer.add(textLabel(valueBuilder(caseElement.argument, false), baseSize, {
-            x: space.x + baseSize * 0.4,
-            y: space.y + baseSize * 0.075 + addVerticalSpace
-         }, baseSize * 0.2));
+         const dimensions = {width: caseNode.attrs.width, height: caseNode.attrs.height};
+         
+         konvaLayer.add(textLabel(valueBuilder(caseElement.argument, false), {
+            x: position.x,
+            y: position.y + verticalSpace
+         }, dimensions));
 
          let caseSentences =  [...caseElement.body];
-         let addCaseSpace = addVerticalSpace;
-
-         addVerticalSpace += defaultVerticalSpace + baseSize * 0.3;
+         let caseSpace = verticalSpace;
+         verticalSpace += caseNode.attrs.height;
 
          while(caseSentences.length) {
             const caseNode = caseSentences.shift()!;
-            addCaseSpace += addTreeNode(caseNode, {
-               x: space.x + baseSize * 0.7,
-               y: space.y + addCaseSpace
-            }, true);
+            caseSpace += addTreeNodeSymbol(caseNode, {
+               x: position.x + defaultHorizontalSpace,
+               y: position.y + caseSpace
+            });
          }
-         if (addCaseSpace > addVerticalSpace) {
-            addVerticalSpace = addCaseSpace + defaultVerticalSpace;
+
+         if (caseSpace > verticalSpace) {
+            verticalSpace = caseSpace;
          }
+         
       });
    }
    else if (node.name === 'ForNode') {
-      konvaLayer.add(decisionSymbol(baseSize, space, '#ff66e5'));
-
+      let forPosition = {x: position.x, y: position.y};
+      const symbol = decisionSymbol(baseSize, forPosition, '#ff66e5');
+      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height * 0.6};
       let textValue = node.declaration.identifier + '<=' + node.to['value'];
-
-      konvaLayer.add(textLabel(textValue, baseSize, {
-         x: space.x + baseSize * 0.4,
-         y: space.y + baseSize * 0.075 + addVerticalSpace
-      }, baseSize * 0.2));
-
-      space.x += baseSize * 0.7;
-      addVerticalSpace += defaultVerticalSpace * 2 + baseSize * 0.15;
-
-      let addForSpace = baseSize * 0.075
-
-      konvaLayer.add(taskSymbol(baseSize, {
-         x: space.x,
-         y: space.y + addForSpace
-      }, '#ff7070'));
-
-      textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + node.steps['value'];
-
-      konvaLayer.add(textLabel(textValue, baseSize, {
-         x: space.x + baseSize * 0.31,
-         y: space.y + addForSpace
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(textValue, forPosition, {
+         width: dimensions.width * 0.6,
+         height: dimensions.height
       }));
 
-      addForSpace = baseSize * 0.075 + defaultVerticalSpace;
-
+      forPosition.x += defaultHorizontalSpace;
+      
       let forSentences = [...node.body];
-
+      let forSpace = 0;
       while(forSentences.length) {
-         const caseNode = forSentences.shift()!;
-         addForSpace += addTreeNode(caseNode, {
-            x: space.x,
-            y: space.y + defaultVerticalSpace + addForSpace
+         const forNode = forSentences.shift()!;
+         forSpace += addTreeNodeSymbol(forNode, {
+            x: forPosition.x,
+            y: forPosition.y + forSpace
          });
       }
-      if (addForSpace > addVerticalSpace) {
-         addVerticalSpace = addForSpace + defaultVerticalSpace;
+      
+      forPosition.y += forSpace;
+
+      textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + node.steps['value'];
+      const tSymbol = taskSymbol(baseSize, forPosition, '#ff7070');
+      updateHorizontalSpacing(tSymbol, forPosition);
+      konvaLayer.add(tSymbol);
+      konvaLayer.add(textLabel(textValue, forPosition, dimensions));
+
+      if (forSpace > verticalSpace) {
+         verticalSpace = forSpace;
       }
+
+      verticalSpace += defaultVerticalSpace * 2;
 
    }
    else if (node.name === 'WhileNode') {
-      konvaLayer.add(decisionSymbol(baseSize, space, '#ff66e5'));
+      const symbol = decisionSymbol(baseSize, position, '#ff66e5');
+      updateHorizontalSpacing(symbol, position);
+      const dimensions = {width: symbol.attrs.width * 0.6, height: symbol.attrs.height * 0.6};
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
 
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), baseSize, {
-         x: space.x + baseSize * 0.4,
-         y: space.y + baseSize * 0.075
-      }, baseSize * 0.2));
-
-      addVerticalSpace += defaultVerticalSpace + baseSize * 0.3;
+      verticalSpace += symbol.attrs.height + defaultVerticalSpace;
 
       let bodySentences = [...node.body];
       while (bodySentences.length) {
          const bodyNode = bodySentences.shift()!;
-         addVerticalSpace += addTreeNode(bodyNode, {
-            x: space.x,
-            y: space.y + addVerticalSpace
+         verticalSpace += addTreeNodeSymbol(bodyNode, {
+            x: position.x,
+            y: position.y + verticalSpace
          });
       }
+      verticalSpace -= defaultVerticalSpace;
+
    }
    else if (node.name === 'DowhileNode') {
       let bodySentences = [...node.body];
       while (bodySentences.length) {
          const bodyNode = bodySentences.shift()!;
-         addVerticalSpace += addTreeNode(bodyNode, {
-            x: space.x,
-            y: space.y + addVerticalSpace
+         verticalSpace += addTreeNodeSymbol(bodyNode, {
+            x: position.x,
+            y: position.y + verticalSpace
          });
       }
 
-      konvaLayer.add(decisionSymbol(baseSize, {
-         x: space.x,
-         y: space.y + addVerticalSpace
-      }, '#ff66e5'));
+      const doWhilePosition = {x: position.x, y: position.y + verticalSpace};
+      const symbol = decisionSymbol(baseSize, doWhilePosition, '#ff66e5');
+      updateHorizontalSpacing(symbol, doWhilePosition);
+      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
+      konvaLayer.add(symbol);
+      konvaLayer.add(textLabel(valueBuilder(node.argument, false), doWhilePosition, dimensions));
 
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), baseSize, {
-         x: space.x + baseSize * 0.4,
-         y: space.y + baseSize * 0.075 + addVerticalSpace
-      }, baseSize * 0.2));
-
-      addVerticalSpace += defaultVerticalSpace + baseSize * 0.3;
+      verticalSpace += defaultVerticalSpace;
    }
 
-   return addVerticalSpace;
+   return verticalSpace + defaultVerticalSpace;
+}
+
+function updateHorizontalSpacing(symbol, position) {
+   const width = symbol.attrs.width + position.x;
+   if (width > horizontalSpacing) {
+      horizontalSpacing = width;
+   }
 }
