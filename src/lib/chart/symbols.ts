@@ -29,35 +29,39 @@ export function taskSymbol(baseSize: number, position: { x: number, y: number },
 
 export function dataSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#24a7ff') {
    return new Konva.Line({
+      x: position.x,
+      y: position.y,
       points: [
-         position.x + baseSize * 0.05, position.y,
-         position.x + baseSize * 0.5, position.y,
-         position.x + baseSize * 0.45, position.y + baseSize * 0.2,
-         position.x, position.y + baseSize * 0.2
+         baseSize * 0.05, 0,
+         baseSize * 0.5, 0,
+         baseSize * 0.45, baseSize * 0.2,
+         0, baseSize * 0.2
       ],
       width: baseSize * 0.5,
       height: baseSize * 0.2,
       offsetX: baseSize * 0.25,
       offsetY: baseSize * 0.1,
       fill: color,
-      closed: true,
+      closed: true
    });
 }
 
 export function decisionSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#f1c232') {
    return new Konva.Line({
+      x: position.x,
+      y: position.y,
       points: [
-         position.x + baseSize * 0.2, position.y,
-         position.x + baseSize * 0.4, position.y + baseSize * 0.1,
-         position.x + baseSize * 0.2, position.y + baseSize * 0.2,
-         position.x, position.y + baseSize * 0.1,
+         baseSize * 0.2, 0,
+         baseSize * 0.4, baseSize * 0.1,
+         baseSize * 0.2, baseSize * 0.2,
+         0, baseSize * 0.1,
       ],
       width: baseSize * 0.4,
       height: baseSize * 0.2,
       offsetX: baseSize * 0.2,
       offsetY: baseSize * 0.1,
       fill: color,
-      closed: true,
+      closed: true
    });
 }
 

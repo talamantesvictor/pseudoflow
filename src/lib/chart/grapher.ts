@@ -52,7 +52,7 @@ function addTreeNodeSymbol(
 
    if (node.name === 'PrintNode' || node.name === 'ReadNode') {
       const symbol = dataSymbol(baseSize, position);
-      updateHorizontalSpacing(symbol, position);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       const textValue = node.name === 'PrintNode'? valueBuilder(node.value, false) : node.identifier['value'];
       symbolsLayer.add(symbol)
@@ -62,7 +62,7 @@ function addTreeNodeSymbol(
    }
    else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
       const symbol = taskSymbol(baseSize, position);
-      updateHorizontalSpacing(symbol, position);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       let textValue = node.identifier;
       let builtValue = valueBuilder(node.value, false);
@@ -77,7 +77,7 @@ function addTreeNodeSymbol(
    }
    else if (node.name === 'IfNode') {
       const symbol = decisionSymbol(baseSize, position);
-      updateHorizontalSpacing(symbol, position);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       symbolsLayer.add(symbol);
       symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
@@ -112,7 +112,7 @@ function addTreeNodeSymbol(
    }
    else if (node.name === 'SwitchNode') {
       const symbol = taskSymbol(baseSize, position, '#ffd23e');
-      updateHorizontalSpacing(symbol, position);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       symbolsLayer.add(symbol);
       symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
@@ -178,7 +178,7 @@ function addTreeNodeSymbol(
 
       textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + node.steps['value'];
       const tSymbol = taskSymbol(baseSize, forPosition, '#ff7070');
-      updateHorizontalSpacing(tSymbol, forPosition);
+      updateHorizontalSpacing(tSymbol);
       symbolsLayer.add(tSymbol);
       symbolsLayer.add(textLabel(textValue, forPosition, dimensions));
 
@@ -191,7 +191,7 @@ function addTreeNodeSymbol(
    }
    else if (node.name === 'WhileNode') {
       const symbol = decisionSymbol(baseSize, position, '#ff66e5');
-      updateHorizontalSpacing(symbol, position);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       symbolsLayer.add(symbol);
       symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
@@ -221,7 +221,7 @@ function addTreeNodeSymbol(
 
       const doWhilePosition = {x: position.x, y: position.y + verticalSpace};
       const symbol = decisionSymbol(baseSize, doWhilePosition, '#ff66e5');
-      updateHorizontalSpacing(symbol, doWhilePosition);
+      updateHorizontalSpacing(symbol);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       symbolsLayer.add(symbol);
       symbolsLayer.add(textLabel(valueBuilder(node.argument, false), doWhilePosition, dimensions));
@@ -232,8 +232,9 @@ function addTreeNodeSymbol(
    return verticalSpace + defaultVerticalSpace;
 }
 
-function updateHorizontalSpacing(symbol, position) {
-   const width = symbol.attrs.width + position.x;
+function updateHorizontalSpacing(symbol) {
+   console.log(symbol.attrs.x);
+   const width = symbol.attrs.width + symbol.attrs.x;
    if (width > horizontalSpacing) {
       horizontalSpacing = width;
    }
