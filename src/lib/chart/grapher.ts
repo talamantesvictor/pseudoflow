@@ -3,7 +3,8 @@ import type Konva from 'konva';
 import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol } from "./symbols";
 import { valueBuilder } from "../code/interpreter";
 
-let konvaLayer: Konva.Layer;
+let arrowsLayer: Konva.Layer;
+let symbolsLayer: Konva.Layer;
 let runningSentences: atype.SentencesNode[];
 let baseSize: number;
 let defaultVerticalSpace: number;
@@ -11,10 +12,11 @@ let defaultHorizontalSpace: number;
 let horizontalSpacing: number;
 
 // Draws the flow chart symbols and returns the vertical space used
-export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, size: number) : any {
-   layer.removeChildren();
+export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer, frontLayer: Konva.Layer, size: number) : any {
+   frontLayer.removeChildren();
    runningSentences = [...sentences];
-   konvaLayer = layer;
+   arrowsLayer = backLayer;
+   symbolsLayer = frontLayer;
    baseSize = size;
    defaultVerticalSpace = baseSize * 0.2;
    defaultHorizontalSpace = baseSize * 0.7;
@@ -24,7 +26,7 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, si
 
    if (runningSentences.length > 0) {
       const startSymbol = terminatorSymbol(baseSize, dimensions);
-      layer.add(startSymbol);
+      frontLayer.add(startSymbol);
       dimensions.y += defaultVerticalSpace + baseSize * 0.2;
    
       while (runningSentences.length) {
@@ -32,7 +34,7 @@ export function grapher(sentences: atype.SentencesNode[], layer: Konva.Layer, si
          dimensions.y += addTreeNodeSymbol(node, dimensions);
       }
 
-      layer.add(terminatorSymbol(baseSize, dimensions));
+      frontLayer.add(terminatorSymbol(baseSize, dimensions));
       dimensions.y += defaultVerticalSpace;
    }
 
@@ -53,8 +55,8 @@ function addTreeNodeSymbol(
       updateHorizontalSpacing(symbol, position);
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
       const textValue = node.name === 'PrintNode'? valueBuilder(node.value, false) : node.identifier['value'];
-      konvaLayer.add(symbol)
-      konvaLayer.add(textLabel(textValue, position, dimensions));
+      symbolsLayer.add(symbol)
+      symbolsLayer.add(textLabel(textValue, position, dimensions));
       verticalSpace = symbol.attrs.height;
 
    }
@@ -68,8 +70,8 @@ function addTreeNodeSymbol(
          textValue += '=' + builtValue;
       }
       
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(textValue, position, dimensions));
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(textValue, position, dimensions));
       verticalSpace = symbol.attrs.height;
 
    }
@@ -77,8 +79,8 @@ function addTreeNodeSymbol(
       const symbol = decisionSymbol(baseSize, position);
       updateHorizontalSpacing(symbol, position);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
       verticalSpace = symbol.attrs.height + defaultVerticalSpace;
       
       let bodySentences = [...node.body];
@@ -112,8 +114,8 @@ function addTreeNodeSymbol(
       const symbol = taskSymbol(baseSize, position, '#ffd23e');
       updateHorizontalSpacing(symbol, position);
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
       verticalSpace = symbol.attrs.height;
 
       node.cases.forEach(caseElement => {
@@ -122,11 +124,11 @@ function addTreeNodeSymbol(
             x: position.x,
             y: position.y + verticalSpace
          }, '#ff7070');
-         konvaLayer.add(caseNode);
+         symbolsLayer.add(caseNode);
 
          const dimensions = {width: caseNode.attrs.width, height: caseNode.attrs.height};
          
-         konvaLayer.add(textLabel(valueBuilder(caseElement.argument, false), {
+         symbolsLayer.add(textLabel(valueBuilder(caseElement.argument, false), {
             x: position.x,
             y: position.y + verticalSpace
          }, dimensions));
@@ -154,8 +156,8 @@ function addTreeNodeSymbol(
       const symbol = decisionSymbol(baseSize, forPosition, '#ff66e5');
       const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height * 0.6};
       let textValue = node.declaration.identifier + '<=' + node.to['value'];
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(textValue, forPosition, {
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(textValue, forPosition, {
          width: dimensions.width * 0.7,
          height: dimensions.height
       }));
@@ -177,8 +179,8 @@ function addTreeNodeSymbol(
       textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + node.steps['value'];
       const tSymbol = taskSymbol(baseSize, forPosition, '#ff7070');
       updateHorizontalSpacing(tSymbol, forPosition);
-      konvaLayer.add(tSymbol);
-      konvaLayer.add(textLabel(textValue, forPosition, dimensions));
+      symbolsLayer.add(tSymbol);
+      symbolsLayer.add(textLabel(textValue, forPosition, dimensions));
 
       if (forSpace > verticalSpace) {
          verticalSpace = forSpace;
@@ -191,8 +193,8 @@ function addTreeNodeSymbol(
       const symbol = decisionSymbol(baseSize, position, '#ff66e5');
       updateHorizontalSpacing(symbol, position);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
 
       verticalSpace += symbol.attrs.height + defaultVerticalSpace;
 
@@ -221,8 +223,8 @@ function addTreeNodeSymbol(
       const symbol = decisionSymbol(baseSize, doWhilePosition, '#ff66e5');
       updateHorizontalSpacing(symbol, doWhilePosition);
       const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
-      konvaLayer.add(symbol);
-      konvaLayer.add(textLabel(valueBuilder(node.argument, false), doWhilePosition, dimensions));
+      symbolsLayer.add(symbol);
+      symbolsLayer.add(textLabel(valueBuilder(node.argument, false), doWhilePosition, dimensions));
 
       verticalSpace += defaultVerticalSpace;
    }

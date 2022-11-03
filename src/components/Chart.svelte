@@ -9,17 +9,18 @@
    let konvaScale = 0.3;
    let userScale = konvaScale * 100;
    let chartDimensions;
-   const chartLayer = new Konva.Layer();
+   const arrowsLayer = new Konva.Layer();
+   const symbolsLayer = new Konva.Layer();
    
    $: if (sintaxTree && konvaContainer) {
-      chartDimensions = grapher(sintaxTree, chartLayer, konvaContainer.offsetWidth);
+      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth);
    }
 
    $: if (konvaStage) {
       konvaStage.width(chartDimensions.x * konvaScale);
       konvaStage.height(chartDimensions.y * konvaScale);
 
-      chartLayer.scale({
+      symbolsLayer.scale({
          x: konvaScale, 
          y: konvaScale
       });
@@ -37,7 +38,9 @@
          height: konvaContainer.offsetHeight
       });
 
-      konvaStage.add(chartLayer);
+      konvaStage.add(arrowsLayer);
+      konvaStage.add(symbolsLayer);
+
    });
 
 </script>
