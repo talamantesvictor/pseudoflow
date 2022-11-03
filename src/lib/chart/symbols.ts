@@ -79,14 +79,14 @@ export function textLabel(label: string, position: { x: number, y: number }, dim
       x: position.x,
       y: position.y,
       text: label,
-      fontSize: 28,
+      fontSize: 22,
       fontFamily: 'Calibri',
       align: 'center',
       verticalAlign: 'middle',
       ellipsis: true,
-      width: dimensions.width,
-      height: dimensions.height,
-      offsetX: dimensions.width * 0.5,
-      offsetY: dimensions.height * 0.5
+      width: dimensions.width * 0.84,
+      height: dimensions.height * 0.7,
+      offsetX: dimensions.width * 0.42,
+      offsetY: dimensions.height * 0.35
    });
 }

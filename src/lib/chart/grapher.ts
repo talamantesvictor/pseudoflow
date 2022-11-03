@@ -1,5 +1,5 @@
 import type * as atype from "../analyzers/atypes";
-import Konva from 'konva';
+import type Konva from 'konva';
 import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol } from "./symbols";
 import { valueBuilder } from "../code/interpreter";
 
@@ -76,7 +76,7 @@ function addTreeNodeSymbol(
    else if (node.name === 'IfNode') {
       const symbol = decisionSymbol(baseSize, position);
       updateHorizontalSpacing(symbol, position);
-      const dimensions = {width: symbol.attrs.width * 0.55, height: symbol.attrs.height * 0.3};
+      const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       konvaLayer.add(symbol);
       konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
       verticalSpace = symbol.attrs.height + defaultVerticalSpace;
@@ -156,7 +156,7 @@ function addTreeNodeSymbol(
       let textValue = node.declaration.identifier + '<=' + node.to['value'];
       konvaLayer.add(symbol);
       konvaLayer.add(textLabel(textValue, forPosition, {
-         width: dimensions.width * 0.6,
+         width: dimensions.width * 0.7,
          height: dimensions.height
       }));
 
@@ -190,7 +190,7 @@ function addTreeNodeSymbol(
    else if (node.name === 'WhileNode') {
       const symbol = decisionSymbol(baseSize, position, '#ff66e5');
       updateHorizontalSpacing(symbol, position);
-      const dimensions = {width: symbol.attrs.width * 0.6, height: symbol.attrs.height * 0.6};
+      const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       konvaLayer.add(symbol);
       konvaLayer.add(textLabel(valueBuilder(node.argument, false), position, dimensions));
 
@@ -220,7 +220,7 @@ function addTreeNodeSymbol(
       const doWhilePosition = {x: position.x, y: position.y + verticalSpace};
       const symbol = decisionSymbol(baseSize, doWhilePosition, '#ff66e5');
       updateHorizontalSpacing(symbol, doWhilePosition);
-      const dimensions = {width: symbol.attrs.width, height: symbol.attrs.height};
+      const dimensions = {width: symbol.attrs.width * 0.7, height: symbol.attrs.height * 0.5};
       konvaLayer.add(symbol);
       konvaLayer.add(textLabel(valueBuilder(node.argument, false), doWhilePosition, dimensions));
 
