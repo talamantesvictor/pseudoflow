@@ -270,14 +270,19 @@ function addTreeNodeSymbol(
       lastSymbolAttributes = getSymbolAttributes(symbol);
 
       let bodySentences = [...node.body];
-      while (bodySentences.length) {
-         const bodyNode = bodySentences.shift()!;
-         verticalSpace += addTreeNodeSymbol(bodyNode, {
-            x: position.x,
-            y: position.y + verticalSpace
-         }, column + 1);
+      if (bodySentences.length) {
+         while (bodySentences.length) {
+            const bodyNode = bodySentences.shift()!;
+            verticalSpace += addTreeNodeSymbol(bodyNode, {
+               x: position.x,
+               y: position.y + verticalSpace
+            }, column + 1);
+         }
+         verticalSpace -= defaultVerticalSpace;
       }
-      verticalSpace -= defaultVerticalSpace;
+      else {
+         verticalSpace += defaultVerticalSpace;
+      }
       
       shouldConnectNestedSymbols = true;
       if (nestedSymbolsAttributes[column + 1]) {
@@ -291,9 +296,7 @@ function addTreeNodeSymbol(
          symbolAttributes.height
       ));
 
-      
       lastSymbolAttributes = getSymbolAttributes(symbol);
-
    }
    else if (node.name === 'DowhileNode') {
       let bodySentences = [...node.body];
