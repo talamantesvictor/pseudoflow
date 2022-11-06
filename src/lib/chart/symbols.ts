@@ -51,30 +51,119 @@ export function decisionSymbol(baseSize: number, position: { x: number, y: numbe
       x: position.x,
       y: position.y,
       points: [
-         baseSize * 0.2, 0,
-         baseSize * 0.4, baseSize * 0.1,
-         baseSize * 0.2, baseSize * 0.2,
+         baseSize * 0.25, 0,
+         baseSize * 0.5, baseSize * 0.1,
+         baseSize * 0.25, baseSize * 0.2,
          0, baseSize * 0.1,
       ],
-      width: baseSize * 0.4,
+      width: baseSize * 0.5,
       height: baseSize * 0.2,
-      offsetX: baseSize * 0.2,
+      offsetX: baseSize * 0.25,
       offsetY: baseSize * 0.1,
       fill: color,
       closed: true
    });
 }
 
-export function arrowSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#3f4254') {
+export function arrowSymbol(
+   origPosition: { x: number, y: number }, 
+   destPosition: { x: number, y: number },
+   objectDimensions: { width: number, height: number },
+   verticalSpace: number,
+   color: string = '#3f4254'
+){
+   const stroke = 4;
+   let substractX = destPosition.x > origPosition.x? objectDimensions.width * 0.5 + stroke : -stroke;
+   let substractY = destPosition.y > origPosition.y? objectDimensions.height * 0.5 + stroke : stroke;
+
+   if (destPosition.x !== origPosition.x && destPosition.y !== origPosition.y ) {
+      substractY += verticalSpace * 0.5;
+   }
+
+   let points = [ 0, 0, 0, destPosition.y - origPosition.y - substractY ];
+
+   if (destPosition.x !== origPosition.x) {
+      points.push(destPosition.x - origPosition.x - substractX);
+      points.push(destPosition.y - origPosition.y - substractY);
+   }
+
    return new Konva.Arrow({
-      x: position.x + baseSize * 0.5,
-      y: position.y,
-      points: [0, 0, baseSize * 0.4, 0, baseSize * 0.4, 50],
+      x: origPosition.x,
+      y: origPosition.y,
+      points: points,
       pointerLength: 10,
       pointerWidth: 10,
-      fill: color,
       stroke: color,
-      strokeWidth: 2,
+      strokeWidth: stroke,
+   });
+}
+
+export function negativeArrowSymbol(
+   origPosition: {x: number, y: number}, 
+   destPosition: {x: number, y: number},
+   space: number,
+   color: string = '#3f4254'
+) {
+   const stroke = 4;
+   const distanceY = destPosition.y - origPosition.y;
+
+   const points = [
+      0, 0,
+      -space * 1.8, space * 0.85,
+      -space * 1.8, distanceY + space * 0.85,
+      -stroke, distanceY + space * 0.85
+      
+   ]
+
+   return new Konva.Arrow({
+      x: origPosition.x,
+      y: origPosition.y,
+      points: points,
+      pointerLength: 10,
+      pointerWidth: 10,
+      stroke: color,
+      strokeWidth: stroke,
+   });
+}
+
+export function loopArrowSymbol(
+   origPosition: {x: number, y: number}, 
+   destPosition: {x: number, y: number},
+   space: number,
+   color: string = '#66295c'
+) {
+
+   let distanceX = origPosition.x - destPosition.x;
+   let distanceY = origPosition.y - destPosition.y;
+
+   let points: any = [];
+
+   if (distanceX) {
+      points = [
+         0, 0,
+         0, space * 1.2,
+         -distanceX * 0.65, space * 1.2,
+         -distanceX * 0.65, -distanceY + space * 1.2,
+         -distanceX + space * 0.45, -distanceY + space * 0.3
+      ]
+   }
+   else {
+      points = [
+         0, 0,
+         -space * 2, 0,
+         -space * 2, -distanceY - space ,
+         0, -distanceY - space
+      ]
+   }
+
+   return new Konva.Arrow({
+      x: origPosition.x,
+      y: origPosition.y,
+      points: points,
+      pointerLength: 10,
+      pointerWidth: 10,
+      stroke: color,
+      strokeWidth: 4,
    });
 }
 

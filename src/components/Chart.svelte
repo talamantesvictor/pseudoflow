@@ -6,7 +6,7 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
-   let konvaScale = 0.3;
+   let konvaScale = 0.25;
    let userScale = konvaScale * 100;
    let chartDimensions;
    const arrowsLayer = new Konva.Layer();
@@ -21,6 +21,11 @@
       konvaStage.height(chartDimensions.y * konvaScale);
 
       symbolsLayer.scale({
+         x: konvaScale, 
+         y: konvaScale
+      });
+
+      arrowsLayer.scale({
          x: konvaScale, 
          y: konvaScale
       });
