@@ -118,9 +118,10 @@ export function negativeArrowSymbol(
 
    const points = [
       0, 0,
-      -space * 1.8, space * 0.85,
-      -space * 1.8, distanceY + space * 0.85,
-      -stroke, distanceY + space * 0.85
+      space * 1.8, 0,
+      space * 1.8, space * 0.85,
+      space * 1.8, distanceY + space * 0.85,
+      stroke, distanceY + space * 0.85
       
    ]
 
