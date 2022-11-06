@@ -1,6 +1,6 @@
 import type * as atype from "../analyzers/atypes";
 import type Konva from 'konva';
-import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol, loopArrowSymbol, negativeArrowSymbol } from "./symbols";
+import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol, loopArrowSymbol, negativeArrowSymbol, emptySymbol } from "./symbols";
 import { valueBuilder } from "../code/interpreter";
 
 let arrowsLayer: Konva.Layer;
@@ -42,8 +42,8 @@ export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer
    
       while (runningSentences.length) {
          const node = runningSentences.shift()!;
-         nodeColumns = 0;
          spaces.y += addTreeNodeSymbol(node, spaces);
+         nodeColumns = 0;
          shouldConnectNestedSymbols = true;
       }
 
@@ -110,6 +110,7 @@ function addTreeNodeSymbol(
       addArrows(symbol);
       lastSymbolAttributes = getSymbolAttributes(symbol);
    
+      let firstSymbolAttributes = lastSymbolAttributes;
       let bodySentences = [...node.body];
       while (bodySentences.length) {
          const bodyNode = bodySentences.shift()!;
@@ -119,12 +120,17 @@ function addTreeNodeSymbol(
          }, column);
       }
 
+      firstSymbolAttributes = lastSymbolAttributes;
       nestedSymbolsAttributes[column] = lastSymbolAttributes;
-      lastSymbolAttributes = getSymbolAttributes(symbol);
 
       if (node.alternative.length) {
+         lastSymbolAttributes = getSymbolAttributes(symbol);
          let alternativeSentences = [...node.alternative];
          let alternateSpace = 0;
+
+         if (column < nodeColumns) {
+            column = nodeColumns
+         }
 
          while (alternativeSentences.length) {
             const alternativeNode = alternativeSentences.shift()!;
@@ -132,6 +138,8 @@ function addTreeNodeSymbol(
                x: position.x,
                y: position.y + alternateSpace
             }, column + 1);
+
+            nestedSymbolsAttributes[column + 1] = lastSymbolAttributes;
          }
 
          if (alternateSpace > verticalSpace) {
@@ -147,6 +155,7 @@ function addTreeNodeSymbol(
          ));
       }
 
+      lastSymbolAttributes = nestedSymbolsAttributes[column];
       shouldConnectNestedSymbols = true;
       nodeColumns = column;
       verticalSpace -= defaultVerticalSpace * 0.85;
@@ -235,7 +244,7 @@ function addTreeNodeSymbol(
       
       forPosition.y += forSpace;
       shouldConnectNestedSymbols = true;
-      nodeColumns = column;
+      // nodeColumns = column;
 
       textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + node.steps['value'];
       const tSymbol = taskSymbol(baseSize, forPosition, '#ff7070');
@@ -270,13 +279,21 @@ function addTreeNodeSymbol(
       lastSymbolAttributes = getSymbolAttributes(symbol);
 
       let bodySentences = [...node.body];
+      let whileSpace = 0;
       if (bodySentences.length) {
+
          while (bodySentences.length) {
             const bodyNode = bodySentences.shift()!;
-            verticalSpace += addTreeNodeSymbol(bodyNode, {
+            const vSpace = addTreeNodeSymbol(bodyNode, {
                x: position.x,
                y: position.y + verticalSpace
             }, column + 1);
+
+            whileSpace = vSpace
+            verticalSpace += vSpace;
+
+            nodeColumns = column;
+            shouldConnectNestedSymbols = true;
          }
          verticalSpace -= defaultVerticalSpace;
       }
@@ -293,10 +310,19 @@ function addTreeNodeSymbol(
       arrowsLayer.add(loopArrowSymbol(
          {x: lastSymbolAttributes.x, y: lastSymbolAttributes.y},
          {x: symbolAttributes.x, y: symbolAttributes.y },
-         symbolAttributes.height
+         symbolAttributes.height,
+         whileSpace
       ));
 
+      const empty = emptySymbol({
+         x: lastSymbolAttributes.x,
+         y: lastSymbolAttributes.y + whileSpace
+      })
+      addArrows(empty, false);
+
+
       lastSymbolAttributes = getSymbolAttributes(symbol);
+      verticalSpace += defaultVerticalSpace;
    }
    else if (node.name === 'DowhileNode') {
       let bodySentences = [...node.body];
@@ -345,22 +371,22 @@ function updateHorizontalSpacing(symbol?) {
    }
 }
 
-function addArrows(currentSymbol) {
-   arrowsLayer.add(arrowSymbol(
-      {x: lastSymbolAttributes.x, y: lastSymbolAttributes.y},
-      {x: currentSymbol.attrs.x, y: currentSymbol.attrs.y},
-      {width: currentSymbol.attrs.width, height: currentSymbol.attrs.height },
-      defaultVerticalSpace
-   ));
+function addArrows(currentSymbol, drawRegularArrow = true) {
+   if (drawRegularArrow) {
+      arrowsLayer.add(arrowSymbol(
+         {x: lastSymbolAttributes.x, y: lastSymbolAttributes.y},
+         {x: currentSymbol.attrs.x, y: currentSymbol.attrs.y},
+         {width: currentSymbol.attrs.width, height: currentSymbol.attrs.height },
+         defaultVerticalSpace
+      ));
+   }
 
    if (shouldConnectNestedSymbols) {
       shouldConnectNestedSymbols = false;
 
       for (let index = nodeColumns; index < nestedSymbolsAttributes.length; index++) {
-         
          if (nestedSymbolsAttributes[index]) {
             const element = nestedSymbolsAttributes[index];
-            
             arrowsLayer.add(arrowSymbol(
                {x: element.x, y: element.y},
                {x: currentSymbol.attrs.x, y: currentSymbol.attrs.y},

@@ -1,5 +1,14 @@
 import Konva from 'konva';
 
+export function emptySymbol(position: { x: number, y: number }) {
+   return new Konva.Shape({
+      x: position.x,
+      y: position.y,
+      widh: 0,
+      height: 0,
+   });
+}
+
 export function terminatorSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#3f4254') {
    return new Konva.Rect({
       x: position.x,
@@ -130,6 +139,8 @@ export function loopArrowSymbol(
    origPosition: {x: number, y: number}, 
    destPosition: {x: number, y: number},
    space: number,
+   verticalOffset: number = 0,
+   horizontalOffset: number = 0,
    color: string = '#66295c'
 ) {
 
@@ -141,8 +152,8 @@ export function loopArrowSymbol(
    if (distanceX) {
       points = [
          0, 0,
-         0, space * 1.2,
-         -distanceX * 0.65, space * 1.2,
+         0, verticalOffset,
+         -distanceX * 0.65, verticalOffset,
          -distanceX * 0.65, -distanceY + space * 1.2,
          -distanceX + space * 0.45, -distanceY + space * 0.3
       ]
