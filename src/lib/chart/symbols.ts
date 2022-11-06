@@ -150,12 +150,17 @@ export function loopArrowSymbol(
    let points: any = [];
 
    if (distanceX) {
+
+      if (horizontalOffset) {
+         horizontalOffset =  horizontalOffset - origPosition.x;
+      }
+
       points = [
          0, 0,
          0, verticalOffset,
-         -distanceX * 0.65, verticalOffset,
-         -distanceX * 0.65, -distanceY + space * 1.2,
-         -distanceX + space * 0.45, -distanceY + space * 0.3
+         horizontalOffset - space * 0.6, verticalOffset,
+         horizontalOffset - space * 0.6, -distanceY - space,
+         -distanceX , -distanceY -space
       ]
    }
    else {

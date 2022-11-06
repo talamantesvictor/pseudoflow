@@ -234,13 +234,19 @@ function addTreeNodeSymbol(
       
       let forSentences = [...node.body];
       let forSpace = 0;
+      let horizontalSpace = 0;
       while(forSentences.length) {
          const forNode = forSentences.shift()!;
          forSpace += addTreeNodeSymbol(forNode, {
             x: forPosition.x,
             y: forPosition.y + forSpace
          }, column + 1);
+
       }
+      if (nestedSymbolsAttributes[nodeColumns+1])
+         horizontalSpace = nestedSymbolsAttributes[nodeColumns+1].x + nestedSymbolsAttributes[nodeColumns].width;
+      else if (horizontalSpace)
+         horizontalSpace = lastSymbolAttributes.x + lastSymbolAttributes.width;
       
       forPosition.y += forSpace;
       shouldConnectNestedSymbols = true;
@@ -258,7 +264,9 @@ function addTreeNodeSymbol(
       arrowsLayer.add(loopArrowSymbol(
          {x: tSymbolAttributes.x, y: tSymbolAttributes.y},
          {x: lastSymbolAttributes.x, y : lastSymbolAttributes.y},
-         lastSymbolAttributes.height
+         lastSymbolAttributes.height,
+         0,
+         horizontalSpace
       ));
 
       if (forSpace > verticalSpace) {
@@ -280,6 +288,7 @@ function addTreeNodeSymbol(
 
       let bodySentences = [...node.body];
       let whileSpace = 0;
+      let horizontalSpace = 0;
       if (bodySentences.length) {
 
          while (bodySentences.length) {
@@ -291,6 +300,11 @@ function addTreeNodeSymbol(
 
             whileSpace = vSpace
             verticalSpace += vSpace;
+
+            if (nestedSymbolsAttributes[nodeColumns+1])
+               horizontalSpace = nestedSymbolsAttributes[nodeColumns+1].x + nestedSymbolsAttributes[nodeColumns].width;
+            else
+               horizontalSpace = lastSymbolAttributes.x + lastSymbolAttributes.width;
 
             nodeColumns = column;
             shouldConnectNestedSymbols = true;
@@ -311,7 +325,8 @@ function addTreeNodeSymbol(
          {x: lastSymbolAttributes.x, y: lastSymbolAttributes.y},
          {x: symbolAttributes.x, y: symbolAttributes.y },
          symbolAttributes.height,
-         whileSpace
+         whileSpace,
+         horizontalSpace
       ));
 
       const empty = emptySymbol({
