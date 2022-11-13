@@ -53,6 +53,7 @@
    }
 </script>
 
+
 <div class="commands-area">
    <ul>
       <li on:mousedown="{printCmd}">Print</li>
@@ -64,6 +65,7 @@
       <li on:mousedown="{dowhileCmd}">Do-While</li>
    </ul>
 </div>
+
 
 <style lang="scss">
    @import "../styles/variables.scss";

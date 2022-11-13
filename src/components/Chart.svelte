@@ -50,6 +50,7 @@
 
 </script>
 
+
 <div id="konvaContainer" bind:this={konvaContainer} />
 <div id="scaler">
    <div>
@@ -57,6 +58,7 @@
    </div>
    <input type="range" min="0" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
 </div>
+
 
 <style lang="scss">
    @import "../styles/variables.scss";

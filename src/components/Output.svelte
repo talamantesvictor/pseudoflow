@@ -69,6 +69,8 @@
    };
 
 </script>
+
+
 <div id="output-content">
    {@html content}
    {#if isInputPromptEnabled}
@@ -82,6 +84,8 @@
       </div>
    {/if}
 </div>
+
+
 <style lang="scss">
    #output-content {
       width: calc(100% - 2rem);
