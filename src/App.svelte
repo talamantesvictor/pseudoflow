@@ -4,10 +4,14 @@
    import Editor from "./components/Editor.svelte";
    import Output from "./components/Output.svelte";
    import Chart from "./components/Chart.svelte";
+   import Modal from "./components/Modal.svelte";
+   import InformationModal from "./components/modals/InformationModal.svelte";
+
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
    
+   let modal: any;
    let isProgramRunning: boolean = false;
    let enableUserInput: boolean;
    let pseudocode: string;
@@ -116,6 +120,22 @@
       }
    }
 
+   function settingsButtonClick() {
+      console.log("open settings modal");
+   }
+
+   function infoButtonClick() {
+      console.log("open info modal");
+      modal = {
+         title: 'Information',
+         component: InformationModal
+      };
+   }
+
+   function closeModal() {
+      modal = undefined;
+   }
+
 </script>
 
 
@@ -124,6 +144,8 @@
    on:newButtonClick={newButtonClick}
    on:importButtonClick={importButtonClick}
    on:exportButtonClick={exportButtonClick}
+   on:settingsButtonClick={settingsButtonClick}
+   on:infoButtonClick={infoButtonClick}
    bind:isProgramRunning={isProgramRunning} />
 
 <div id="wrapper" on:mousedown={generateTree}>
@@ -139,7 +161,9 @@
 </div>
 
 <input type="file" id="file-import" accept=".pff" on:change={importData} />
-
+{#if modal}
+   <Modal title="{modal.title}" component="{modal.component}" on:closeModal="{closeModal}"></Modal>
+{/if}
 
 <style lang="scss">
    @import "./styles/variables.scss";

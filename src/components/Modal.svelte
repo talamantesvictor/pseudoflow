@@ -6,7 +6,7 @@
 
    const topbarDispatcher = createEventDispatcher();
    export let title: string = 'Modal';
-   export let content: string = '';
+   export let component: any;
 
    const closeModal = () => {
       topbarDispatcher("closeModal");
@@ -25,7 +25,7 @@
    </div>
    <div class="content">
       <div class="inner-content">
-         {content}
+         <svelte:component this={component} />
       </div>
    </div>
 </div>
@@ -86,11 +86,6 @@
          .inner-content {
             padding: 2rem 4rem;
             overflow: hidden;
-
-            a {
-               text-decoration: none;
-               color: $accent-color;
-            }
          }
       }
    }

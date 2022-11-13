@@ -29,6 +29,14 @@
       topbarDispatcher("exportButtonClick");
    }
 
+   const settingsButtonClick = () => {
+      topbarDispatcher("settingsButtonClick");
+   }
+
+   const infoButtonClick = () => {
+      topbarDispatcher("infoButtonClick");
+   }
+
    $: executeButtonImage = isProgramRunning? stopButton : playButton;
 </script>
 
@@ -50,8 +58,8 @@
       </div>
    </div>
    <div class="right">
-      <img src="{settingsButton}" alt="Settings Button" />
-      <img src="{infoButton}" alt="Info Button" />
+      <img src="{settingsButton}" alt="Settings Button" on:click={settingsButtonClick} />
+      <img src="{infoButton}" alt="Info Button" on:click={infoButtonClick} />
    </div>
 </div>
 
