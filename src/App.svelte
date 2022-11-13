@@ -5,6 +5,7 @@
    import Output from "./components/Output.svelte";
    import Chart from "./components/Chart.svelte";
    import Modal from "./components/Modal.svelte";
+   import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
 
    import { lexer } from "./lib/analyzers/lexer";
@@ -121,11 +122,13 @@
    }
 
    function settingsButtonClick() {
-      console.log("open settings modal");
+      modal = {
+         title: 'Settings',
+         component: SettingsModal
+      };
    }
 
    function infoButtonClick() {
-      console.log("open info modal");
       modal = {
          title: 'Information',
          component: InformationModal
