@@ -2,10 +2,10 @@
    import Commands from "./Commands.svelte";
    import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
-   import { _reservedWords, _codeImport } from "../lib/stores";
+   import { _reservedWords } from "../lib/stores";
    import { onMount } from "svelte";
 
-   export let editorText: String = '';
+   export let editorText: string = '';
    let editorElement: HTMLElement;
    let coloredElement: HTMLElement;
    let numbersElement: Element;
@@ -41,13 +41,14 @@
       }
    }
 
-   _codeImport.subscribe(value => {
-      if (value && editorElement) {
-         editorElement.innerText = String(value);
-         beautifyCode();
-         _codeImport.set(false);
+   $: {
+      if (editorElement) {
+         if (editorElement.innerText !== editorText) {
+            editorElement.innerText = editorText;
+            beautifyCode();
+         }
       }
-   });
+   }
 
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
@@ -102,6 +103,7 @@
    });
 </script>
 
+
 <Commands bind:command={commandToInsert} />
 <div class="editor-wrapper">
    <div class="numbers-area">
@@ -123,6 +125,7 @@
       </div>
    </div>
 </div>
+
 
 <style lang="scss">
    @import "../styles/variables.scss";

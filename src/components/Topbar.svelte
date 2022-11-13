@@ -7,44 +7,28 @@
    import infoButton  from '../../static/images/info_button.svg';
    import playButton  from '../../static/images/play_button.svg';
    import stopButton  from '../../static/images/stop_button.svg';
-   import { _codeImport } from '../lib/stores';
 
+   const topbarDispatcher = createEventDispatcher();
    export let isProgramRunning: boolean;
    let executeButtonImage: any = playButton;
 
-   const topbarDispatcher = createEventDispatcher();
    const runButtonClick = () => {
       isProgramRunning = !isProgramRunning;
       topbarDispatcher("runButtonClick", isProgramRunning);
    };
 
-   $: if (isProgramRunning) {
-      executeButtonImage = stopButton;
-   }
-   else {
-      executeButtonImage = playButton;
+   const importButtonClick = () => {
+      topbarDispatcher("importButtonClick")
    }
 
-   function importClick() {
-		let element = document.getElementById("file-import");
-		element.click();
-	}
-
-   function importData(e) {
-      const reader = new FileReader();
-
-		reader.addEventListener("load", (event) => {
-			const result = event.target.result;
-         _codeImport.set(result);
-		});
-		reader.readAsText(e.target.files[0], "UTF-8");
-   }
+   $: executeButtonImage = isProgramRunning? stopButton : playButton;
 </script>
+
 
 <div id="topbar">
    <div class="left">
       <img src="{newButton}" alt="New Button" />
-      <img src="{openButton}" alt="New Button" on:click={importClick} />
+      <img src="{openButton}" alt="New Button" on:click={importButtonClick} />
       <img src="{saveButton}" alt="New Button" />
    </div>
    <div class="middle">
@@ -63,7 +47,6 @@
    </div>
 </div>
 
-<input type="file" id="file-import" accept=".pff" on:change={importData} />
 
 <style lang="scss">
    @import "../styles/variables.scss";
@@ -76,8 +59,6 @@
       justify-content: space-between;
       align-items: center;
 
-
-
       .left, .right {
          display: flex;
          width: 0px;
@@ -87,10 +68,6 @@
             height: calc($topbar-height * 0.4);
             cursor: pointer;
          }
-      }
-
-      .right {
-         justify-content: left;
       }
 
       .right {
@@ -139,8 +116,4 @@
          }
       }
    }
-
-   #file-import {
-		display: none;
-	}
 </style>

@@ -7,7 +7,6 @@
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
-   import { _codeImport } from "./lib/stores";
    
    let isProgramRunning: boolean = false;
    let enableUserInput: boolean;
@@ -17,14 +16,7 @@
    let outputText: string;
    let pendingSentencesToExecute: atype.SentencesNode[];
    let lastExecutedSentence: atype.SentencesNode;
-
    let timeoutToParse: any;
-
-   _codeImport.subscribe(value => {
-      if (value) {
-         timeoutToParse = setTimeout(generateTree, 350);
-      }
-   });
 
    window.onkeydown = function (event) {
       clearTimeout(timeoutToParse);
@@ -92,9 +84,29 @@
       outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
       execute();
    }
+
+   function importButtonClick() {
+      let element = document.getElementById("file-import");
+      element.click();
+   }
+
+   function importData(e) {
+      const reader = new FileReader();
+		reader.addEventListener("load", (event) => {
+			const result = event.target.result;
+         pseudocode = result.toString();
+         generateTree();
+		});
+		reader.readAsText(e.target.files[0], "UTF-8");
+   }
 </script>
 
-<Topbar on:runButtonClick={runButtonClick} bind:isProgramRunning={isProgramRunning} />
+
+<Topbar 
+   on:runButtonClick={runButtonClick} 
+   on:importButtonClick={importButtonClick}
+   bind:isProgramRunning={isProgramRunning} />
+
 <div id="wrapper" on:mousedown={generateTree}>
    <div id="flowchart-area">
       <Chart sintaxTree="{syntaxTree['body']}"></Chart>
@@ -106,6 +118,9 @@
       <Editor bind:editorText={pseudocode} />
    </div>
 </div>
+
+<input type="file" id="file-import" accept=".pff" on:change={importData} />
+
 
 <style lang="scss">
    @import "./styles/variables.scss";
@@ -152,4 +167,8 @@
          z-index: 3;
       }
    }
+
+   #file-import {
+		display: none;
+	}
 </style>
