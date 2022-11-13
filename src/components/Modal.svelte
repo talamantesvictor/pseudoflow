@@ -1,0 +1,97 @@
+<script lang="ts">
+   import { createEventDispatcher } from "svelte";
+   import { scale, fade } from "svelte/transition";
+   import { quintOut } from "svelte/easing";
+   import closeButton from '../../static/images/close_button.svg';
+
+   const topbarDispatcher = createEventDispatcher();
+   export let title: string = 'Modal';
+   export let content: string = '';
+
+   const closeModal = () => {
+      topbarDispatcher("closeModal");
+   };
+</script>
+
+<div class="backdrop" on:click={closeModal} transition:fade={{ duration: 150 }}></div>
+<div class="modal" transition:scale={{ duration: 300, easing: quintOut }}>
+   <div class="header">
+      <div class="title">
+         {title}
+      </div>
+      <div class="close">
+         <img src="{closeButton}" alt="Close Button" on:click={closeModal} />
+      </div>
+   </div>
+   <div class="content">
+      <div class="inner-content">
+         {content}
+      </div>
+   </div>
+</div>
+
+<style lang="scss">
+   @import "../styles/variables.scss";
+
+   .backdrop {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10;
+   }
+
+   .modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 700px;
+      max-height: 500px;
+      width: 80%;
+      height: auto;
+      background: #282A36;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+
+      .header {
+         width: calc(100% - 1rem);
+         height: 3rem;
+         background: #424453;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 0 0.5rem;
+
+         .close {
+            height: 2rem;
+            cursor: pointer;
+
+            img {
+               height: 100%;
+            }
+         }
+      }
+
+      .content {
+         width: 100%;
+         height: 100%;
+         overflow-y: auto;
+         
+         .inner-content {
+            padding: 2rem 4rem;
+            overflow: hidden;
+
+            a {
+               text-decoration: none;
+               color: $accent-color;
+            }
+         }
+      }
+   }
+</style>
