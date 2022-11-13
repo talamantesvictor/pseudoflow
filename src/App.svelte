@@ -85,6 +85,13 @@
 		reader.readAsText(e.target.files[0], "UTF-8");
    }
 
+   function newButtonClick() {
+      // Pending: add a warning modal
+      
+      pseudocode = '';
+      generateTree();
+   }
+
    function importButtonClick() {
       let element = document.getElementById("file-import");
       element.click();
@@ -114,6 +121,7 @@
 
 <Topbar 
    on:runButtonClick={runButtonClick} 
+   on:newButtonClick={newButtonClick}
    on:importButtonClick={importButtonClick}
    on:exportButtonClick={exportButtonClick}
    bind:isProgramRunning={isProgramRunning} />

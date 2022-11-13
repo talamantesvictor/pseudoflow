@@ -1,12 +1,12 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
-   import newButton  from '../../static/images/new_button.svg';
-   import openButton  from '../../static/images/open_button.svg';
-   import saveButton  from '../../static/images/save_button.svg';
-   import settingsButton  from '../../static/images/settings_button.svg';
-   import infoButton  from '../../static/images/info_button.svg';
-   import playButton  from '../../static/images/play_button.svg';
-   import stopButton  from '../../static/images/stop_button.svg';
+   import newButton from '../../static/images/new_button.svg';
+   import openButton from '../../static/images/open_button.svg';
+   import saveButton from '../../static/images/save_button.svg';
+   import settingsButton from '../../static/images/settings_button.svg';
+   import infoButton from '../../static/images/info_button.svg';
+   import playButton from '../../static/images/play_button.svg';
+   import stopButton from '../../static/images/stop_button.svg';
 
    const topbarDispatcher = createEventDispatcher();
    export let isProgramRunning: boolean;
@@ -16,6 +16,10 @@
       isProgramRunning = !isProgramRunning;
       topbarDispatcher("runButtonClick", isProgramRunning);
    };
+
+   const newButtonClick = () => {
+      topbarDispatcher("newButtonClick");
+   }
 
    const importButtonClick = () => {
       topbarDispatcher("importButtonClick");
@@ -31,7 +35,7 @@
 
 <div id="topbar">
    <div class="left">
-      <img src="{newButton}" alt="New Button" />
+      <img src="{newButton}" alt="New Button" on:click={newButtonClick} />
       <img src="{openButton}" alt="Open Button" on:click={importButtonClick} />
       <img src="{saveButton}" alt="Save Button" on:click={exportButtonClick} />
    </div>
