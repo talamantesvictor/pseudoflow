@@ -85,7 +85,6 @@
 <style lang="scss">
    #output-content {
       width: calc(100% - 2rem);
-      min-height: calc(100% - 2rem);
       padding: 1rem;
       color: white;
       word-wrap: break-word;

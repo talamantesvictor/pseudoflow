@@ -126,6 +126,7 @@
          left: 0;
          transform: translateX(100%);
          transition: transform 0.2s;
+         overflow-y: auto;
          z-index: 2;
 
          &.active {
