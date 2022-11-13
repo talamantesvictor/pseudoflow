@@ -15,6 +15,10 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
       const node = runningSentences.shift()!;
       lastNode = node;
       if (node.name === 'ReadNode') {
+         interpreterVariables.push({
+            identifier: node.identifier.value,
+            value: undefined
+         });
          shouldReadInput = true;
          break;
       }
