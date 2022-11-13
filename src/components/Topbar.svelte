@@ -7,6 +7,7 @@
    import infoButton  from '../../static/images/info_button.svg';
    import playButton  from '../../static/images/play_button.svg';
    import stopButton  from '../../static/images/stop_button.svg';
+   import { _codeImport } from '../lib/stores';
 
    export let isProgramRunning: boolean;
    let executeButtonImage: any = playButton;
@@ -24,15 +25,26 @@
       executeButtonImage = playButton;
    }
 
-   function importData() {
-      console.log('changed');
+   function importClick() {
+		let element = document.getElementById("file-import");
+		element.click();
+	}
+
+   function importData(e) {
+      const reader = new FileReader();
+
+		reader.addEventListener("load", (event) => {
+			const result = event.target.result;
+         _codeImport.set(result);
+		});
+		reader.readAsText(e.target.files[0], "UTF-8");
    }
 </script>
 
 <div id="topbar">
    <div class="left">
       <img src="{newButton}" alt="New Button" />
-      <img src="{openButton}" alt="New Button" />
+      <img src="{openButton}" alt="New Button" on:click={importClick} />
       <img src="{saveButton}" alt="New Button" />
    </div>
    <div class="middle">

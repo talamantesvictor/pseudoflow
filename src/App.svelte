@@ -7,6 +7,7 @@
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
+   import { _codeImport } from "./lib/stores";
    
    let isProgramRunning: boolean = false;
    let enableUserInput: boolean;
@@ -18,6 +19,12 @@
    let lastExecutedSentence: atype.SentencesNode;
 
    let timeoutToParse: any;
+
+   _codeImport.subscribe(value => {
+      if (value) {
+         timeoutToParse = setTimeout(generateTree, 350);
+      }
+   });
 
    window.onkeydown = function (event) {
       clearTimeout(timeoutToParse);

@@ -2,7 +2,7 @@
    import Commands from "./Commands.svelte";
    import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
-   import { _reservedWords } from "../lib/stores";
+   import { _reservedWords, _codeImport } from "../lib/stores";
    import { onMount } from "svelte";
 
    export let editorText: String = '';
@@ -40,6 +40,14 @@
          insertTemplate(commandToInsert.template);
       }
    }
+
+   _codeImport.subscribe(value => {
+      if (value && editorElement) {
+         editorElement.innerText = String(value);
+         beautifyCode();
+         _codeImport.set(false);
+      }
+   });
 
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
