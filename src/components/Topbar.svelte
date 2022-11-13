@@ -1,5 +1,10 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
+   import newButton  from '../../static/images/new_button.svg';
+   import openButton  from '../../static/images/open_button.svg';
+   import saveButton  from '../../static/images/save_button.svg';
+   import settingsButton  from '../../static/images/settings_button.svg';
+   import infoButton  from '../../static/images/info_button.svg';
    import playButton  from '../../static/images/play_button.svg';
    import stopButton  from '../../static/images/stop_button.svg';
 
@@ -18,10 +23,18 @@
    else {
       executeButtonImage = playButton;
    }
+
+   function importData() {
+      console.log('changed');
+   }
 </script>
 
 <div id="topbar">
-   <div class="left" />
+   <div class="left">
+      <img src="{newButton}" alt="New Button" />
+      <img src="{openButton}" alt="New Button" />
+      <img src="{saveButton}" alt="New Button" />
+   </div>
    <div class="middle">
       <div id="fileinfo">
          <span>File:</span>
@@ -32,8 +45,13 @@
          {isProgramRunning? "Stop" : "Run"}
       </div>
    </div>
-   <div class="right" />
+   <div class="right">
+      <img src="{settingsButton}" alt="New Button" />
+      <img src="{infoButton}" alt="New Button" />
+   </div>
 </div>
+
+<input type="file" id="file-import" accept=".pff" on:change={importData} />
 
 <style lang="scss">
    @import "../styles/variables.scss";
@@ -46,9 +64,29 @@
       justify-content: space-between;
       align-items: center;
 
+
+
+      .left, .right {
+         display: flex;
+         width: 0px;
+         img {
+            margin: 0 0.5rem;
+            padding: 0 0.5rem;
+            height: calc($topbar-height * 0.4);
+            cursor: pointer;
+         }
+      }
+
+      .right {
+         justify-content: left;
+      }
+
+      .right {
+         justify-content: right;
+      }
+
       .middle {
          display: flex;
-
          #fileinfo {
             background-color: $fileinfo-background;
             color: $fileinfo-foreground;
@@ -89,4 +127,8 @@
          }
       }
    }
+
+   #file-import {
+		display: none;
+	}
 </style>
