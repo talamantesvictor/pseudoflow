@@ -1,8 +1,9 @@
-App version: 1.0.0 Beta 1<br><br>
+<script lang="ts">
+   import { translations } from "../../lib/stores";
+</script>
 
-PseudoFlow is a tool to help programming students learn about 
-control structures using pseudocode and generating an ANSI standard 
-flowchart of their algorithms in real-time.<br><br>
+{translations().APP_INFO_VERSION}: 1.0.0 Beta 1<br><br>
+{translations().APP_INFO_DESCRIPTION}<br><br>
 
 <a href="https://www.victortalamantes.com" target="_blank">victortalamantes.com</a>
 

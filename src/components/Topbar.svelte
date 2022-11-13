@@ -1,5 +1,6 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
+   import { translations } from "../lib/stores";
    import newButton from '../../static/images/new_button.svg';
    import openButton from '../../static/images/open_button.svg';
    import saveButton from '../../static/images/save_button.svg';
@@ -49,12 +50,12 @@
    </div>
    <div class="middle">
       <div id="fileinfo">
-         <span>File:</span>
+         <span>{translations().APP_FILE}:</span>
          <span>pseudocode.pff</span>
       </div>
       <div id="runbutton" on:click={runButtonClick}>
          <img src="{executeButtonImage}" alt="Play Button" />
-         {isProgramRunning? "Stop" : "Run"}
+         {isProgramRunning? translations().APP_STOP : translations().APP_RUN}
       </div>
    </div>
    <div class="right">
