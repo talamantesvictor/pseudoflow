@@ -18,7 +18,11 @@
    };
 
    const importButtonClick = () => {
-      topbarDispatcher("importButtonClick")
+      topbarDispatcher("importButtonClick");
+   }
+
+   const exportButtonClick = () => {
+      topbarDispatcher("exportButtonClick");
    }
 
    $: executeButtonImage = isProgramRunning? stopButton : playButton;
@@ -28,8 +32,8 @@
 <div id="topbar">
    <div class="left">
       <img src="{newButton}" alt="New Button" />
-      <img src="{openButton}" alt="New Button" on:click={importButtonClick} />
-      <img src="{saveButton}" alt="New Button" />
+      <img src="{openButton}" alt="Open Button" on:click={importButtonClick} />
+      <img src="{saveButton}" alt="Save Button" on:click={exportButtonClick} />
    </div>
    <div class="middle">
       <div id="fileinfo">
@@ -42,8 +46,8 @@
       </div>
    </div>
    <div class="right">
-      <img src="{settingsButton}" alt="New Button" />
-      <img src="{infoButton}" alt="New Button" />
+      <img src="{settingsButton}" alt="Settings Button" />
+      <img src="{infoButton}" alt="Info Button" />
    </div>
 </div>
 

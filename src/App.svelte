@@ -62,16 +62,6 @@
       }
    }
 
-   function runButtonClick(e) {
-      if (isProgramRunning = e.detail) {
-         prepareExecution();
-      }
-      else {
-         interpreterReset();
-         enableUserInput = false;
-      }
-   }
-
    function capturedMessage(e) {
       const value = e.detail.text? e.detail.text : false;
       enableUserInput = false;
@@ -85,11 +75,6 @@
       execute();
    }
 
-   function importButtonClick() {
-      let element = document.getElementById("file-import");
-      element.click();
-   }
-
    function importData(e) {
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
@@ -99,12 +84,38 @@
 		});
 		reader.readAsText(e.target.files[0], "UTF-8");
    }
+
+   function importButtonClick() {
+      let element = document.getElementById("file-import");
+      element.click();
+   }
+
+   function exportButtonClick() {
+      let textBlob = new Blob([pseudocode], {type: 'text/plain'});
+      let tempLink = document.createElement("a");
+      tempLink.setAttribute('href', URL.createObjectURL(textBlob));
+      tempLink.setAttribute('download', 'pseudocode.pff');
+      tempLink.click();
+      URL.revokeObjectURL(tempLink.href);
+   }
+
+   function runButtonClick(e) {
+      if (isProgramRunning = e.detail) {
+         prepareExecution();
+      }
+      else {
+         interpreterReset();
+         enableUserInput = false;
+      }
+   }
+
 </script>
 
 
 <Topbar 
    on:runButtonClick={runButtonClick} 
    on:importButtonClick={importButtonClick}
+   on:exportButtonClick={exportButtonClick}
    bind:isProgramRunning={isProgramRunning} />
 
 <div id="wrapper" on:mousedown={generateTree}>
