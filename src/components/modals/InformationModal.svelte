@@ -2,7 +2,7 @@
    import { translationStore } from "../../lib/stores";
 </script>
 
-{$translationStore.APP_INFO_VERSION}: 1.0.0 Beta 1<br><br>
+{$translationStore.APP_INFO_VERSION}: 0.9 Beta 1<br><br>
 {$translationStore.APP_INFO_DESCRIPTION}<br><br>
 
 <a href="https://www.victortalamantes.com" target="_blank">victortalamantes.com</a>
