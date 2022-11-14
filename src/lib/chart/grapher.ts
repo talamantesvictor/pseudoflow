@@ -88,6 +88,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const dataNode = dataSymbol(baseSize, position, color);
       treeNodeRect = addSymbol(dataNode);
 
+      console.log(node);
       const textValue = node.name === 'PrintNode'? valueBuilder(node.value, false) : node.identifier['value'];
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,

@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { translations } from "./lib/stores";
+   import { translationStore } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -51,7 +51,7 @@
 
    function prepareExecution() {
       generateTree()
-      outputText = "<div class=\"hl-comments\">" + $translations.APP_PROGRAM_STARTED + " ***</div>";
+      outputText = "<div class=\"hl-comments\">" + $translationStore.APP_PROGRAM_STARTED + " ***</div>";
       interpreterReset();
       execute(syntaxTree['body']);
    }
@@ -64,7 +64,7 @@
       lastExecutedSentence = execution.lastNode;
 
       if (!enableUserInput && !pendingSentencesToExecute.length) {
-         outputText += "<div class=\"hl-comments\">" + $translations.APP_PROGRAM_END + " ***</div>";
+         outputText += "<div class=\"hl-comments\">" + $translationStore.APP_PROGRAM_END + " ***</div>";
       }
    }
 
@@ -124,14 +124,14 @@
 
    function settingsButtonClick() {
       modal = {
-         title: $translations.APP_SETTINGS_TITLE,
+         title: $translationStore.APP_SETTINGS_TITLE,
          component: SettingsModal
       };
    }
 
    function infoButtonClick() {
       modal = {
-         title: $translations.APP_INFO_TITLE,
+         title: $translationStore.APP_INFO_TITLE,
          component: InformationModal
       };
    }

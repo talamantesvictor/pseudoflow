@@ -1,9 +1,9 @@
 <script lang="ts">
-   import { translations } from "../../lib/stores";
+   import { translationStore } from "../../lib/stores";
 </script>
 
-{$translations.APP_INFO_VERSION}: 1.0.0 Beta 1<br><br>
-{$translations.APP_INFO_DESCRIPTION}<br><br>
+{$translationStore.APP_INFO_VERSION}: 1.0.0 Beta 1<br><br>
+{$translationStore.APP_INFO_DESCRIPTION}<br><br>
 
 <a href="https://www.victortalamantes.com" target="_blank">victortalamantes.com</a>
 

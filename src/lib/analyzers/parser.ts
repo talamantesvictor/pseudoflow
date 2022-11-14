@@ -1,9 +1,8 @@
 import type * as atype from './atypes'
-import { _reservedWords } from "../stores";
+import { codeWordStore } from "../stores";
 
 let reservedWords;
-
-_reservedWords.subscribe(value => {
+codeWordStore.subscribe(value => {
    reservedWords = value;
 });
 

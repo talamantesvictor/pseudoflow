@@ -2,7 +2,7 @@
    import Commands from "./Commands.svelte";
    import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
-   import { _reservedWords } from "../lib/stores";
+   import { codeWordStore } from "../lib/stores";
    import { onMount } from "svelte";
 
    export let editorText: string = '';
@@ -53,7 +53,7 @@
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      coloredElement.innerHTML = beautifier(editorElement.innerHTML, $_reservedWords, activeRowNumber);
+      coloredElement.innerHTML = beautifier(editorElement.innerHTML, $codeWordStore, activeRowNumber);
       editorText = editorElement.innerText;
    }
 
