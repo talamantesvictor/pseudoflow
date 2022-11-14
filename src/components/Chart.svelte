@@ -6,14 +6,14 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
-   let konvaScale = 0.25;
+   let konvaScale = 0.5;
    let userScale = konvaScale * 100;
    let chartDimensions;
    const arrowsLayer = new Konva.Layer();
    const symbolsLayer = new Konva.Layer();
    
    $: if (sintaxTree && konvaContainer) {
-      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth);
+      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8);
    }
 
    $: if (konvaStage) {
@@ -56,7 +56,7 @@
    <div>
       <span>Zoom:</span> {userScale * 2}%
    </div>
-   <input type="range" min="0" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
+   <input type="range" min="5" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
 </div>
 
 

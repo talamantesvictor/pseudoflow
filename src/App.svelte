@@ -180,14 +180,14 @@
       #text-area {
          display: flex;
          flex-direction: column;
-         width: 70%;
+         width: 60%;
          background-color: $editor-background;
          height: calc(100vh - $topbar-height);
          overflow: hidden;
       }
 
       #output-area {
-         width: 70%;
+         width: 60%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;
@@ -204,7 +204,7 @@
       }
 
       #flowchart-area {
-         width: 30%;
+         width: 40%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;

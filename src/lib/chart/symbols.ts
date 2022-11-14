@@ -205,7 +205,7 @@ export function textLabel(label: string, position: { x: number, y: number }, dim
       x: position.x,
       y: position.y,
       text: label,
-      fontSize: 26,
+      fontSize: 30,
       fontFamily: 'Calibri',
       align: 'center',
       verticalAlign: 'middle',
