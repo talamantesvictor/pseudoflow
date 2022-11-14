@@ -26,7 +26,7 @@
    function ifCmd(e) {
       e.preventDefault();
       command = {
-         template: $codeWordStore.CODE_IF + ' (xyz == 1)\n\n' + $codeWordStore.CODE_ENDIF,
+         template: $codeWordStore.CODE_IF + ' (xyz == 1)\n' + $codeWordStore.CODE_ELSE + '\n' + $codeWordStore.CODE_ENDIF,
          timestamp: Date.now()
       }
    }
