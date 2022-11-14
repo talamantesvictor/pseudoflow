@@ -50,12 +50,12 @@
    </div>
    <div class="middle">
       <div id="fileinfo">
-         <span>{translations().APP_FILE}:</span>
+         <span>{$translations.APP_FILE}:</span>
          <span>pseudocode.pff</span>
       </div>
       <div id="runbutton" on:click={runButtonClick}>
          <img src="{executeButtonImage}" alt="Play Button" />
-         {isProgramRunning? translations().APP_STOP : translations().APP_RUN}
+         {isProgramRunning? $translations.APP_STOP : $translations.APP_RUN}
       </div>
    </div>
    <div class="right">

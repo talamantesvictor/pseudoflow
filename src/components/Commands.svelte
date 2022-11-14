@@ -5,7 +5,7 @@
    function printCmd(e) {
       e.preventDefault();
       command = {
-         template: $_reservedWords.CODE_PRINT + ' "' + translations().APP_PLACEHOLDER_PRINT + '"',
+         template: $_reservedWords.CODE_PRINT + ' "' + $translations.APP_PLACEHOLDER_PRINT + '"',
          timestamp: Date.now()
       }
    }
@@ -56,13 +56,13 @@
 
 <div class="commands-area">
    <ul>
-      <li on:mousedown="{printCmd}">{translations().APP_CMD_PRINT}</li>
-      <li on:mousedown="{readCmd}">{translations().APP_CMD_READ}</li>
-      <li on:mousedown="{ifCmd}">{translations().APP_CMD_IF}</li>
-      <li on:mousedown="{switchCmd}">{translations().APP_CMD_SWITCH}</li>
-      <li on:mousedown="{forCmd}">{translations().APP_CMD_FOR}</li>
-      <li on:mousedown="{whileCmd}">{translations().APP_CMD_WHILE}</li>
-      <li on:mousedown="{dowhileCmd}">{translations().APP_CMD_DOWHILE}</li>
+      <li on:mousedown="{printCmd}">{$translations.APP_CMD_PRINT}</li>
+      <li on:mousedown="{readCmd}">{$translations.APP_CMD_READ}</li>
+      <li on:mousedown="{ifCmd}">{$translations.APP_CMD_IF}</li>
+      <li on:mousedown="{switchCmd}">{$translations.APP_CMD_SWITCH}</li>
+      <li on:mousedown="{forCmd}">{$translations.APP_CMD_FOR}</li>
+      <li on:mousedown="{whileCmd}">{$translations.APP_CMD_WHILE}</li>
+      <li on:mousedown="{dowhileCmd}">{$translations.APP_CMD_DOWHILE}</li>
    </ul>
 </div>
 

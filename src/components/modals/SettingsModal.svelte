@@ -5,31 +5,31 @@
 <div class="languages">
    <div>
       <div class="title">
-         {translations().APP_SETTINGS_SOFTWARE}
+         {$translations.APP_SETTINGS_SOFTWARE}
       </div>
       <div class="options">
          <div>
-            <input type="radio" id="app-english">
-            <label for="app-english">{translations().APP_SETTINGS_LANG_ENGLISH}</label>
+            <input type="radio" id="app-english" value="en">
+            <label for="app-english">{$translations.APP_SETTINGS_LANG_ENGLISH}</label>
          </div>
          <div>
-            <input type="radio" id="app-spanish">
-            <label for="app-spanish">{translations().APP_SETTINGS_LANG_SPANISH}</label>
+            <input type="radio" id="app-spanish" value="es">
+            <label for="app-spanish">{$translations.APP_SETTINGS_LANG_SPANISH}</label>
          </div>
       </div>
    </div>
    <div>
       <div class="title">
-         {translations().APP_SETTINGS_PSEUDOCODE}
+         {$translations.APP_SETTINGS_PSEUDOCODE}
       </div>
       <div class="options">
          <div>
             <input type="radio" id="app-english">
-            <label for="app-english">{translations().APP_SETTINGS_LANG_ENGLISH}</label>
+            <label for="app-english">{$translations.APP_SETTINGS_LANG_ENGLISH}</label>
          </div>
          <div>
             <input type="radio" id="app-spanish">
-            <label for="app-spanish">{translations().APP_SETTINGS_LANG_SPANISH}</label>
+            <label for="app-spanish">{$translations.APP_SETTINGS_LANG_SPANISH}</label>
          </div>
       </div>
    </div>
