@@ -13,6 +13,7 @@
    "APP_INFO_TITLE": "Information",
    "APP_INFO_VERSION": "App version",
    "APP_INFO_DESCRIPTION": "PseudoFlow is a tool to help programming students learn about control structures using pseudocode and generating an ANSI standard flowchart of their algorithms in real-time.",
+   "APP_CMD_VAR": "Declare",
    "APP_CMD_PRINT": "Print",
    "APP_CMD_READ": "Read",
    "APP_CMD_IF": "If",

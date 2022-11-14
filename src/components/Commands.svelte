@@ -2,6 +2,13 @@
    import { codeWordStore, translationStore } from "../lib/stores";
    export let command: object = {};
 
+   function declareCmd(e) {
+      e.preventDefault();
+      command = {
+         template: $codeWordStore.CODE_VAR + ' xyz',
+         timestamp: Date.now()
+      }
+   }
    function printCmd(e) {
       e.preventDefault();
       command = {
@@ -56,6 +63,7 @@
 
 <div class="commands-area">
    <ul>
+      <li on:mousedown="{declareCmd}">{$translationStore.APP_CMD_VAR}</li>
       <li on:mousedown="{printCmd}">{$translationStore.APP_CMD_PRINT}</li>
       <li on:mousedown="{readCmd}">{$translationStore.APP_CMD_READ}</li>
       <li on:mousedown="{ifCmd}">{$translationStore.APP_CMD_IF}</li>
