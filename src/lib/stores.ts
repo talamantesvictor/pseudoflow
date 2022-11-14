@@ -4,11 +4,13 @@ import spanishWords from "../i18n/code/es.json";
 import englishTranslations from "../i18n/app/en.json";
 import spanishTranslations from "../i18n/app/es.json";
 
-export const codeWordStore = writable(spanishWords);
+export let codeWordLang = 'en';
+export let translationLang = 'en';
+export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
 
-export const changeTranslation = (lanCode) => {
-   switch (lanCode) {
+export const changeTranslation = (langCode) => {
+   switch (translationLang = langCode) {
       case 'es':
          translationStore.set(spanishTranslations);
          break;
@@ -19,8 +21,8 @@ export const changeTranslation = (lanCode) => {
    }
 };
 
-export const changecodeWordsStore = (lanCode) => {
-   switch (lanCode) {
+export const changecodeWordsStore = (langCode) => {
+   switch (codeWordLang = langCode) {
       case 'es':
          codeWordStore.set(spanishWords);
          break;
