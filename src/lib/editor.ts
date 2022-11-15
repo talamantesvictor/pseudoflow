@@ -67,8 +67,17 @@ export const getCurrentLineNumber = (selection: Selection, element: Element) : n
       }
       // Firefox fix when caret is in last row and is empty
       else if (selection.anchorNode['innerText']) {
-         let lineBreaks = selection.anchorNode['innerText'].split('\n');
-         calculatedRow = lineBreaks.length - 1;
+         // Left corner with row content
+         if (selection.getRangeAt(0).startOffset == 0) {
+            calculatedRow = calculateRowBySiblings(selection.getRangeAt(0).startContainer, calculatedRow);
+         }
+         // Right corner with content or left corner without content
+         else {
+            for (let index = 0; index < selection.getRangeAt(0).startOffset; index++) {
+               if (selection.anchorNode.childNodes[index].nodeName == 'BR')
+                  calculatedRow++
+            }
+         }
       }
       // Chromium fix for tabs
       else if (selection.anchorNode.parentNode.previousSibling !== null) {

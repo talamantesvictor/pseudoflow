@@ -165,9 +165,7 @@
 </div>
 
 <input type="file" id="file-import" accept=".pff" on:change={importData} />
-{#if modal}
-   <Modal title="{modal.title}" component="{modal.component}" on:closeModal="{closeModal}"></Modal>
-{/if}
+{#if modal} <Modal title="{modal.title}" component="{modal.component}" on:closeModal="{closeModal}"></Modal> {/if}
 
 <style lang="scss">
    @import "./styles/variables.scss";
