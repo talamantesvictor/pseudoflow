@@ -53,6 +53,5 @@ export const lexer = (code: string) : any => {
          }
       }
    });
-   console.log(tokens);
    return tokens;
 };

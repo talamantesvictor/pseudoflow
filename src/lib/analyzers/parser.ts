@@ -20,7 +20,7 @@ export const parser = (tokens: Array<atype.Token>) => {
          parserIndex++;
    }
 
-   console.log(program);
+   // console.log(program);
 
    return program;
 };
@@ -132,7 +132,6 @@ function assignmentParser() : atype.AssignmentNode {
    const identifier = parserTokens[parserIndex];
    nextIndex();
    if (parserTokens[parserIndex].name !== 'AssignmentToken') {
-      console.log(parserTokens[parserIndex]);
       throw new SyntaxError('Identifier must be followed by assignment operator.');
    }
    nextIndex();

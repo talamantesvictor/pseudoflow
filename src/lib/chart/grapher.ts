@@ -88,7 +88,6 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const dataNode = dataSymbol(baseSize, position, color);
       treeNodeRect = addSymbol(dataNode);
 
-      console.log(node);
       const textValue = node.name === 'PrintNode'? valueBuilder(node.value, false) : node.identifier['value'];
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,
@@ -198,7 +197,6 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       treeNodeDimensions.x = widerBodyNode > widerAlternativeNode? widerBodyNode : widerAlternativeNode;
       treeNodeDimensions.y = bodyHeight > alternativeHeight? bodyHeight : alternativeHeight;
       treeNodeDimensions.y += defaultVerticalSpace * 0.5;
-      console.log('xxx', treeNodeDimensions.x);
    }
    else if (node.name === 'SwitchNode') {
       // First symbol
