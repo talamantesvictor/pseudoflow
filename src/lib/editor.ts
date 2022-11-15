@@ -27,7 +27,11 @@ export const insertTemplate = (template: string) => {
 // Insert line break keeping 
 // trail tab characters
 export const insertLineBreak = (selection: Selection) => {
-   const nodeString = selection.anchorNode?.nodeValue;
+   const currentLine = getCurrentLineNumber(selection);
+   const fullText = selection.anchorNode.parentNode['innerText'];
+   const lines = fullText.split('\n');
+   let nodeString = lines[currentLine - 1];
+   
    document.execCommand('InsertLineBreak');
 
    if (nodeString) {
@@ -53,12 +57,12 @@ export const unselectText = (selection: Selection) => {
 
 // Based in the current caret position
 // determine which row is active
-export const getCurrentLineNumber = (selection: Selection, element: Element) : number => {
+export const getCurrentLineNumber = (selection: Selection, element: any = false) : number => {
    let calculatedRow = -1;
    
    let shouldCalculate = selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && 
-         selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset &&
-            element === document.activeElement;
+         selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset && 
+            ( (element && element === document.activeElement) || (!element) );
 
    if (shouldCalculate) {
       calculatedRow = 1;
