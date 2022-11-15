@@ -54,41 +54,38 @@ export const unselectText = (selection: Selection) => {
 // Based in the current caret position
 // determine which row is active
 export const getCurrentLineNumber = (selection: Selection, element: Element) : number => {
-   let calculatedRow = 0;
-
-   if (selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && 
-         selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset &&
-            element === document.activeElement) {
-               
-      if (selection.anchorNode === element) {
-         calculatedRow = selection.anchorOffset;
-         if (calculatedRow && element.childNodes[calculatedRow-1].nodeName === '#text') {
-            calculatedRow -= 1;
-         }
-      }
-      else {
-         for (let index = 0; index < element.childNodes.length - 1; index++) {
-            if (element.childNodes[index].isSameNode(selection.anchorNode)) {
-               break;
-            }
-            calculatedRow++;
-         }
-      }
-      
-      let lineBreaksToDiscount = 0;
-      for (let index = 0; index < calculatedRow; index++) {
-         if (index && element.childNodes[index].nodeName === 'BR') {
-            if (element.childNodes[index-1].nodeName === '#text') {
-               lineBreaksToDiscount++;
-            }
-         }
-      }
+   let calculatedRow = -1;
    
-      if (calculatedRow === element.childNodes.length) {
-         calculatedRow -= 1; // calculatedRow > rowLimit? rowLimit : calculatedRow;
+   let shouldCalculate = selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && 
+         selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset &&
+            element === document.activeElement;
+
+   if (shouldCalculate) {
+      calculatedRow = 1;
+      if (selection.anchorNode.previousSibling !== null) {
+         calculatedRow = calculateRowBySiblings(selection.anchorNode, calculatedRow);
       }
-      calculatedRow += 1 - lineBreaksToDiscount;
+      // Firefox fix when caret is in last row and is empty
+      else if (selection.anchorNode['innerText']) {
+         let lineBreaks = selection.anchorNode['innerText'].split('\n');
+         calculatedRow = lineBreaks.length - 1;
+      }
+      // Chromium fix for tabs
+      else if (selection.anchorNode.parentNode.previousSibling !== null) {
+         calculatedRow = calculateRowBySiblings(selection.anchorNode.parentNode, calculatedRow);
+      }
    }
    
    return calculatedRow;
+}
+
+function calculateRowBySiblings(currentNode, currentIndex) {
+   let index = currentIndex;
+   if (currentNode.previousSibling) {
+      if (currentNode.previousSibling.nodeValue === '\n' || currentNode.previousSibling.nodeName === 'BR') {
+         index += 1;
+      }
+      index = calculateRowBySiblings(currentNode.previousSibling, index);
+   }
+   return index;
 }
