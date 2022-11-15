@@ -8,7 +8,7 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
    for (let index = 0; index < code.length; index++) {
       if (code[index] === '\t') {
          const sub = code.substring(0, index);
-         const indexLastLineBreak = sub.lastIndexOf('<br>');
+         const indexLastLineBreak = sub.lastIndexOf('\n');
          const rowStart = indexLastLineBreak >= 0? indexLastLineBreak + 4 : 0;
          const rowString = sub.substring(rowStart);
          let calculatedPosition = 0;
@@ -32,10 +32,10 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
       code = code.replace(/\t/, spacesString);
    });
 
+   let lines = code.split('\n');
    // Actual spaces should be replaced with HTML too
    code = code.replace(/\s/g, "&nbsp;");
 
-   let lines = code.split('<br>');
    for (let index = 0; index < lines.length; index++) {
       // Temporary replace comments to avoid 
       // issues with styling of reserved words

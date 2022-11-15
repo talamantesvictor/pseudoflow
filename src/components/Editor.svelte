@@ -53,7 +53,7 @@
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
       activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      coloredElement.innerHTML = beautifier(editorElement.innerHTML, $codeWordStore, activeRowNumber);
+      coloredElement.innerHTML = beautifier(editorElement.innerText, $codeWordStore, activeRowNumber);
       editorText = editorElement.innerText;
    }
 
