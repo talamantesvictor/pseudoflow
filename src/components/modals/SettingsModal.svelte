@@ -18,11 +18,15 @@
       <div class="options">
          <div>
             <input type="radio" id="app-english" name="app-language" value="en" on:input={selectTranslation} checked="{translationLang === 'en'}">
-            <label for="app-english">{$translationStore.APP_SETTINGS_LANG_ENGLISH}</label>
+            <label for="app-english">
+               {$translationStore.APP_SETTINGS_LANG_ENGLISH}
+            </label>
          </div>
          <div>
             <input type="radio" id="app-spanish" name="app-language" value="es" on:input={selectTranslation} checked="{translationLang === 'es'}">
-            <label for="app-spanish">{$translationStore.APP_SETTINGS_LANG_SPANISH}</label>
+            <label for="app-spanish">
+               {$translationStore.APP_SETTINGS_LANG_SPANISH}
+            </label>
          </div>
       </div>
    </div>
@@ -44,15 +48,55 @@
 </div>
 
 <style lang="scss">
+   @import "../../styles/variables.scss";
+
    .languages {
       display: flex;
+      justify-content: space-between;
 
       div:first-child {
          margin-right: 1.5rem;
       }
-
       .title {
          margin-bottom: 1rem;
+      }
+   }
+
+   .options div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+
+      label {
+         cursor: pointer;
+      }
+
+      input[type="radio"] {
+         -webkit-appearance: none;
+         appearance: none;
+         margin: 0;
+         font: inherit;
+         color: white;
+         width: 1.3rem;
+         height: 1.3rem;
+         border: 2px solid $accent-color;
+         border-radius: 50%;
+         margin-right: 0.8rem;
+         display: grid;
+         place-content: center;
+         cursor: pointer;
+
+         &::before {
+            content: url(../../../static/images/check_icon.svg);
+            transform: scale(0);
+         }
+
+         &:checked {
+            border-color: $alternative-color;
+            &::before {
+               transform: scale(0.4) translateY(0.2rem); 
+            }
+         }
       }
    }
 </style>
