@@ -1,14 +1,5 @@
 import Konva from 'konva';
 
-export function emptySymbol(position: { x: number, y: number }) {
-   return new Konva.Shape({
-      x: position.x,
-      y: position.y,
-      widh: 0,
-      height: 0,
-   });
-}
-
 export function terminatorSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#4d5166') {
    return new Konva.Rect({
       x: position.x,
