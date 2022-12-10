@@ -18,5 +18,7 @@
    "CODE_PRINT": "imprimir",
    "CODE_READ": "leer",
    "CODE_AND": "y",
-   "CODE_OR": "o"
+   "CODE_OR": "o",
+   "CHART_YES": "si",
+   "CHART_NO": "no"
 }

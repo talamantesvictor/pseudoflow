@@ -1,6 +1,10 @@
 import Konva from 'konva';
 
-export function terminatorSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#4d5166') {
+export function terminatorSymbol(
+   baseSize: number, 
+   position: { x: number, y: number }, 
+   color: string = '#4d5166'
+) {
    return new Konva.Rect({
       x: position.x,
       y: position.y,
@@ -14,7 +18,11 @@ export function terminatorSymbol(baseSize: number, position: { x: number, y: num
    });
 }
 
-export function taskSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#00ff95') {
+export function taskSymbol(
+   baseSize: number, 
+   position: { x: number, y: number }, 
+   color: string = '#00ff95'
+) {
    return new Konva.Rect({
       x: position.x,
       y: position.y,
@@ -27,7 +35,11 @@ export function taskSymbol(baseSize: number, position: { x: number, y: number },
    });
 }
 
-export function dataSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#24a7ff') {
+export function dataSymbol(
+   baseSize: number, 
+   position: { x: number, y: number }, 
+   color: string = '#24a7ff'
+) {
    return new Konva.Line({
       x: position.x,
       y: position.y,
@@ -46,7 +58,11 @@ export function dataSymbol(baseSize: number, position: { x: number, y: number },
    });
 }
 
-export function decisionSymbol(baseSize: number, position: { x: number, y: number }, color: string = '#f1c232') {
+export function decisionSymbol(
+   baseSize: number, 
+   position: { x: number, y: number }, 
+   color: string = '#f1c232'
+) {
    return new Konva.Line({
       x: position.x,
       y: position.y,
@@ -74,7 +90,7 @@ export function arrowSymbol(
 ){
    const stroke = 6;
    let substractX = destPosition.x > origPosition.x? objectDimensions.width * 0.5 + stroke : -stroke;
-   let substractY = destPosition.y > origPosition.y? objectDimensions.height * 0.5 + stroke : stroke;
+   let substractY = destPosition.y > origPosition.y? objectDimensions.height * 0.5 + stroke : 0;
 
    if (destPosition.x < origPosition.x && destPosition.y !== origPosition.y ) {
       substractY += verticalSpace * 0.5;
@@ -191,7 +207,12 @@ export function loopArrowSymbol(
    });
 }
 
-export function textLabel(label: string, position: { x: number, y: number }, dimensions: { width: number, height: number }) {
+export function textLabel(
+   label: string, 
+   position: { x: number, y: number }, 
+   dimensions: { width: number, height: number },
+   color: string = '#000000'
+) {
    return new Konva.Text({
       x: position.x,
       y: position.y,
@@ -201,6 +222,7 @@ export function textLabel(label: string, position: { x: number, y: number }, dim
       align: 'center',
       verticalAlign: 'middle',
       ellipsis: true,
+      fill: color,
       width: dimensions.width * 0.84,
       height: dimensions.height * 0.7,
       offsetX: dimensions.width * 0.42,

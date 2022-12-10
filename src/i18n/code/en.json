@@ -18,5 +18,7 @@
    "CODE_PRINT": "print",
    "CODE_READ": "read",
    "CODE_AND": "and",
-   "CODE_OR": "or"
+   "CODE_OR": "or",
+   "CHART_YES": "yes",
+   "CHART_NO": "no"
 }

@@ -2,6 +2,12 @@ import type * as atype from "../analyzers/atypes";
 import type Konva from 'konva';
 import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol, autoReturnArrowSymbol, loopArrowSymbol } from "./symbols";
 import { valueBuilder } from "../code/interpreter";
+import { codeWordStore } from "../stores";
+
+let reservedWords;
+codeWordStore.subscribe(value => {
+   reservedWords = value;
+});
 
 type Vector = {x: number, y: number};
 type Rect = {x: number, y: number, width: number, height: number};
@@ -127,6 +133,34 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       });
       symbolsLayer.add(textNode);
 
+      const yesLabel = textLabel(
+         reservedWords.CHART_YES, 
+         {
+            x: position.x - baseSize * 0.09,
+            y: position.y + baseSize * 0.13
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(yesLabel);
+
+      const noLabel = textLabel(
+         reservedWords.CHART_NO, 
+         {
+            x: position.x + treeNodeRect.width * 0.55,
+            y: position.y - baseSize * 0.06
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(noLabel);
+
       // Add vertical space after inserting the first symbol
       treeNodeDimensions.y = treeNodeRect.height * 0.5 + defaultVerticalSpace;
 
@@ -246,6 +280,34 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             }
          );
          symbolsLayer.add(textNode);
+
+         const noLabel = textLabel(
+            reservedWords.CHART_NO, 
+            {
+               x: caseRect.x - baseSize * 0.08,
+               y: caseRect.y + baseSize * 0.13
+            }, 
+            {
+               width: treeNodeRect.width * 0.6,
+               height: treeNodeRect.height
+            }, 
+            '#ffffff'
+         );
+         symbolsLayer.add(noLabel);
+
+         const yesLabel = textLabel(
+            reservedWords.CHART_YES, 
+            {
+               x: caseRect.x + treeNodeRect.width * 0.55,
+               y: caseRect.y - baseSize * 0.06
+            }, 
+            {
+               width: treeNodeRect.width * 0.6,
+               height: treeNodeRect.height
+            }, 
+            '#ffffff'
+         );
+         symbolsLayer.add(yesLabel);
          
          // Iterate body sentences
          let bodySentences = [...caseElement.body];
@@ -303,6 +365,34 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          height: treeNodeRect.height
       });
       symbolsLayer.add(textNode);
+
+      const noLabel = textLabel(
+         reservedWords.CHART_NO, 
+         {
+            x: treeNodeRect.x - baseSize * 0.08,
+            y: treeNodeRect.y + baseSize * 0.13
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(noLabel);
+
+      const yesLabel = textLabel(
+         reservedWords.CHART_YES, 
+         {
+            x: treeNodeRect.x + treeNodeRect.width * 0.55,
+            y: treeNodeRect.y - baseSize * 0.06
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(yesLabel);
 
       // Structure sentences are added to the right
       treeNodeDimensions.x += defaultHorizontalSpace;
@@ -389,6 +479,34 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          height: treeNodeRect.height
       });
       symbolsLayer.add(textNode);
+
+      const noLabel = textLabel(
+         reservedWords.CHART_NO, 
+         {
+            x: treeNodeRect.x - baseSize * 0.08,
+            y: treeNodeRect.y + baseSize * 0.13
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(noLabel);
+
+      const yesLabel = textLabel(
+         reservedWords.CHART_YES, 
+         {
+            x: treeNodeRect.x + treeNodeRect.width * 0.55,
+            y: treeNodeRect.y - baseSize * 0.06
+         }, 
+         {
+            width: treeNodeRect.width * 0.6,
+            height: treeNodeRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(yesLabel);
       
       // Variables to keep track of dimensions
       let lastNodeRect = treeNodeRect;
@@ -503,6 +621,34 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       symbolsLayer.add(textNode);
 
       addFlow(lastNodeRect, decisionRect);
+
+      const noLabel = textLabel(
+         reservedWords.CHART_NO, 
+         {
+            x: decisionRect.x - baseSize * 0.08,
+            y: decisionRect.y + baseSize * 0.13
+         }, 
+         {
+            width: decisionRect.width * 0.6,
+            height: decisionRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(noLabel);
+
+      const yesLabel = textLabel(
+         reservedWords.CHART_YES, 
+         {
+            x: decisionRect.x + decisionRect.width * 0.55,
+            y: decisionRect.y - baseSize * 0.06
+         }, 
+         {
+            width: decisionRect.width * 0.6,
+            height: decisionRect.height
+         }, 
+         '#ffffff'
+      );
+      symbolsLayer.add(yesLabel);
 
       // Loop
       flowLayer.add(
