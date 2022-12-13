@@ -41,6 +41,12 @@
       }
    }
 
+   translationStore.subscribe((translations) => {
+      if (modal) {
+         modal.title = translations.APP_SETTINGS_TITLE;
+      }
+   });
+
    function generateTree() {
       if (pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
