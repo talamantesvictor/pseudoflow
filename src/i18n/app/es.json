@@ -12,7 +12,7 @@
    "APP_SETTINGS_LANG_SPANISH": "Español",
    "APP_INFO_TITLE": "Información",
    "APP_INFO_VERSION": "Versión app",
-   "APP_INFO_DESCRIPTION": "PseudoFlow es una herramiento para ayudar a estudiantes de programación a aprender sobre estructuras de control utilizando pseudocódigo y generando un diagrama de flujo basado en el estándar ANSI en tiempo real.",
+   "APP_INFO_DESCRIPTION": "PseudoFlow es un software gratis y de código abierto, desarrollado para ayudar a estudiantes de programación a aprender sobre estructuras de control, utilizando pseudocódigo y generando diagramas de flujo en estándar ANSI de sus algoritmos en tiempo real.",
    "APP_CMD_VAR": "Declarar",
    "APP_CMD_PRINT": "Imprimir",
    "APP_CMD_READ": "Leer",
