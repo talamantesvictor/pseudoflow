@@ -349,7 +349,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       });
 
    }
-   else if (node.name === 'ForNode') {
+   else if (node.name === 'RepeatNode') {
       // Add top margin to leave room for the
       // returning "iteration" arrow
       position.y += defaultVerticalSpace * 0.5;

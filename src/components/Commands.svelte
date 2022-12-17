@@ -40,7 +40,7 @@
    function forCmd(e) {
       e.preventDefault();
       command = {
-         template: $codeWordStore.CODE_FOR + ' (' + $codeWordStore.CODE_VAR + ' xyz = 1 ' + $codeWordStore.CODE_FORTO + ' 10 ' + $codeWordStore.CODE_FORSTEP + ' 1)\n\n' + $codeWordStore.CODE_ENDFOR,
+         template: $codeWordStore.CODE_REPEAT + ' (' + $codeWordStore.CODE_REPEATDECLARE + ' xyz = 1 ' + $codeWordStore.CODE_REPEATTO + ' 10 ' + $codeWordStore.CODE_REPEATSTEP + ' 1)\n\n' + $codeWordStore.CODE_ENDREPEAT,
          timestamp: Date.now()
       }
    }

@@ -102,12 +102,20 @@ function intepretTreeNode(node: atype.SentencesNode) {
 
       return { print: '' };
    }
-   else if (node.name === 'ForNode') {
+   else if (node.name === 'RepeatNode') {
       const declarationValue = eval(valueBuilder(node.declaration.value));
       const toValue = eval(valueBuilder(node.to));
-      const stepsValue = eval(valueBuilder(node.steps));
+      let stepsValue = eval(valueBuilder(node.steps));
+      stepsValue = Math.abs(stepsValue);
+      
+      let newUntilValue = Math.abs(toValue - declarationValue);
 
-      if (declarationValue != toValue) {
+      let operator = '+';
+      if (declarationValue > toValue) {
+         operator = '-'
+      }
+
+      if (newUntilValue > 0) {
          addSentence({
             body: node.body,
             declaration: {
@@ -115,14 +123,13 @@ function intepretTreeNode(node: atype.SentencesNode) {
                identifier: node.declaration.identifier,
                value: {
                   name: 'NumericNode',
-                  value: declarationValue + stepsValue
-               }
+                  value: eval(declarationValue + operator + '(' + stepsValue + ')')
+               } as any
             },
             name: node.name,
-            steps: {name: 'NumericNode', value: stepsValue},
-            to: {name: 'NumericNode', value: toValue}
-         } as atype.ForNode, 0);
-
+            steps: node.steps,
+            to: node.to
+         } as atype.RepeatNode, 0);
       }
        
       [...node.body].reverse().forEach(bodyNode => {

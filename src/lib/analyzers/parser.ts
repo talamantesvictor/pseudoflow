@@ -46,8 +46,8 @@ function parse() : atype.SentencesNode {
    else if (token.name === 'OpenSwitchToken') {
       return switchParser();
    }
-   else if (token.name === 'OpenForToken') {
-      return forParser();
+   else if (token.name === 'OpenRepeatToken') {
+      return repeatParser();
    }
    else if (token.name === 'OpenWhileToken') {
       return whileParser();
@@ -252,24 +252,25 @@ function switchParser() : atype.SwitchNode {
    }
 }
 
-function forParser() : atype.ForNode {
+function repeatParser() : atype.RepeatNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
       throw new SyntaxError('Opening parenthesis is missing.');
    }
    nextIndex();
-   if (parserTokens[parserIndex].name !== 'DeclarationToken') {
+   if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATDECLARE &&
+         parserTokens[parserIndex].name !== 'DeclarationToken') {
       throw new SyntaxError('Declare a variable to keep track of the iterations');
    }
    let declaration = declarationParser();
    nextIndex();
-   if (parserTokens[parserIndex].value !== reservedWords.CODE_FORTO) {
+   if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATTO) {
       throw new SyntaxError('Specify when the For loop should stop.');
    }
    nextIndex();
    let to = tokenToNode(parserTokens[parserIndex]);
    nextIndex();
-   if (parserTokens[parserIndex].value !== reservedWords.CODE_FORSTEP) {
+   if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATSTEP) {
       throw new SyntaxError('Steps to increment on each iteration is missing.');
    }
    nextIndex();
@@ -281,13 +282,21 @@ function forParser() : atype.ForNode {
    nextIndex();
 
    let forSentences = new Array<atype.SentencesNode>;
-   while (parserTokens[parserIndex].name !== 'CloseForToken') {
+   while (parserTokens[parserIndex].name !== 'CloseRepeatToken') {
       forSentences.push(parse());
       nextIndex();
    }
 
+   console.log({
+      name: 'RepeatNode',
+      declaration: declaration,
+      to: to,
+      steps: steps,
+      body: forSentences
+   });
+
    return {
-      name: 'ForNode',
+      name: 'RepeatNode',
       declaration: declaration,
       to: to,
       steps: steps,

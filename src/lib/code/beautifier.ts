@@ -43,7 +43,7 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
          lines[index] = lines[index].replace(comments[0],'<##pf-comment$!>');
       }
 
-      // Temorary replace strings to avoid
+      // Temporary replace strings to avoid
       // issues with styling of reserved words
       let strings = lines[index].match(/(["'])(?:(?=(\\?))\2.)*?\1/g);
       if (strings) {

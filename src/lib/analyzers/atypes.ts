@@ -15,8 +15,8 @@ export type OpenSwitchToken =          { name: 'OpenSwitchToken', rule?: RegExp,
 export type CloseSwitchToken =         { name: 'CloseSwitchToken', rule?: RegExp, value?: string };
 export type OpenCaseToken =            { name: 'OpenCaseToken', rule?: RegExp, value?: string };
 export type CloseCaseToken =           { name: 'CloseCaseToken', rule?: RegExp, value?: string };
-export type OpenForToken =             { name: 'OpenForToken', rule?: RegExp, value?: string };
-export type CloseForToken =            { name: 'CloseForToken', rule?: RegExp, value?: string };
+export type OpenRepeatToken =             { name: 'OpenRepeatToken', rule?: RegExp, value?: string };
+export type CloseRepeatToken =            { name: 'CloseRepeatToken', rule?: RegExp, value?: string };
 export type OpenWhileToken =           { name: 'OpenWhileToken', rule?: RegExp, value?: string };
 export type CloseWhileToken =          { name: 'CloseWhileToken', rule?: RegExp, value?: string };
 export type OpenDowhileToken =         { name: 'OpenDowhileToken', rule?: RegExp, value?: string };
@@ -59,8 +59,8 @@ export type Token =
    CloseSwitchToken           | 
    OpenCaseToken              | 
    CloseCaseToken             | 
-   OpenForToken               | 
-   CloseForToken              | 
+   OpenRepeatToken            | 
+   CloseRepeatToken           | 
    OpenWhileToken             | 
    CloseWhileToken            | 
    OpenDowhileToken           | 
@@ -84,7 +84,7 @@ export type ReadNode =                 { name: 'ReadNode', identifier: Identifie
 export type IfNode =                   { name: 'IfNode', argument: Node, body: SentencesNode[], alternative: SentencesNode[] };
 export type SwitchNode =               { name: 'SwitchNode', argument: Node, cases: CaseNode[] };
 export type CaseNode =                 { name: 'CaseNode', argument: Node, body: SentencesNode[]};
-export type ForNode =                  { name: 'ForNode', declaration: DeclarationNode, to: Node, steps: Node, body: SentencesNode[] };
+export type RepeatNode =               { name: 'RepeatNode', declaration: DeclarationNode, to: Node, steps: Node, body: SentencesNode[] };
 export type WhileNode =                { name: 'WhileNode', argument: Node, body: SentencesNode[]};
 export type DowhileNode =              { name: 'DowhileNode', argument: Node, body: SentencesNode[], do: boolean};
 export type GroupNode =                { name: 'GroupNode', body: Node };
@@ -99,7 +99,7 @@ export type SentencesNode =
    ReadNode                   | 
    IfNode                     | 
    SwitchNode                 | 
-   ForNode                    | 
+   RepeatNode                    | 
    WhileNode                  | 
    DowhileNode;
 

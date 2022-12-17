@@ -18,7 +18,7 @@
    "APP_CMD_READ": "Read",
    "APP_CMD_IF": "If",
    "APP_CMD_SWITCH": "Switch",
-   "APP_CMD_FOR": "For",
+   "APP_CMD_FOR": "Repeat",
    "APP_CMD_WHILE": "While",
    "APP_CMD_DOWHILE": "Do-While",
    "APP_PROGRAM_STARTED": "Program started",
