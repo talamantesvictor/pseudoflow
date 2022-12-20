@@ -132,7 +132,7 @@
 
    .editor-wrapper {
       display: flex;
-      overflow: scroll;
+      overflow: auto;
       flex-grow: 1;
 
       .numbers-area {

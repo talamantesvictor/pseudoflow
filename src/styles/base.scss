@@ -29,3 +29,17 @@ body {
    overflow: hidden;
 }
 
+::-webkit-scrollbar {
+   width: 6px;
+   height: 6px;
+   background: $chromium-scrollbar-track; 
+}
+
+::-webkit-scrollbar-corner {
+   background: $chromium-scrollbar-track;
+}
+
+::-webkit-scrollbar-thumb {
+   background: $chromium-scrollbar-thumb;
+}
+
