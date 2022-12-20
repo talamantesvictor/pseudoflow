@@ -104,9 +104,10 @@
       }
 
       input[type=range]::-webkit-slider-thumb {
-         margin-top: -5px;
-         width: 20px;
+         width: 10px;
          height: 20px;
+         margin-top: 2.5px;
+         transform: translateY(-50%);
          background: #00bbd3;
          border: 0;
          border-radius: 15px;
@@ -129,7 +130,6 @@
          background: #00bbd3;
          border: 0;
          border-radius: 15px;
-         // transform: translateX(50%);
          cursor: pointer;
       }
       
