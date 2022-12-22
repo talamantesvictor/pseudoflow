@@ -43,7 +43,7 @@ export const insertLineBreak = (selection: Selection) => {
          else break;
       }
       if (tabsToInsert.length) {
-         document.execCommand("InsertHTML", false, tabsToInsert);
+         document.execCommand("InsertText", false, tabsToInsert);
       }
    }
 }
