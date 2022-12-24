@@ -84,7 +84,9 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
          lines[index] = '<div class="line hl-activerow">' + lines[index] + '</div>';
       }
       else {
-         lines[index] = '<div class="line">' + lines[index] + '</div>';
+         if (lines[index] || index + 1 < lines.length) {
+            lines[index] = '<div class="line">' + lines[index] + '</div>';
+         }
       }
    }
 

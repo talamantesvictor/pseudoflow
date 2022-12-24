@@ -1,30 +1,41 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
-   import { getLineNumbers, insertTab, insertTemplate, insertLineBreak, unselectText, getCurrentLineNumber } from "../lib/editor";
+   import {
+      getLineNumbers,
+      insertTab,
+      insertTemplate,
+      insertLineBreak,
+      unselectText,
+      getCurrentLineNumber,
+   } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
    import { codeWordStore } from "../lib/stores";
    import { onMount } from "svelte";
 
-   export let editorText: string = '';
+   export let editorText: string = "";
+   let editorDynamicArea: HTMLElement;
    let editorElement: HTMLElement;
    let coloredElement: HTMLElement;
-   let numbersElement: Element;
-   let editorHeight: number;
+   let numbersArea: HTMLElement;
+   let numbersElement: HTMLElement;
    let activeRowNumber: number;
    let lastRowNumber: number;
    let commandToInsert: any;
    let lastInsertedCommand: any;
 
-   // Redraw line numbers when editorHeight changes.
-   // The defined line-height is 24.
-   $: { 
+   $: {
       if (numbersElement) {
-         numbersElement.innerHTML = getLineNumbers(editorHeight / 24);
+         // Redraw row numbers when editorHeight changes.
+         // The defined line-height is 24.
+         numbersElement.innerHTML = getLineNumbers(coloredElement.clientHeight / 24);
       }
    }
 
    $: {
-      if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
+      if (
+         commandToInsert?.template &&
+         lastInsertedCommand !== commandToInsert
+      ) {
          lastInsertedCommand = commandToInsert;
 
          if (editorElement !== document.activeElement) {
@@ -52,13 +63,19 @@
 
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
-      activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
-      coloredElement.innerHTML = beautifier(editorElement.innerText, $codeWordStore, activeRowNumber);
+      activeRowNumber = getCurrentLineNumber(
+         window.getSelection(),
+         editorElement
+      );
+      coloredElement.innerHTML = beautifier(
+         editorElement.innerText,
+         $codeWordStore,
+         activeRowNumber
+      );
       editorText = editorElement.innerText;
    }
 
    function keyDownController(e) {
-
       switch (e.key) {
          case "Tab":
             e.preventDefault();
@@ -67,6 +84,11 @@
          case "Enter":
             e.preventDefault();
             insertLineBreak(window.getSelection());
+            var isChromium = !!window.CSS && window.CSS.supports && window.CSS.supports("(-webkit-appearance:none)");
+            if (isChromium) {
+               editorDynamicArea.scrollTop += 24;
+               editorDynamicArea.scrollLeft = 0;
+            }
             break;
          case "Escape":
             unselectText(window.getSelection());
@@ -74,17 +96,27 @@
          default:
             break;
       }
-   
    }
 
    function keyUpController(e) {
-      if (e.key === 'Escape' || e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'ArrowLeft' || (e.ctrlKey && e.key === 'a')) {
+      if (
+         e.key === "Escape" ||
+         e.key === "Enter" ||
+         e.key === "ArrowUp" ||
+         e.key === "ArrowDown" ||
+         e.key === "ArrowRight" ||
+         e.key === "ArrowLeft" ||
+         (e.ctrlKey && e.key === "a")
+      ) {
          beautifyCode();
       }
    }
 
    function mouseEvent() {
-      activeRowNumber = getCurrentLineNumber(window.getSelection(), editorElement);
+      activeRowNumber = getCurrentLineNumber(
+         window.getSelection(),
+         editorElement
+      );
       if (activeRowNumber !== lastRowNumber) {
          beautifyCode();
       }
@@ -96,97 +128,97 @@
    }
 
    onMount(() => {
-      editorElement = document.getElementById("editor-editable-area");
-      coloredElement = document.getElementById("editor-colored-area");
-      numbersElement = document.getElementsByClassName("line-numbers")[0];
+      editorDynamicArea = document.querySelector("#editor-dynamic-area");
+      editorElement = document.querySelector("#editor-editable-area");
+      coloredElement = document.querySelector("#editor-colored-area");
+      numbersArea = document.querySelector(".numbers-area");
+      numbersElement = document.querySelector(".line-numbers");
       focusOnEditableArea();
    });
 </script>
 
-
 <Commands bind:command={commandToInsert} />
-<div class="editor-wrapper">
+<div class="editor-area" on:click={focusOnEditableArea}>
    <div class="numbers-area">
       <div class="line-numbers" />
    </div>
-   <div class="editor-area" on:click={focusOnEditableArea}>
-      <div bind:clientHeight={editorHeight}>
-         <div
-            id="editor-editable-area"
-            contenteditable="true"
-            spellcheck="false"
-            on:input="{beautifyCode}"
-            on:keydown="{keyDownController}"
-            on:keyup="{keyUpController}"
-            on:mousemove="{mouseEvent}"
-            on:blur="{beautifyCode}"
-         />
-         <div id="editor-colored-area"></div>
-      </div>
+   <div id="editor-dynamic-area" on:scroll={numbersArea.scrollTop = this.scrollTop}>
+      <div id="editor-colored-area" />
+      <div
+         id="editor-editable-area"
+         contenteditable="true"
+         spellcheck="false"
+         on:input={beautifyCode}
+         on:keydown={keyDownController}
+         on:keyup={keyUpController}
+         on:mousemove={mouseEvent}
+         on:blur={beautifyCode}
+      />
    </div>
 </div>
-
 
 <style lang="scss">
    @import "../styles/variables.scss";
 
-   .editor-wrapper {
+   .editor-area {
+      position: relative;
       display: flex;
-      overflow: auto;
       flex-grow: 1;
+      font-size: 16px;
+      tab-size: 4;
+      overflow: hidden;
 
-      .numbers-area {
-         padding: 0 1rem 1rem 0.5rem;
-         -webkit-user-select: none; /* Safari */
-         -moz-user-select: none;
-         user-select: none;
-         pointer-events: none;
-
-         .line-numbers {
-            color: $linenumbers-foreground;
-            background-color: $linenumbers-background;
-            min-width: 36px;
-            text-align: right;
-            
-            div {
-               border-top: 1px solid transparent;
-               border-bottom: 1px solid transparent;
-               height: 22px;
-               display: flex;
-               align-items: center;
-            }
-         }
+      &::selection,
+      ::-moz-selection {
+         background: $editor-selection;
       }
-   
-      .editor-area {
+
+      #editor-dynamic-area {
          width: 100%;
-         flex-grow: 1;
-         min-height: calc(100% - 2rem);
-         padding: 0 1rem 1rem 0rem;
+         height: 100%;
          position: relative;
-         font-size: 16px;
-         tab-size: 4;
-   
-         &::selection, ::-moz-selection {
-            background: $editor-selection;
-         }
+         left: 0;
+         overflow: auto;
+      }
 
-         #editor-editable-area {
-            outline: 0px solid transparent;
-            pointer-events: all;
-            white-space: pre;
-            color: transparent;
-            caret-color: white;
-         }
+      #editor-colored-area {
+         min-width: 100%;
+         min-height: 24px;
+         position: absolute;
+         pointer-events: none;
+         white-space: pre;
+         color: white;
+      }
 
-         #editor-colored-area {
-            position: absolute;
-            top: 0;
-            pointer-events: none;
-            white-space: pre;
-            color: white;
-            min-width: 100%;
-         }  
+      #editor-editable-area {
+         width: 100%;
+         position: absolute;
+         top: 0;
+         outline: 0px solid transparent;
+         pointer-events: all;
+         white-space: pre;
+         color: transparent;
+         caret-color: white;
+      }
+   }
+
+   .numbers-area {
+      pointer-events: none;
+      overflow: hidden;
+
+      .line-numbers {
+         color: $linenumbers-foreground;
+         min-width: 36px;
+         text-align: right;
+         padding-right: 20px;
+
+         div {
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            height: 22px;
+            display: flex;
+            align-items: center;
+         }
       }
    }
 </style>

@@ -183,11 +183,12 @@
 
       #text-area {
          display: flex;
-         flex-direction: column;
          width: 60%;
+         flex-direction: column;
          background-color: $editor-background;
          height: calc(100vh - $topbar-height);
          overflow: hidden;
+         position: absolute;
       }
 
       #output-area {
