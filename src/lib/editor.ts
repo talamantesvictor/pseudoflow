@@ -27,8 +27,8 @@ export const insertTemplate = (template: string) => {
 // Insert line break keeping 
 // trail tab characters
 export const insertLineBreak = (selection: Selection) => {
-   const currentLine = getCurrentLineNumber(selection);
-   const fullText = selection.anchorNode.parentNode['innerText'];
+   const currentLine = getActiveRowNumber(selection);
+   const fullText = selection.anchorNode!.parentNode!['innerText'];
    const lines = fullText.split('\n');
    let nodeString = lines[currentLine - 1];
    
@@ -57,48 +57,36 @@ export const unselectText = (selection: Selection) => {
 
 // Based in the current caret position
 // determine which row is active
-export const getCurrentLineNumber = (selection: Selection, element: any = false) : number => {
+export const getActiveRowNumber = (selection: Selection, element: any = false) : number => {
    let calculatedRow = -1;
-   
    let shouldCalculate = selection.getRangeAt(0).startContainer === selection.getRangeAt(0).endContainer && 
          selection.getRangeAt(0).startOffset === selection.getRangeAt(0).endOffset && 
             ( (element && element === document.activeElement) || (!element) );
 
    if (shouldCalculate) {
-      calculatedRow = 1;
-      if (selection.anchorNode.previousSibling !== null) {
-         calculatedRow = calculateRowBySiblings(selection.anchorNode, calculatedRow);
-      }
-      // Firefox fix when caret is in last row and is empty
-      else if (selection.anchorNode['innerText']) {
-         // Left corner with row content
-         if (selection.getRangeAt(0).startOffset == 0) {
-            calculatedRow = calculateRowBySiblings(selection.getRangeAt(0).startContainer, calculatedRow);
+      if (selection.getRangeAt(0).startContainer) {
+         if (!selection.getRangeAt(0).startContainer['innerHTML']) {
+            const allNodes = selection.getRangeAt(0).startContainer.parentElement!.childNodes;
+            let previousText = '';
+            for (let i = 0; i < allNodes.length; i++) {
+               if (allNodes[i] == selection.getRangeAt(0).startContainer) {
+                  break;
+               }
+               previousText += allNodes[i]['tagName'] === 'BR'? '\n' : allNodes[i].textContent;
+            }
+            calculatedRow = previousText.split('\n').length;
          }
-         // Right corner with content or left corner without content
          else {
+            // Firefox fix
+            // Use case: caret is in an empty position
+            calculatedRow = 1;
             for (let index = 0; index < selection.getRangeAt(0).startOffset; index++) {
-               if (selection.anchorNode.childNodes[index].nodeName == 'BR')
+               if (selection.anchorNode!.childNodes[index].nodeName == 'BR')
                   calculatedRow++
             }
          }
       }
-      // Chromium fix for tabs
-      else if (selection.anchorNode.parentNode.previousSibling !== null) {
-         calculatedRow = calculateRowBySiblings(selection.anchorNode.parentNode, calculatedRow);
-      }
    }
    
    return calculatedRow;
-}
-
-function calculateRowBySiblings(currentNode, currentIndex) {
-   let index = currentIndex;
-   if (currentNode.previousSibling) {
-      if (currentNode.previousSibling.nodeValue === '\n' || currentNode.previousSibling.nodeName === 'BR') {
-         index += 1;
-      }
-      index = calculateRowBySiblings(currentNode.previousSibling, index);
-   }
-   return index;
 }

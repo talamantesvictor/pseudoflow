@@ -6,7 +6,7 @@
       insertTemplate,
       insertLineBreak,
       unselectText,
-      getCurrentLineNumber,
+      getActiveRowNumber,
    } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
    import { codeWordStore } from "../lib/stores";
@@ -63,7 +63,7 @@
 
    function beautifyCode() {
       lastRowNumber = activeRowNumber;
-      activeRowNumber = getCurrentLineNumber(
+      activeRowNumber = getActiveRowNumber(
          window.getSelection(),
          editorElement
       );
@@ -113,7 +113,7 @@
    }
 
    function mouseEvent() {
-      activeRowNumber = getCurrentLineNumber(
+      activeRowNumber = getActiveRowNumber(
          window.getSelection(),
          editorElement
       );
