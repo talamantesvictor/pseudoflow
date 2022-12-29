@@ -49,6 +49,9 @@
             window.getSelection().addRange(newRange);
          }
          insertTemplate(commandToInsert.template);
+         setTimeout(() => {
+            beautifyCode();
+         });
       }
    }
 
