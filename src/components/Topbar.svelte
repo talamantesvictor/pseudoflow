@@ -47,8 +47,10 @@
       <img src="{newButton}" alt="New Button" on:click={newButtonClick} />
       <img src="{openButton}" alt="Open Button" on:click={importButtonClick} />
       <img src="{saveButton}" alt="Save Button" on:click={exportButtonClick} />
+      <img src="{settingsButton}" alt="Settings Button" on:click={settingsButtonClick} />
+      <img src="{infoButton}" alt="Info Button" on:click={infoButtonClick} />
    </div>
-   <div class="middle">
+   <div class="right">
       <div id="fileinfo">
          <span>{$translationStore.APP_FILE}:</span>
          <span>pseudocode.pff</span>
@@ -57,10 +59,6 @@
          <img src="{executeButtonImage}" alt="Play Button" />
          {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
       </div>
-   </div>
-   <div class="right">
-      <img src="{settingsButton}" alt="Settings Button" on:click={settingsButtonClick} />
-      <img src="{infoButton}" alt="Info Button" on:click={infoButtonClick} />
    </div>
 </div>
 
@@ -76,22 +74,22 @@
       justify-content: space-between;
       align-items: center;
 
-      .left, .right {
+      .left {
          display: flex;
          width: 0px;
          img {
-            margin: 0 0.5rem;
+            margin: 0 0.4rem;
             padding: 0 0.5rem;
             height: calc($topbar-height * 0.4);
             cursor: pointer;
+            
+            &:first-child {
+               margin-left: 0.8rem;
+            }
          }
       }
 
       .right {
-         justify-content: right;
-      }
-
-      .middle {
          display: flex;
          #fileinfo {
             background-color: $fileinfo-background;
@@ -102,7 +100,6 @@
             padding: 0 0.8rem;
             display: flex;
             align-items: center;
-            margin-right: 0.8rem;
 
             span {
                opacity: 0.5;
@@ -121,6 +118,7 @@
             display: flex;
             justify-content: center;
             padding: 0 1.4rem;
+            margin: 0 1rem;
             border-radius: 1rem;
             display: flex;
             align-items: center;
