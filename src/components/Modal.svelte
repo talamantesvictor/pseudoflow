@@ -50,7 +50,7 @@
       transform: translate(-50%, -50%);
       max-width: 700px;
       max-height: 500px;
-      width: 80%;
+      width: 90%;
       height: auto;
       background: #282A36;
       color: white;
@@ -84,8 +84,12 @@
          overflow-y: auto;
          
          .inner-content {
-            padding: 2rem 4rem;
+            padding: 1rem 2rem;
             overflow: hidden;
+
+            @media screen and (min-width: $breakpoint) {
+               padding: 2rem 4rem;
+            }
          }
       }
    }

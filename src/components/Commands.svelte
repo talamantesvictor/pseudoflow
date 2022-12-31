@@ -79,18 +79,20 @@
    @import "../styles/variables.scss";
 
    .commands-area {
-      display: flex;
       width: 100%;
       background-color: $editor-background;
       z-index: 1;
+      display: flex;
       
       ul {
          width: calc(100% - 1.6rem);
          border-radius: 0.8rem;
          background-color: #1C1F2D;
-         list-style-type:none;
+         list-style-type: none;
          margin: 0.8rem auto;
          padding: 0;
+         display: none;
+
          li {
             color: rgba(255, 255, 255, 0.5);
             display: inline-block;
@@ -100,6 +102,10 @@
             &:hover {
                color: $accent-color;
             }
+         }
+
+         @media screen and (min-width: $breakpoint) {
+            display: block;
          }
       }
    }

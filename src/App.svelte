@@ -15,6 +15,7 @@
    
    let modal: any;
    let isProgramRunning: boolean = false;
+   let isChartVisible: boolean = false;
    let enableUserInput: boolean;
    let pseudocode: string;
    let lastPseudocode: string;
@@ -156,10 +157,11 @@
    on:exportButtonClick={exportButtonClick}
    on:settingsButtonClick={settingsButtonClick}
    on:infoButtonClick={infoButtonClick}
-   bind:isProgramRunning={isProgramRunning} />
+   bind:isProgramRunning={isProgramRunning}
+   bind:isChartVisible={isChartVisible} />
 
 <div id="wrapper" on:mousedown={generateTree}>
-   <div id="flowchart-area">
+   <div id="flowchart-area" class:active={isChartVisible}>
       <Chart sintaxTree="{syntaxTree['body']}"></Chart>
    </div>
    <div id="output-area" class:active="{isProgramRunning}">
@@ -183,16 +185,20 @@
 
       #text-area {
          display: flex;
-         width: 60%;
+         width: 100%;
          flex-direction: column;
          background-color: $editor-background;
          height: calc(100vh - $topbar-height);
          overflow: hidden;
          position: absolute;
+
+         @media screen and (min-width: $breakpoint) {
+            width: 60%;
+         }
       }
 
       #output-area {
-         width: 60%;
+         width: 100%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;
@@ -206,17 +212,30 @@
          &.active {
             transform: translateX(0%);
          }
+
+         @media screen and (min-width: $breakpoint) {
+            width: 60%;
+         }
       }
 
       #flowchart-area {
-         width: 40%;
+         width: 100%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;
          border-left: 1px solid $editor-background;
          position: absolute;
          right: 0;
-         z-index: 3;
+         z-index: 0;
+
+         &.active {
+            z-index: 3;
+         }
+
+         @media screen and (min-width: $breakpoint) {
+            width: 40%;
+            z-index: 3;
+         }
       }
    }
 
