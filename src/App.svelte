@@ -8,6 +8,8 @@
    import Modal from "./components/Modal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
+   import { save } from "@tauri-apps/api/dialog";
+   import { invoke } from "@tauri-apps/api/tauri";
 
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
@@ -110,13 +112,23 @@
       element.click();
    }
 
-   function exportButtonClick() {
-      let textBlob = new Blob([pseudocode], {type: 'text/plain'});
-      let tempLink = document.createElement("a");
-      tempLink.setAttribute('href', URL.createObjectURL(textBlob));
-      tempLink.setAttribute('download', 'pseudocode.pff');
-      tempLink.click();
-      URL.revokeObjectURL(tempLink.href);
+   async function exportButtonClick() {
+      // Desktop
+      try {
+         const savePath = await save();
+         if (savePath) {
+            await invoke('save_file', {path: savePath, contents: pseudocode});
+         }
+      } 
+      // Web
+      catch (err) {
+         let textBlob = new Blob([pseudocode], {type: 'text/plain'});
+         let tempLink = document.createElement("a");
+         tempLink.setAttribute('href', URL.createObjectURL(textBlob));
+         tempLink.setAttribute('download', 'pseudocode.pff');
+         tempLink.click();
+         URL.revokeObjectURL(tempLink.href);
+      };
    }
 
    function runButtonClick(e) {
