@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { translationStore } from "./lib/stores";
+   import { translationStore, filename } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -91,6 +91,9 @@
    }
 
    function importData(e) {
+      let element = document.getElementById("file-import");
+      filename.set(element['value'].split(/(\\|\/)/g).pop());
+
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
 			const result = event.target.result;
@@ -117,7 +120,7 @@
       try {
          const savePath = await save();
          if (savePath) {
-            await invoke('save_file', {path: savePath, contents: pseudocode});
+            await invoke('save_file', {filename: $filename, contents: pseudocode});
          }
       } 
       // Web
@@ -125,7 +128,7 @@
          let textBlob = new Blob([pseudocode], {type: 'text/plain'});
          let tempLink = document.createElement("a");
          tempLink.setAttribute('href', URL.createObjectURL(textBlob));
-         tempLink.setAttribute('download', 'pseudocode.pff');
+         tempLink.setAttribute('download', $filename);
          tempLink.click();
          URL.revokeObjectURL(tempLink.href);
       };
@@ -184,7 +187,7 @@
    </div>
 </div>
 
-<input type="file" id="file-import" accept=".pff" on:change={importData} />
+<input type="file" id="file-import" on:change={importData} />
 {#if modal} <Modal title="{modal.title}" component="{modal.component}" on:closeModal="{closeModal}"></Modal> {/if}
 
 <style lang="scss">
