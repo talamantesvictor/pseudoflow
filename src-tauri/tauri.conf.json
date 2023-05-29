@@ -19,6 +19,9 @@
          "fs": {
             "all": true,
             "scope": ["**"]
+         },
+         "shell": {
+            "open": true
          }
       },
       "bundle": {
@@ -58,7 +61,12 @@
          "csp": null
       },
       "updater": {
-         "active": false
+         "active": true,
+         "endpoints": [
+             "https://gist.githubusercontent.com/talamantesvictor/8222ddf93d9c09b3bce3e67ff97fc158/raw/pseudoflow.updater.json"
+         ],
+         "dialog": true,
+         "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQxQUUyOTgzQjVGRUIzRjkKUldUNXMvNjFneW11UWFLenRwS3JKaDNydWRhQnZQYXQwMU9EZUVkMG1DYmZTSGZnUnc5UlRRUWoK"
       },
       "windows": [
          {
