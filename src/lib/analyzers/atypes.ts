@@ -99,7 +99,7 @@ export type SentencesNode =
    ReadNode                   | 
    IfNode                     | 
    SwitchNode                 | 
-   RepeatNode                    | 
+   RepeatNode                 | 
    WhileNode                  | 
    DowhileNode;
 
