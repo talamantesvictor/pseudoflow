@@ -174,6 +174,7 @@
       &::selection,
       ::-moz-selection {
          background: $editor-selection;
+         color: $flowchart-background;
       }
 
       #editor-dynamic-area {
