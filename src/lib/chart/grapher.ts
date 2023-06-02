@@ -150,7 +150,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const noLabel = textLabel(
          reservedWords.CHART_NO, 
          {
-            x: position.x + treeNodeRect.width * 0.55,
+            x: position.x + treeNodeRect.width * 0.5,
             y: position.y - baseSize * 0.06
          }, 
          {
@@ -298,7 +298,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          const yesLabel = textLabel(
             reservedWords.CHART_YES, 
             {
-               x: caseRect.x + treeNodeRect.width * 0.55,
+               x: caseRect.x + treeNodeRect.width * 0.5,
                y: caseRect.y - baseSize * 0.06
             }, 
             {
@@ -391,7 +391,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const yesLabel = textLabel(
          reservedWords.CHART_YES, 
          {
-            x: treeNodeRect.x + treeNodeRect.width * 0.55,
+            x: treeNodeRect.x + treeNodeRect.width * 0.5,
             y: treeNodeRect.y - baseSize * 0.06
          }, 
          {
@@ -507,7 +507,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const yesLabel = textLabel(
          reservedWords.CHART_YES, 
          {
-            x: treeNodeRect.x + treeNodeRect.width * 0.55,
+            x: treeNodeRect.x + treeNodeRect.width * 0.5 * ([...node.body].length? 1 : -1),
             y: treeNodeRect.y - baseSize * 0.06
          }, 
          {
@@ -523,7 +523,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let nodeWidth = 0;
       let widerNode = 0;
       let lastRowPosition = baseSize * 0.2;
-      treeNodeDimensions.x += defaultHorizontalSpace;
+      treeNodeDimensions.x += defaultHorizontalSpace;      
 
       // Iterate body sentences
       let bodySentences = [...node.body];
@@ -649,7 +649,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const yesLabel = textLabel(
          reservedWords.CHART_YES, 
          {
-            x: decisionRect.x + decisionRect.width * 0.55,
+            x: decisionRect.x + decisionRect.width * 0.5 * ([...node.body].length? 1 : -1),
             y: decisionRect.y - baseSize * 0.06
          }, 
          {
