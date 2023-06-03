@@ -8,11 +8,4 @@
 
 <a href="https://www.pseudoflow.app" target="_blank">pseudoflow.app</a>
 
-<style lang="scss">
-   @import "../../styles/variables.scss";
-   
-   a {
-      text-decoration: none;
-      color: $accent-color;
-   }
-</style>
+<style lang="scss"></style>

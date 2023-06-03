@@ -43,3 +43,23 @@ body {
    background: $chromium-scrollbar-thumb;
 }
 
+a, .link {
+   text-decoration: none;
+   color: $accent-color;
+   cursor: pointer;
+}
+
+.button {
+   background: $accent-color;
+   border: none;
+   border-radius: 1rem;
+   padding: 0.3rem 1.5rem;
+   cursor: pointer;
+   display: grid;
+   font-size: 1rem;
+
+   &.alternative {
+      color: $accent-color;
+      background-color: $runbutton-background;
+   }
+}
