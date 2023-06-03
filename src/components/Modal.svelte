@@ -1,4 +1,5 @@
 <script lang="ts">
+   import { translationStore } from "../lib/stores";
    import { createEventDispatcher } from "svelte";
    import { scale, fade } from "svelte/transition";
    import { quintOut } from "svelte/easing";
@@ -7,10 +8,20 @@
    const topbarDispatcher = createEventDispatcher();
    export let title: string = 'Modal';
    export let component: any;
+   export let saveDialog: boolean;
 
    const closeModal = () => {
       topbarDispatcher("closeModal");
    };
+
+   const closeAndNew = () => {
+      topbarDispatcher("closeAndNew");
+   };
+
+   const saveAndClose = () => {
+      topbarDispatcher("saveAndClose");
+   };
+
 </script>
 
 <div class="backdrop" on:click={closeModal} transition:fade={{ duration: 150 }}></div>
@@ -27,6 +38,15 @@
       <div class="inner-content">
          <svelte:component this={component} />
       </div>
+      {#if saveDialog}
+      <div class="inner-options">
+         <span class="link" on:click={closeModal}>{$translationStore.APP_SAVE_CANCEL_BUTTON}</span>
+         <div class="right">
+            <button class="button alternative" on:click={closeAndNew}>{$translationStore.APP_SAVE_NO_BUTTON}</button>
+            <button class="button" on:click={saveAndClose}>{$translationStore.APP_SAVE_YES_BUTTON}</button>
+         </div>
+      </div>
+      {/if}
    </div>
 </div>
 
@@ -89,6 +109,20 @@
 
             @media screen and (min-width: $breakpoint) {
                padding: 2rem 4rem;
+            }
+         }
+
+         .inner-options {
+            margin: 0 1rem 1rem 1rem;
+            display: flex;
+            justify-content: space-between;
+
+            .right {
+               display: flex;
+
+               button {
+                  margin-left: 1rem;
+               }
             }
          }
       }

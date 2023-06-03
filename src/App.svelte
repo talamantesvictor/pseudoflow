@@ -6,6 +6,7 @@
    import Output from "./components/Output.svelte";
    import Chart from "./components/Chart.svelte";
    import Modal from "./components/Modal.svelte";
+   import SaveModal from "./components/modals/SaveModal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
    import { save } from "@tauri-apps/api/dialog";
@@ -105,9 +106,14 @@
 
    function newButtonClick() {
       // Pending: add a warning modal
+      modal = {
+         title: $translationStore.APP_SAVE_TITLE,
+         component: SaveModal,
+         saveDialog: true
+      };
       
-      pseudocode = '';
-      generateTree();
+      // pseudocode = '';
+      // generateTree();
    }
 
    function importButtonClick() {
@@ -158,6 +164,21 @@
       };
    }
 
+   function saveAndClose() {
+      closeModal();
+      exportButtonClick();
+   }
+
+   function closeAndNew() {
+      closeModal();
+      newDocument();
+   }
+
+   function newDocument() {
+      pseudocode = '';
+      generateTree();
+   }
+
    function closeModal() {
       modal = undefined;
    }
@@ -188,7 +209,12 @@
 </div>
 
 <input type="file" id="file-import" on:change={importData} />
-{#if modal} <Modal title="{modal.title}" component="{modal.component}" on:closeModal="{closeModal}"></Modal> {/if}
+{#if modal} 
+<Modal title="{modal.title}" component="{modal.component}" saveDialog="{modal.saveDialog}"
+   on:closeModal="{closeModal}"
+   on:saveAndClose="{saveAndClose}"
+   on:closeAndNew="{closeAndNew}"></Modal> 
+{/if}
 
 <style lang="scss">
    @import "./styles/variables.scss";
