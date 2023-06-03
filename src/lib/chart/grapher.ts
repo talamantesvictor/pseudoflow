@@ -578,6 +578,9 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       );
    }
    else if (node.name === 'DowhileNode') {
+      // Add top margin to leave room for the
+      // returning "iteration" arrow
+      position.y += defaultVerticalSpace * 0.5;
 
       // Variables to keep track of dimensions
       let lastNodeRect: any;
@@ -609,9 +612,6 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             widerNode = widerNode > nodeWidth ? widerNode : nodeWidth;
             nodeWidth = 0;
          }
-      }
-      else {
-         position.y += defaultVerticalSpace * 0.5;
       }
 
       position.y += treeNodeDimensions.y;
@@ -646,10 +646,12 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       );
       symbolsLayer.add(noLabel);
 
+      let hasBodySentences = [...node.body].length? true : false;
+
       const yesLabel = textLabel(
          reservedWords.CHART_YES, 
          {
-            x: decisionRect.x + decisionRect.width * 0.5 * ([...node.body].length? 1 : -1),
+            x: decisionRect.x + decisionRect.width * 0.5 * (hasBodySentences? 1 : -1),
             y: decisionRect.y - baseSize * 0.06
          }, 
          {
@@ -660,20 +662,22 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       );
       symbolsLayer.add(yesLabel);
 
-      // Loop
-      flowLayer.add(
-         loopArrowSymbol(
-            {x: decisionRect.x, y: decisionRect.y},
-            {x: treeNodeRect.x + treeNodeRect.width * 0.5, y: treeNodeRect.y},
-            treeNodeRect.height,
-            0,
-            position.x + widerNode + defaultHorizontalSpace * 0.5
-         )
-      );
-
       // Update dimensions
       treeNodeDimensions.x = widerNode;
       treeNodeDimensions.y += treeNodeRect.height * 0.5 + defaultVerticalSpace * 1.5;
+
+      let lastRowPosition = decisionRect.y - defaultVerticalSpace > baseSize * 0.2? decisionRect.y - defaultVerticalSpace : baseSize * 0.2;
+
+      // Loop
+      flowLayer.add(
+         loopArrowSymbol(
+            {x: decisionRect.x + (decisionRect.width * 0.5 * (hasBodySentences? 1 : 0)), y: decisionRect.y},
+            {x: treeNodeRect.x, y: treeNodeRect.y},
+            treeNodeRect.height,
+            0.1, // We give a marginal number only to add height at the top
+            position.x + widerNode + defaultHorizontalSpace * 0.5
+         )
+      );
    }
 
    return {
