@@ -80,13 +80,13 @@
       z-index: 10;
 
       .header {
-         width: calc(100% - 1rem);
+         width: calc(100% - 1.6rem);
          height: 3rem;
          background: #424453;
          display: flex;
          justify-content: space-between;
          align-items: center;
-         padding: 0 0.5rem;
+         padding: 0 1rem;
 
          .close {
             height: 2rem;
