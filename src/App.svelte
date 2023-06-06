@@ -125,6 +125,7 @@
    }
 
    async function exportButtonClick() {
+      let exported = false;
       // Desktop
       try {
          const filePath = await save({
@@ -133,6 +134,7 @@
          if (filePath) {
             await invoke('save_file', {path: filePath, contents: pseudocode});
             savedPseudocode = pseudocode;
+            exported = true;
          }
       } 
       // Web
@@ -144,7 +146,10 @@
          tempLink.click();
          URL.revokeObjectURL(tempLink.href);
          savedPseudocode = pseudocode;
+         exported = true;
       };
+
+      return exported;
    }
 
    function runButtonClick(e) {
@@ -171,9 +176,11 @@
       };
    }
 
-   function saveAndClose() {
+   async function saveAndClose() {
       closeModal();
-      exportButtonClick();
+      if (await exportButtonClick()) {
+         newDocument();
+      }
    }
 
    function closeAndNew() {
