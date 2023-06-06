@@ -13,6 +13,6 @@ fn main() {
 }
 
 #[tauri::command]
-fn save_file(filename: String, contents: String) {
-  fs::write(filename, contents).unwrap();
+fn save_file(path: String, contents: String) {
+  fs::write(path, contents).unwrap();
 }

@@ -22,6 +22,7 @@
    let enableUserInput: boolean;
    let pseudocode: string;
    let lastPseudocode: string;
+   let savedPseudocode: string;
    let syntaxTree: object = { body: null };
    let outputText: string;
    let pendingSentencesToExecute: atype.SentencesNode[];
@@ -99,21 +100,23 @@
 		reader.addEventListener("load", (event) => {
 			const result = event.target.result;
          pseudocode = result.toString();
+         savedPseudocode = pseudocode;
          generateTree();
 		});
 		reader.readAsText(e.target.files[0], "UTF-8");
    }
 
    function newButtonClick() {
-      // Pending: add a warning modal
-      modal = {
-         title: $translationStore.APP_SAVE_TITLE,
-         component: SaveModal,
-         saveDialog: true
-      };
-      
-      // pseudocode = '';
-      // generateTree();
+      if (pseudocode && pseudocode !== savedPseudocode) {
+         modal = {
+            title: $translationStore.APP_SAVE_TITLE,
+            component: SaveModal,
+            saveDialog: true
+         };
+      }
+      else {
+         newDocument();
+      }
    }
 
    function importButtonClick() {
@@ -124,9 +127,12 @@
    async function exportButtonClick() {
       // Desktop
       try {
-         const savePath = await save();
-         if (savePath) {
-            await invoke('save_file', {filename: $filename, contents: pseudocode});
+         const filePath = await save({
+            defaultPath: $filename
+         });
+         if (filePath) {
+            await invoke('save_file', {path: filePath, contents: pseudocode});
+            savedPseudocode = pseudocode;
          }
       } 
       // Web
@@ -137,6 +143,7 @@
          tempLink.setAttribute('download', $filename);
          tempLink.click();
          URL.revokeObjectURL(tempLink.href);
+         savedPseudocode = pseudocode;
       };
    }
 
