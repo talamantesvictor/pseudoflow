@@ -43,6 +43,8 @@
          interpreterReset();
          enableUserInput = false;
          isProgramRunning = false;
+      } else if (event.code === 'Escape' && modal) {
+         closeModal();
       }
    }
 
@@ -223,6 +225,7 @@
 </div>
 
 <input type="file" id="file-import" on:change={importData} />
+
 {#if modal} 
 <Modal title="{modal.title}" component="{modal.component}" saveDialog="{modal.saveDialog}"
    on:closeModal="{closeModal}"
