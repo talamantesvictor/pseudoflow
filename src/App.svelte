@@ -143,6 +143,7 @@
          });
          if (filePath) {
             await invoke('save_file', {path: filePath, contents: pseudocode});
+            filename.set(filePath);
             savedPseudocode = pseudocode;
             exported = true;
          }
