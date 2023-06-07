@@ -63,3 +63,36 @@ a, .link {
       background-color: $runbutton-background;
    }
 }
+
+
+@media screen and (min-width: $breakpoint) {
+   .tooltip {
+      position: relative;
+      display: inline-block;
+   }
+   
+   .tooltip .tooltiptext {
+      min-width: max-content;
+      top: 100%;
+      padding: 3px 1rem;
+      color: $fileinfo-foreground;
+      font-size: 0.8rem;
+      text-align: center;
+      background-color: $runbutton-background;
+      border: 1px solid transparentize($fileinfo-foreground, 0.5);
+      border-radius: 6px;
+
+      position: absolute;
+      pointer-events: none;
+      visibility: hidden;
+      z-index: 1;
+
+      transition: visibility 0s;
+      transition-delay: 0s;
+   }
+
+   .tooltip:hover .tooltiptext {
+      visibility: visible;
+      transition-delay: 0.8s;
+   }
+}

@@ -60,25 +60,25 @@
             </div>
          </div>
          <ul id="menu" class:active="{isMenuOpen}">
-            <li on:click={newButtonClick}>
+            <li class="tooltip" on:click={newButtonClick}>
                <img src="{newButton}" alt="New Button" />
-               <span>New project</span>
+               <span class="tooltiptext">New project</span>
             </li>
-            <li on:click={importButtonClick}>
+            <li class="tooltip" on:click={importButtonClick}>
                <img src="{openButton}" alt="Open Button" />
-               <span>Open project</span>
+               <span class="tooltiptext">Open project</span>
             </li>
-            <li on:click={exportButtonClick}>
+            <li class="tooltip" on:click={exportButtonClick}>
                <img src="{saveButton}" alt="Save Button" />
-               <span>Save/Export</span>
+               <span class="tooltiptext">Save/Export</span>
             </li>
-            <li on:click={settingsButtonClick}>
+            <li class="tooltip" on:click={settingsButtonClick}>
                <img src="{settingsButton}" alt="Settings Button" />
-               <span>Settings</span>
+               <span class="tooltiptext">Settings</span>
             </li>
-            <li on:click={infoButtonClick}>
+            <li class="tooltip" on:click={infoButtonClick}>
                <img src="{infoButton}" alt="Info Button" />
-               <span>About</span>
+               <span class="tooltiptext">About</span>
             </li>
          </ul>
       </div>
@@ -165,10 +165,6 @@
 
                   li {
                      margin: 0;
-
-                     span {
-                        display: none;
-                     }
 
                      img {
                         margin: 0;
