@@ -1,6 +1,6 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
-   import { translationStore, filename } from "../lib/stores";
+   import { translationStore, fileName } from "../lib/stores";
    import newButton from '../../static/images/new_button.svg';
    import openButton from '../../static/images/open_button.svg';
    import saveButton from '../../static/images/save_button.svg';
@@ -86,7 +86,7 @@
    <div class="right">
       <div id="fileinfo">
          <span>{$translationStore.APP_FILE}:</span>
-         <span>{$filename.split(/(\\|\/)/g).pop()}</span>
+         <span>{$fileName.split(/(\\|\/)/g).pop()}</span>
       </div>
       <div id="chartToggle" on:click={chartToggleClick} class:active="{isChartVisible}" >
          {$translationStore.APP_CHART_TOGGLE}

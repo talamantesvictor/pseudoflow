@@ -6,7 +6,8 @@ import spanishTranslations from "../i18n/app/es.json";
 
 export let codeWordLang = 'en';
 export let translationLang = 'en';
-export const filename = writable('pseudocode.pff');
+export const defaultName = 'pseudocode.pff';
+export const fileName = writable(defaultName);
 export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
 

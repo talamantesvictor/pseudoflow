@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { translationStore, filename } from "./lib/stores";
+   import { translationStore, defaultName, fileName } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -101,7 +101,7 @@
 
    // Import code from a file using an input element in HTML
    function importDataFromFile(e) {
-      filename.set(e.target.files[0].name);
+      fileName.set(e.target.files[0].name);
 
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
@@ -139,11 +139,11 @@
       // Desktop
       try {
          const filePath = await save({
-            defaultPath: $filename
+            defaultPath: $fileName
          });
          if (filePath) {
             await invoke('save_file', {path: filePath, contents: pseudocode});
-            filename.set(filePath);
+            fileName.set(filePath);
             savedPseudocode = pseudocode;
             exported = true;
          }
@@ -153,7 +153,7 @@
          let textBlob = new Blob([pseudocode], {type: 'text/plain'});
          let tempLink = document.createElement("a");
          tempLink.setAttribute('href', URL.createObjectURL(textBlob));
-         tempLink.setAttribute('download', $filename);
+         tempLink.setAttribute('download', $fileName);
          tempLink.click();
          URL.revokeObjectURL(tempLink.href);
          savedPseudocode = pseudocode;
@@ -214,6 +214,7 @@
       pendingSentencesToExecute = [];
       lastExecutedSentence = null;
       clearTimeout(timeoutToParse);
+      fileName.set(defaultName);
       generateTree();
    }
 
