@@ -9,8 +9,9 @@
    import SaveModal from "./components/modals/SaveModal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
-   import { save } from "@tauri-apps/api/dialog";
+   import { open, save } from "@tauri-apps/api/dialog";
    import { invoke } from "@tauri-apps/api/tauri";
+   import { readTextFile } from "@tauri-apps/api/fs";
    import { lexer } from "./lib/analyzers/lexer";
    import { parser } from "./lib/analyzers/parser";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
@@ -128,9 +129,23 @@
    }
 
    // Handle "Open" button in top bar
-   function importButtonClick() {
-      let element = document.getElementById("file-import");
-      element.click();
+   async function importButtonClick() {
+      // Desktop
+      try {
+         const filePath = await open(({defaultPath: $fileName}));
+         if (filePath) {
+            readTextFile(filePath as string).then((data) => {
+               pseudocode = data.toString();
+               savedPseudocode = pseudocode;
+               generateTree();
+               fileName.set(filePath as string);
+            });
+         }
+      }
+      // Web
+      catch (err) {
+         document.getElementById("file-import").click();
+      }
    }
 
    // Handle "Save" button in top bar
