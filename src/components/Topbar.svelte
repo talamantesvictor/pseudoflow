@@ -62,23 +62,23 @@
          <ul id="menu" class:active="{isMenuOpen}">
             <li class="tooltip" on:click={newButtonClick}>
                <img src="{newButton}" alt="New Button" />
-               <span class="tooltiptext">New project</span>
+               <span class="tooltiptext">{$translationStore.APP_NEW}</span>
             </li>
             <li class="tooltip" on:click={importButtonClick}>
                <img src="{openButton}" alt="Open Button" />
-               <span class="tooltiptext">Open project</span>
+               <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
             </li>
             <li class="tooltip" on:click={exportButtonClick}>
                <img src="{saveButton}" alt="Save Button" />
-               <span class="tooltiptext">Save/Export</span>
+               <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
             </li>
             <li class="tooltip" on:click={settingsButtonClick}>
                <img src="{settingsButton}" alt="Settings Button" />
-               <span class="tooltiptext">Settings</span>
+               <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
             </li>
             <li class="tooltip" on:click={infoButtonClick}>
                <img src="{infoButton}" alt="Info Button" />
-               <span class="tooltiptext">About</span>
+               <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
             </li>
          </ul>
       </div>
