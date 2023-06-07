@@ -208,7 +208,6 @@
       isProgramRunning = false;
       isChartVisible = false;
       pseudocode = '';
-      lastPseudocode = '';
       savedPseudocode = '';
       outputText = '';
       pendingSentencesToExecute = [];

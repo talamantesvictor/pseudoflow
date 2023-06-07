@@ -59,7 +59,9 @@
       if (editorElement) {
          if (editorElement.innerText !== editorText) {
             editorElement.innerText = editorText;
-            beautifyCode();
+            setTimeout(() => {
+               focusOnEditableArea();
+            });
          }
       }
    }
