@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { translationStore, defaultName, fileName } from "./lib/stores";
+   import { translationStore, defaultName, fileNameStore, flowchartDrawingStore } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -102,7 +102,7 @@
 
    // Import code from a file using an input element in HTML
    function importDataFromFile(e) {
-      fileName.set(e.target.files[0].name);
+      fileNameStore.set(e.target.files[0].name);
 
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
@@ -132,13 +132,13 @@
    async function importButtonClick() {
       // Desktop
       try {
-         const filePath = await open(({defaultPath: $fileName}));
+         const filePath = await open(({defaultPath: $fileNameStore}));
          if (filePath) {
             readTextFile(filePath as string).then((data) => {
                pseudocode = data.toString();
                savedPseudocode = pseudocode;
                generateTree();
-               fileName.set(filePath as string);
+               fileNameStore.set(filePath as string);
             });
          }
       }
@@ -154,11 +154,11 @@
       // Desktop
       try {
          const filePath = await save({
-            defaultPath: $fileName
+            defaultPath: $fileNameStore
          });
          if (filePath) {
             await invoke('save_file', {path: filePath, contents: pseudocode});
-            fileName.set(filePath);
+            fileNameStore.set(filePath);
             savedPseudocode = pseudocode;
             exported = true;
          }
@@ -168,7 +168,7 @@
          let textBlob = new Blob([pseudocode], {type: 'text/plain'});
          let tempLink = document.createElement("a");
          tempLink.setAttribute('href', URL.createObjectURL(textBlob));
-         tempLink.setAttribute('download', $fileName);
+         tempLink.setAttribute('download', $fileNameStore);
          tempLink.click();
          URL.revokeObjectURL(tempLink.href);
          savedPseudocode = pseudocode;
@@ -229,7 +229,7 @@
       pendingSentencesToExecute = [];
       lastExecutedSentence = null;
       clearTimeout(timeoutToParse);
-      fileName.set(defaultName);
+      fileNameStore.set(defaultName);
       generateTree();
    }
 
@@ -251,13 +251,15 @@
    bind:isChartVisible={isChartVisible} />
 
 <div id="wrapper" on:mousedown={generateTree}>
+   {#if $flowchartDrawingStore}
    <div id="flowchart-area" class:active={isChartVisible}>
       <Chart sintaxTree="{syntaxTree['body']}"></Chart>
    </div>
-   <div id="output-area" class:active="{isProgramRunning}">
+   {/if}
+   <div id="output-area" class:active="{isProgramRunning}" class:twoColumnLayout="{$flowchartDrawingStore}">
       <Output content="{outputText}" isInputPromptEnabled="{enableUserInput}" on:message={capturedMessage} />
    </div>
-   <div id="text-area">
+   <div id="text-area" class:twoColumnLayout="{$flowchartDrawingStore}">
       <Editor bind:editorText={pseudocode} />
    </div>
 </div>
@@ -288,8 +290,10 @@
          overflow: hidden;
          position: absolute;
 
-         @media screen and (min-width: $breakpoint) {
-            width: 60%;
+         &.twoColumnLayout {
+            @media screen and (min-width: $breakpoint) {
+               width: 60%;
+            }
          }
       }
 
@@ -309,8 +313,10 @@
             transform: translateX(0%);
          }
 
-         @media screen and (min-width: $breakpoint) {
-            width: 60%;
+         &.twoColumnLayout {
+            @media screen and (min-width: $breakpoint) {
+               width: 60%;
+            }
          }
       }
 

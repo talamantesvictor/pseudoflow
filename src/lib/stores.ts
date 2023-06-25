@@ -7,9 +7,10 @@ import spanishTranslations from "../i18n/app/es.json";
 export let codeWordLang = 'en';
 export let translationLang = 'en';
 export const defaultName = 'pseudocode.pff';
-export const fileName = writable(defaultName);
+export const fileNameStore = writable(defaultName);
 export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
+export const flowchartDrawingStore = writable(true);
 
 export const changeTranslation = (langCode) => {
    switch (translationLang = langCode) {
