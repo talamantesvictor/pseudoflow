@@ -1,6 +1,6 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
-   import { translationStore, fileNameStore } from "../lib/stores";
+   import { translationStore, fileNameStore, flowchartDrawingStore } from "../lib/stores";
    import newButton from '../../static/images/new_button.svg';
    import openButton from '../../static/images/open_button.svg';
    import saveButton from '../../static/images/save_button.svg';
@@ -88,9 +88,11 @@
          <span>{$translationStore.APP_FILE}:</span>
          <span>{$fileNameStore.split(/(\\|\/)/g).pop()}</span>
       </div>
+      {#if $flowchartDrawingStore}
       <div id="chartToggle" on:click={chartToggleClick} class:active="{isChartVisible}" >
          {$translationStore.APP_CHART_TOGGLE}
       </div>
+      {/if}
       <div id="runButton" on:click={runButtonClick}>
          <img src="{executeButtonImage}" alt="Play Button" />
          {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
