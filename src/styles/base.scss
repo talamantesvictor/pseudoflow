@@ -49,6 +49,45 @@ a, .link {
    cursor: pointer;
 }
 
+label {
+   cursor: pointer;
+   line-height: 1rem;
+
+   span {
+      color: $linenumbers-foreground;
+      font-size: 0.8rem;
+   }
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+   -webkit-appearance: none;
+   appearance: none;
+   margin: 0;
+   font: inherit;
+   color: white;
+   width: 1.3rem;
+   height: 1.3rem;
+   border: 2px solid $accent-color;
+   border-radius: 50%;
+   margin-right: 0.8rem;
+   display: grid;
+   place-content: center;
+   cursor: pointer;
+
+   &::before {
+      content: url(../../../static/images/check_icon.svg);
+      transform: scale(0);
+   }
+
+   &:checked {
+      border-color: $alternative-color;
+      &::before {
+         transform: scale(0.4) translateY(0.3rem); 
+      }
+   }
+}
+
 .button {
    background: $accent-color;
    border: none;

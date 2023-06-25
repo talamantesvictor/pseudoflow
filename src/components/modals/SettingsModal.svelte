@@ -10,7 +10,7 @@
    }
 </script>
 
-<div class="languages">
+<div class="languageSettings">
    <div>
       <div class="title">
          {$translationStore.APP_SETTINGS_SOFTWARE}
@@ -46,11 +46,21 @@
       </div>
    </div>
 </div>
+<div class="otherSettings">
+   <div class="options">
+      <div>
+         <input type="checkbox" id="flowchart">
+         <label for="flowchart">{$translationStore.APP_SETTINGS_OTHER_FLOWCHART}. 
+            <span>{$translationStore.APP_SETTINGS_OTHER_FLOWCHART_INFO}</span>
+         </label>
+      </div>
+   </div>
+</div>
 
 <style lang="scss">
    @import "../../styles/variables.scss";
 
-   .languages {
+   .languageSettings {
       display: flex;
       justify-content: space-between;
 
@@ -64,48 +74,16 @@
       @media screen and (max-width: calc($breakpoint - 1px)) {
          flex-direction: column;
          justify-content: left;
-         
-         div {
-            margin-bottom: 1rem;
-         }
       }
    }
 
    .options div {
       display: flex;
       align-items: center;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.8rem;      
+   }
 
-      label {
-         cursor: pointer;
-      }
-
-      input[type="radio"] {
-         -webkit-appearance: none;
-         appearance: none;
-         margin: 0;
-         font: inherit;
-         color: white;
-         width: 1.3rem;
-         height: 1.3rem;
-         border: 2px solid $accent-color;
-         border-radius: 50%;
-         margin-right: 0.8rem;
-         display: grid;
-         place-content: center;
-         cursor: pointer;
-
-         &::before {
-            content: url(../../../static/images/check_icon.svg);
-            transform: scale(0);
-         }
-
-         &:checked {
-            border-color: $alternative-color;
-            &::before {
-               transform: scale(0.4) translateY(0.2rem); 
-            }
-         }
-      }
+   .otherSettings {
+      margin-top: 1rem;
    }
 </style>

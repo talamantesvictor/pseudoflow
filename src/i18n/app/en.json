@@ -16,6 +16,8 @@
    "APP_SETTINGS_PSEUDOCODE": "Pseudocode language",
    "APP_SETTINGS_LANG_ENGLISH": "English",
    "APP_SETTINGS_LANG_SPANISH": "Spanish",
+   "APP_SETTINGS_OTHER_FLOWCHART": "Real-Time flowchart",
+   "APP_SETTINGS_OTHER_FLOWCHART_INFO": "Requires WebGL",
    "APP_INFO_TITLE": "About",
    "APP_INFO_VERSION": "App version",
    "APP_INFO_DESCRIPTION": "PseudoFlow is a free and open source software developed to help programming students learn about control structures by using pseudocode and generating ANSI standard flowcharts of their algorithms in real-time.",
