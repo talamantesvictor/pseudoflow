@@ -6,11 +6,12 @@ import spanishTranslations from "../i18n/app/es.json";
 
 export let codeWordLang = 'en';
 export let translationLang = 'en';
+export let isFlowchartVisible = true;
 export const defaultName = 'pseudocode.pff';
 export const fileNameStore = writable(defaultName);
 export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
-export const flowchartDrawingStore = writable(true);
+export const flowchartDrawingStore = writable(isFlowchartVisible);
 
 export const changeTranslation = (langCode) => {
    switch (translationLang = langCode) {
@@ -34,4 +35,9 @@ export const changecodeWordsStore = (langCode) => {
          codeWordStore.set(englishWords);
          break;
    }
+};
+
+export const changeFlowchartVisibility = (isVisible) => {
+   isFlowchartVisible = isVisible;
+   flowchartDrawingStore.set(isVisible);
 };

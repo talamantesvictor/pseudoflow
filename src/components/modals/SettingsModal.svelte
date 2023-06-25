@@ -1,5 +1,12 @@
 <script lang="ts">
-   import { translationStore, changeTranslation, changecodeWordsStore, codeWordLang, translationLang } from "../../lib/stores";
+   import { 
+      translationStore, 
+      changeTranslation, 
+      changecodeWordsStore, 
+      codeWordLang, 
+      translationLang, 
+      changeFlowchartVisibility, 
+      isFlowchartVisible } from "../../lib/stores";
 
    function selectTranslation(e) {
       changeTranslation(e.srcElement['value']);
@@ -7,6 +14,10 @@
 
    function selectcodeWordsStore(e) {
       changecodeWordsStore(e.srcElement['value']);
+   }
+
+   function toggleFlowchart(e) {
+      changeFlowchartVisibility(e.target['checked']);
    }
 </script>
 
@@ -49,7 +60,7 @@
 <div class="otherSettings">
    <div class="options">
       <div>
-         <input type="checkbox" id="flowchart">
+         <input type="checkbox" id="flowchart" on:input={toggleFlowchart} checked="{isFlowchartVisible}">
          <label for="flowchart">{$translationStore.APP_SETTINGS_OTHER_FLOWCHART}. 
             <span>{$translationStore.APP_SETTINGS_OTHER_FLOWCHART_INFO}</span>
          </label>
