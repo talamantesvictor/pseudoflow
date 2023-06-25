@@ -60,6 +60,15 @@
       .title {
          margin-bottom: 1rem;
       }
+
+      @media screen and (max-width: calc($breakpoint - 1px)) {
+         flex-direction: column;
+         justify-content: left;
+         
+         div {
+            margin-bottom: 1rem;
+         }
+      }
    }
 
    .options div {
