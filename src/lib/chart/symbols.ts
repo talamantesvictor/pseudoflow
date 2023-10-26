@@ -218,7 +218,7 @@ export function textLabel(
       y: position.y,
       text: label,
       fontSize: 30,
-      fontFamily: 'Calibri',
+      fontFamily: 'Roboto',
       align: 'center',
       verticalAlign: 'middle',
       ellipsis: true,
