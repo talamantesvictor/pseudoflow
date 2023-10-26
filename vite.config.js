@@ -8,7 +8,7 @@ export default defineConfig({
       strictPort: true,
       host: true
    },
-   envPrefix: ["VITE_", "TAURI_"],
+   envPrefix: ['VITE_', 'TAURI_PLATFORM', 'TAURI_ARCH', 'TAURI_FAMILY', 'TAURI_PLATFORM_VERSION', 'TAURI_PLATFORM_TYPE', 'TAURI_DEBUG'],
    build: {
       target: ["es2021", "chrome100", "safari13"],
       // don't minify for debug builds
