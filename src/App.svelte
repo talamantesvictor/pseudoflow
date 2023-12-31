@@ -29,6 +29,8 @@
    let lastExecutedSentence: atype.SentencesNode;
    let timeoutToParse: any;
 
+   let pointerStartX, rightColumnStartWidth;
+
    // Shortcut key handling
    window.onkeydown = function (event) {
       clearTimeout(timeoutToParse);
@@ -237,6 +239,32 @@
       modal = undefined;
    }
 
+   function startResizing(event) {
+      pointerStartX = event.clientX;
+      rightColumnStartWidth = document.getElementById('flowchart-area').offsetWidth;
+      document.addEventListener('mousemove', resize);
+      document.addEventListener('mouseup', stopResizing);
+      document.body.classList.add('no-select');
+   }
+
+   function resize(event) {
+      const currentX = event.clientX;
+      const deltaX = currentX - pointerStartX;
+      const rightColumnWidth = rightColumnStartWidth - deltaX;
+      const leftColumnWidth = document.getElementById('wrapper').offsetWidth - rightColumnWidth;
+
+      document.getElementById('flowchart-area').style.width = `${rightColumnWidth}px`;
+      document.getElementById('resizer').style.right = `${rightColumnWidth}px`;
+      document.getElementById('text-area').style.width = `${leftColumnWidth}px`;
+      document.getElementById('output-area').style.width = `${leftColumnWidth}px`;
+   }
+
+   function stopResizing() {
+      document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResizing);
+      document.body.classList.remove('no-select');
+   }
+
 </script>
 
 
@@ -259,6 +287,7 @@
    <div id="output-area" class:active="{isProgramRunning}" class:twoColumnLayout="{$flowchartDrawingStore}">
       <Output content="{outputText}" isInputPromptEnabled="{enableUserInput}" on:message={capturedMessage} />
    </div>
+   <div id="resizer" on:mousedown={startResizing}></div>
    <div id="text-area" class:twoColumnLayout="{$flowchartDrawingStore}">
       <Editor bind:editorText={pseudocode} />
    </div>
@@ -281,9 +310,26 @@
       background: $editor-background;
       overflow: hidden;
 
+      #resizer {
+         width: 8px;
+         height: calc(100vh - $topbar-height);
+         cursor: ew-resize;
+         border-right: 1px solid $accent-color;
+         position: absolute;
+         right: 40%;
+         z-index: 10;
+         opacity: 0;
+         transition: opacity 0.4s;
+         
+         &:hover, &:active {
+            opacity: 1;
+         }
+      }
+
       #text-area {
          display: flex;
          width: 100%;
+         max-width: 100%;
          flex-direction: column;
          background-color: $editor-background;
          height: calc(100vh - $topbar-height);
@@ -299,6 +345,7 @@
 
       #output-area {
          width: 100%;
+         max-width: 100%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;
@@ -308,7 +355,7 @@
          transition: transform 0.2s;
          overflow-y: auto;
          z-index: 2;
-
+         
          &.active {
             transform: translateX(0%);
          }
@@ -322,6 +369,7 @@
 
       #flowchart-area {
          width: 100%;
+         max-width: 100%;
          height: calc(100% - $topbar-height);
          background-color: $flowchart-background;
          color: white;
