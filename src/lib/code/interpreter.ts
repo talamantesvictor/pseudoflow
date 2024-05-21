@@ -48,7 +48,7 @@ export function addSentence(sentence: atype.SentencesNode, index: number) {
 
 function intepretTreeNode(node: atype.SentencesNode) {
    if (node.name === 'DeclarationNode') {
-      const value = eval(valueBuilder(node.value));
+      const value = safeEval(valueBuilder(node.value));
       interpreterVariables.push({
          identifier: node.identifier,
          value: isNaN(value) ? '"' + value + '"' : value
@@ -59,7 +59,8 @@ function intepretTreeNode(node: atype.SentencesNode) {
    else if (node.name === 'AssignmentNode') {
       for (let index = 0; index < interpreterVariables.length; index++) {
          if (interpreterVariables[index]['identifier'] === node.identifier) {
-            const value = eval(valueBuilder(node.value));
+            let value = valueBuilder(node.value); 
+            value = isNaN(value)? '"' + value + '"' : safeEval(value);
             interpreterVariables[index]['value'] = value;
          }
       }
@@ -68,11 +69,11 @@ function intepretTreeNode(node: atype.SentencesNode) {
    }
    else if (node.name === 'PrintNode') {
       return { 
-         print: eval(valueBuilder(node.value)) + '<br>' 
+         print: safeEval(valueBuilder(node.value)) + '<br>' 
       };
    }
    else if (node.name === 'IfNode') {
-      const isTrueStatement = eval(valueBuilder(node.argument));
+      const isTrueStatement = safeEval(valueBuilder(node.argument));
 
       if (isTrueStatement) {
          [...node.body].reverse().forEach(bodyNode => {
@@ -88,10 +89,10 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { print: '' };
    }
    else if (node.name === 'SwitchNode') {
-      const switchValue = eval(valueBuilder(node.argument));
+      const switchValue = safeEval(valueBuilder(node.argument));
 
       node.cases.forEach(caseElement => {
-         const caseValue = eval(valueBuilder(caseElement.argument));
+         const caseValue = safeEval(valueBuilder(caseElement.argument));
 
          if (switchValue === caseValue) {
             [...caseElement.body].reverse().forEach(bodyNode => {
@@ -103,9 +104,9 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { print: '' };
    }
    else if (node.name === 'RepeatNode') {
-      const declarationValue = eval(valueBuilder(node.declaration.value));
-      const toValue = eval(valueBuilder(node.to));
-      let stepsValue = eval(valueBuilder(node.steps));
+      const declarationValue = safeEval(valueBuilder(node.declaration.value));
+      const toValue = safeEval(valueBuilder(node.to));
+      let stepsValue = safeEval(valueBuilder(node.steps));
       stepsValue = Math.abs(stepsValue);
       
       let newUntilValue = Math.abs(toValue - declarationValue);
@@ -123,7 +124,7 @@ function intepretTreeNode(node: atype.SentencesNode) {
                identifier: node.declaration.identifier,
                value: {
                   name: 'NumericNode',
-                  value: eval(declarationValue + operator + '(' + stepsValue + ')')
+                  value: safeEval(declarationValue + operator + '(' + stepsValue + ')')
                } as any
             },
             name: node.name,
@@ -148,7 +149,7 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { print: '' };
    }
    else if (node.name === 'WhileNode') {
-      const argumentValue = eval(valueBuilder(node.argument));
+      const argumentValue = safeEval(valueBuilder(node.argument));
 
       if (argumentValue) {
          addSentence({
@@ -165,7 +166,7 @@ function intepretTreeNode(node: atype.SentencesNode) {
       return { print: '' };
    }
    else if (node.name === 'DowhileNode') {
-      const argumentValue = eval(valueBuilder(node.argument));
+      const argumentValue = safeEval(valueBuilder(node.argument));
 
       if (argumentValue || node.do) {
          addSentence({
@@ -220,6 +221,10 @@ function expressionBuilder(node: atype.ExpressionNode, enableVariables = true) {
    }
 
    return expression;
+}
+
+function safeEval(expression: any) {
+   return Function('"use strict";return (' + expression + ')')();
 }
 
 export function valueBuilder(node, enableVariables = true) {
