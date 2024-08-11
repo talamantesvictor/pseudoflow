@@ -351,12 +351,14 @@
          color: white;
          position: absolute;
          left: 0;
-         transform: translateX(100%);
-         transition: transform 0.2s;
+         transform: translateX(100vw);
+         transition: all 0.2s;
          overflow-y: auto;
          z-index: 2;
+         opacity: 0;
          
          &.active {
+            opacity: 1;
             transform: translateX(0%);
          }
 
