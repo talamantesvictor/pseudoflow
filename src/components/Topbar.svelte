@@ -60,23 +60,23 @@
             </div>
          </div>
          <ul id="menu" class:active="{isMenuOpen}">
-            <li class="tooltip" on:click={newButtonClick}>
+            <li class="tooltip" on:mouseup={newButtonClick}>
                <img src="{newButton}" alt="New Button" />
                <span class="tooltiptext">{$translationStore.APP_NEW}</span>
             </li>
-            <li class="tooltip" on:click={importButtonClick}>
+            <li class="tooltip" on:mouseup={importButtonClick}>
                <img src="{openButton}" alt="Open Button" />
                <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
             </li>
-            <li class="tooltip" on:click={exportButtonClick}>
+            <li class="tooltip" on:mouseup={exportButtonClick}>
                <img src="{saveButton}" alt="Save Button" />
                <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
             </li>
-            <li class="tooltip" on:click={settingsButtonClick}>
+            <li class="tooltip" on:mouseup={settingsButtonClick}>
                <img src="{settingsButton}" alt="Settings Button" />
                <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
             </li>
-            <li class="tooltip" on:click={infoButtonClick}>
+            <li class="tooltip" on:mouseup={infoButtonClick}>
                <img src="{infoButton}" alt="Info Button" />
                <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
             </li>
@@ -89,11 +89,11 @@
          <span>{$fileNameStore.split(/(\\|\/)/g).pop()}</span>
       </div>
       {#if $flowchartDrawingStore}
-      <div id="chartToggle" on:click={chartToggleClick} class:active="{isChartVisible}" >
+      <div id="chartToggle" on:mouseup={chartToggleClick} class:active="{isChartVisible}" >
          {$translationStore.APP_CHART_TOGGLE}
       </div>
       {/if}
-      <div id="runButton" on:click={runButtonClick}>
+      <div id="runButton" on:mouseup={runButtonClick}>
          <img src="{executeButtonImage}" alt="Play Button" />
          {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
       </div>

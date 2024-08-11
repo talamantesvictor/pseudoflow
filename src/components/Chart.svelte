@@ -91,6 +91,7 @@
          width: 40%;
          margin: 5px 0;
          background-color: transparent;
+         appearance: none;
          -webkit-appearance: none;
       }
 

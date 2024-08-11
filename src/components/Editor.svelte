@@ -143,7 +143,7 @@
 </script>
 
 <Commands bind:command={commandToInsert} />
-<div class="editor-area" on:click={focusOnEditableArea}>
+<div class="editor-area" on:mouseup={focusOnEditableArea}>
    <div class="numbers-area">
       <div class="line-numbers" />
    </div>

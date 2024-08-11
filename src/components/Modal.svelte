@@ -24,14 +24,14 @@
 
 </script>
 
-<div class="backdrop" on:click={closeModal} transition:fade={{ duration: 150 }}></div>
+<div class="backdrop" on:mouseup={closeModal} transition:fade={{ duration: 150 }}></div>
 <div class="modal" transition:scale={{ duration: 300, easing: quintOut }}>
    <div class="header">
       <div class="title">
          {title}
       </div>
       <div class="close">
-         <img src="{closeButton}" alt="Close Button" on:click={closeModal} />
+         <img src="{closeButton}" alt="Close Button" on:mouseup={closeModal} />
       </div>
    </div>
    <div class="content">
@@ -40,7 +40,7 @@
       </div>
       {#if saveDialog}
       <div class="inner-options">
-         <span class="link" on:click={closeModal}>{$translationStore.APP_SAVE_CANCEL_BUTTON}</span>
+         <span class="link" on:mouseup={closeModal}>{$translationStore.APP_SAVE_CANCEL_BUTTON}</span>
          <div class="right">
             <button class="button alternative" on:click={closeAndNew}>{$translationStore.APP_SAVE_NO_BUTTON}</button>
             <button class="button" on:click={saveAndClose}>{$translationStore.APP_SAVE_YES_BUTTON}</button>
