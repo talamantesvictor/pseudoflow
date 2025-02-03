@@ -34,6 +34,9 @@ codeWordStore.subscribe(word => {
       { name: 'StringToken',              rule: /(["'])(?:(?=(\\?))\2.)*?\1/g },
       { name: 'NumericToken',             rule: /^\-?(\d?)+\.?\d+$/g },
       { name: 'IdentifierToken',          rule: /\w+/g },
+      { name: 'OpenBracketToken',         rule: /^\[$/g },
+      { name: 'CloseBracketToken',        rule: /^\]$/g }, 
+      { name: 'CommaToken',               rule: /^\,$/g }, 
       { name: 'OtherToken',               rule: /./g }
    ];
 });

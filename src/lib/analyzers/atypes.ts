@@ -31,6 +31,9 @@ export type BooleanToken =             { name: 'BooleanToken', rule?: RegExp, va
 export type StringToken =              { name: 'StringToken', rule?: RegExp, value?: string };
 export type NumericToken =             { name: 'NumericToken', rule?: RegExp, value?: string };
 export type IdentifierToken =          { name: 'IdentifierToken', rule?: RegExp, value?: string };
+export type OpenBracketToken =         { name: 'OpenBracketToken', rule?: RegExp, value?: string };
+export type CloseBracketToken =        { name: 'CloseBracketToken', rule?: RegExp, value?: string };
+export type CommaToken =               { name: 'CommaToken', rule?: RegExp, value?: string };
 export type OtherToken =               { name: 'OtherToken', rule?: RegExp, value?: string };
 
 export type ArithmeticToken = 
@@ -44,6 +47,11 @@ export type OperatorToken =
    ArithmeticToken            |
    RelationalToken            |
    BooleanToken;
+
+export type ArrayToken = 
+   OpenBracketToken           | 
+   CloseBracketToken          |
+   CommaToken;
 
 export type Token = 
    DeclarationToken           | 
@@ -71,7 +79,10 @@ export type Token =
    StringToken                | 
    NumericToken               | 
    IdentifierToken            | 
-   OtherToken;
+   OtherToken                 |
+   OpenBracketToken           |
+   CloseBracketToken          |
+   CommaToken;
 
 // *******************************************
 // Nodes
@@ -91,6 +102,8 @@ export type GroupNode =                { name: 'GroupNode', body: Node };
 export type IdentifierNode =           { name: 'IdentifierNode', value: string | undefined };
 export type StringNode =               { name: 'StringNode', value: string | undefined };
 export type NumericNode =              { name: 'NumericNode', value: string | undefined };
+export type ArrayNode =                { name: 'ArrayNode', elements: Node[] };
+export type ArrayIndexNode =           { name: 'ArrayIndexNode', array: ArrayNode | IdentifierNode, index: Node }
 
 export type SentencesNode = 
    DeclarationNode            | 
@@ -103,17 +116,6 @@ export type SentencesNode =
    WhileNode                  | 
    DowhileNode;
 
-export type Node = 
-   StringExpressionNode       | 
-   ArithmeticExpressionNode   | 
-   RelationalExpressionNode   | 
-   BooleanExpressionNode      | 
-   ExpressionNode             | 
-   GroupNode                  | 
-   IdentifierNode             | 
-   StringNode                 | 
-   NumericNode;
-
 // *******************************************
 // Expressions
 // *******************************************
@@ -124,3 +126,16 @@ export type RelationalExpressionNode = { name: 'RelationalExpressionNode', left:
 export type BooleanExpressionNode =    { name: 'BooleanExpressionNode', left: Node, right: Node, operator: BooleanToken };
 export type ExpressionNode =           { name: 'ExpressionNode', left: Node, right: Node, operator: OperatorToken};
 export type ConditionalExpressionNode ={ name: 'ConditionalExpressionNode', left: Node, right: Node, operator: RelationalToken, and?: ConditionalExpressionNode | Node, or?: ConditionalExpressionNode | Node};
+
+export type Node = 
+   StringExpressionNode       | 
+   ArithmeticExpressionNode   | 
+   RelationalExpressionNode   | 
+   BooleanExpressionNode      | 
+   ExpressionNode             | 
+   GroupNode                  | 
+   IdentifierNode             | 
+   StringNode                 | 
+   NumericNode                |
+   ArrayNode                  |
+   ArrayIndexNode;

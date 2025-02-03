@@ -237,6 +237,10 @@ export function valueBuilder(node, enableVariables = true) {
          }
       });
    }
+   // Missing; ArrayIndexNode with activated variables
+   else if (node.name === 'ArrayIndexNode' && !enableVariables) {
+      value = node.array.value + '[' + node.index.value + ']';
+   }
    else if (node.name === 'ExpressionNode') {
       value = expressionBuilder(node, enableVariables);
    }

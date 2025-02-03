@@ -20,7 +20,7 @@ export const parser = (tokens: Array<atype.Token>) => {
          parserIndex++;
    }
 
-   // console.log(program);
+   console.log(program);
 
    return program;
 };
@@ -72,17 +72,25 @@ function tokenToNode(token: atype.Token) : atype.Node {
    }
 }
 
-function expressionParser() : atype.Node {
-
+function expressionParser(): atype.Node {
    let value = tokenToNode(parserTokens[parserIndex]);
 
-   if (parserTokens[parserIndex].name == 'OpenParenToken') {
+   if (parserTokens[parserIndex].name === 'OpenParenToken') {
       nextIndex();
       value = {
          name: 'GroupNode',
          body: expressionParser()
-      }
+      };
       nextIndex();
+   }
+   else if (parserTokens[parserIndex].name === 'OpenBracketToken') {
+      return arrayParser();
+   }
+   else if (
+      parserTokens[parserIndex].name === 'IdentifierToken' &&
+      parserTokens[parserIndex + 1]?.name === 'OpenBracketToken'
+   ) {
+      return arrayIndexParser();
    }
 
    let nextToken = parserTokens[parserIndex + 1];
@@ -96,17 +104,18 @@ function expressionParser() : atype.Node {
          'RelationalToken',
          'BooleanToken'
       ];
-      if (  validTokens.includes(nextToken.name)) {
+      if (validTokens.includes(nextToken.name)) {
          nextIndex();
          let operator = parserTokens[parserIndex] as atype.OperatorToken;
          nextIndex();
          let right = expressionParser();
-         value = {name: 'ExpressionNode',  left: value, right: right, operator: operator}
+         value = { name: 'ExpressionNode', left: value, right: right, operator: operator };
       }
    }
 
    return value;
 }
+
 
 function declarationParser() : atype.DeclarationNode {
    nextIndex();
@@ -128,13 +137,26 @@ function declarationParser() : atype.DeclarationNode {
    };
 }
 
-function assignmentParser() : atype.AssignmentNode {
+function assignmentParser(): atype.AssignmentNode {
    const identifier = parserTokens[parserIndex];
    nextIndex();
+
+   let target: atype.IdentifierNode | atype.ArrayIndexNode = { 
+      name: 'IdentifierNode', 
+      value: identifier.value 
+   };
+
+   if (parserTokens[parserIndex].name === 'OpenBracketToken') {
+      parserIndex--;  // Go back one position in order to `arrayIndexParser` work correctly
+      target = arrayIndexParser();
+      nextIndex();
+   }
+
    if (parserTokens[parserIndex].name !== 'AssignmentToken') {
-      throw new SyntaxError('Identifier must be followed by assignment operator.');
+      throw new SyntaxError('Identificador o acceso a índice debe ser seguido por un operador de asignación.');
    }
    nextIndex();
+
    let value = expressionParser();
 
    return { 
@@ -143,6 +165,7 @@ function assignmentParser() : atype.AssignmentNode {
       value: value
    };
 }
+
 
 function printParser() : atype.PrintNode {
    nextIndex();
@@ -287,14 +310,6 @@ function repeatParser() : atype.RepeatNode {
       nextIndex();
    }
 
-   console.log({
-      name: 'RepeatNode',
-      declaration: declaration,
-      to: to,
-      steps: steps,
-      body: forSentences
-   });
-
    return {
       name: 'RepeatNode',
       declaration: declaration,
@@ -355,4 +370,49 @@ function dowhileParser() : atype.DowhileNode {
       body: dowhileSentences,
       do: true
    }
+}
+
+function arrayParser(): atype.ArrayNode {
+   let elements: atype.Node[] = [];
+
+   nextIndex(); // After '['
+
+   while (parserTokens[parserIndex].name !== 'CloseBracketToken') {
+      elements.push(expressionParser());
+
+      if (parserTokens[parserIndex + 1]?.name === 'CloseBracketToken') {
+         nextIndex();
+         break;
+      }
+
+      if (parserTokens[parserIndex + 1]?.name !== 'CommaToken') {
+         throw new SyntaxError('A comma was expected between array values.');
+      }
+
+      nextIndex();
+      nextIndex();
+   }
+
+   return { name: 'ArrayNode', elements };
+}
+
+
+function arrayIndexParser(): atype.ArrayIndexNode {
+   const array = tokenToNode(parserTokens[parserIndex]) as atype.IdentifierNode;
+
+   nextIndex(); // Avanzar a '['
+
+   if (parserTokens[parserIndex].name !== 'OpenBracketToken') {
+      throw new SyntaxError('"[" was expected after the identifier.');
+   }
+   nextIndex(); // Avanzar al índice
+
+   const index = expressionParser();
+
+   if (parserTokens[parserIndex + 1].name !== 'CloseBracketToken') {
+      throw new SyntaxError('"]" was expected after index.');
+   }
+   nextIndex(); // Avanzar a ']'
+
+   return { name: 'ArrayIndexNode', array, index };
 }

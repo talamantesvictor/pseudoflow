@@ -20,7 +20,6 @@ let defaultHorizontalSpace: number;
 let defaultVerticalSpace: number;
 let columnSymbol: Rect[];
 let chartDimensions: Vector;
-let lastParentSymbol;
 
 export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer, frontLayer: Konva.Layer, size: number) : any {
    // Clean the canvas
@@ -107,7 +106,8 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const taskNode = taskSymbol(baseSize, position);
       treeNodeRect = addSymbol(taskNode);
 
-      let textValue = node.identifier;
+      console.log(node.identifier.length);
+      let textValue = node.identifier.length? node.identifier : node.identifier['value'];
       let builtValue = valueBuilder(node.value, false);
       if (builtValue !== undefined) {
          textValue += '=' + builtValue;
@@ -126,6 +126,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       treeNodeRect = addSymbol(decisionNode);
 
       // Symbol text
+      console.log('node.argument', node.argument);
       let textValue = valueBuilder(node.argument, false);
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
