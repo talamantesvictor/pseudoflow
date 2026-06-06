@@ -20,8 +20,6 @@ export const parser = (tokens: Array<atype.Token>) => {
          parserIndex++;
    }
 
-   console.log(program);
-
    return program;
 };
 
@@ -84,13 +82,13 @@ function expressionParser(): atype.Node {
       nextIndex();
    }
    else if (parserTokens[parserIndex].name === 'OpenBracketToken') {
-      return arrayParser();
+      value = arrayParser();
    }
    else if (
       parserTokens[parserIndex].name === 'IdentifierToken' &&
       parserTokens[parserIndex + 1]?.name === 'OpenBracketToken'
    ) {
-      return arrayIndexParser();
+      value = arrayIndexParser();
    }
 
    let nextToken = parserTokens[parserIndex + 1];
@@ -161,7 +159,7 @@ function assignmentParser(): atype.AssignmentNode {
 
    return { 
       name: 'AssignmentNode',
-      identifier: identifier.value!,
+      identifier: target,
       value: value
    };
 }
@@ -407,9 +405,13 @@ function arrayIndexParser(): atype.ArrayIndexNode {
    }
    nextIndex(); // Avanzar al índice
 
+   if (parserTokens[parserIndex].name === 'CloseBracketToken') {
+      throw new SyntaxError('Index expression was expected between brackets.');
+   }
+
    const index = expressionParser();
 
-   if (parserTokens[parserIndex + 1].name !== 'CloseBracketToken') {
+   if (!parserTokens[parserIndex + 1] || parserTokens[parserIndex + 1].name !== 'CloseBracketToken') {
       throw new SyntaxError('"]" was expected after index.');
    }
    nextIndex(); // Avanzar a ']'

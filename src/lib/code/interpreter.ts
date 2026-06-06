@@ -48,20 +48,37 @@ export function addSentence(sentence: atype.SentencesNode, index: number) {
 
 function intepretTreeNode(node: atype.SentencesNode) {
    if (node.name === 'DeclarationNode') {
-      const value = safeEval(valueBuilder(node.value));
+      const builtValue = valueBuilder(node.value);
+      const value = safeEval(builtValue);
       interpreterVariables.push({
          identifier: node.identifier,
-         value: isNaN(value) ? '"' + value + '"' : value
+         value: Array.isArray(value) ? value : (isNaN(value) ? '"' + value + '"' : value)
       });
 
       return { print: '' };
    }
    else if (node.name === 'AssignmentNode') {
-      for (let index = 0; index < interpreterVariables.length; index++) {
-         if (interpreterVariables[index]['identifier'] === node.identifier) {
-            let value = valueBuilder(node.value); 
-            value = isNaN(value)? '"' + value + '"' : safeEval(value);
-            interpreterVariables[index]['value'] = value;
+      if (node.identifier.name === 'ArrayIndexNode') {
+         const arrayName = node.identifier.array.value;
+         const index = safeEval(valueBuilder(node.identifier.index));
+         let value = valueBuilder(node.value);
+         value = isNaN(value) ? '"' + value + '"' : safeEval(value);
+
+         for (let i = 0; i < interpreterVariables.length; i++) {
+            if (interpreterVariables[i]['identifier'] === arrayName) {
+               const arr = interpreterVariables[i]['value'];
+               if (Array.isArray(arr)) {
+                  arr[index] = value;
+               }
+            }
+         }
+      } else {
+         for (let index = 0; index < interpreterVariables.length; index++) {
+            if (interpreterVariables[index]['identifier'] === node.identifier.value) {
+               let value = valueBuilder(node.value);
+               value = isNaN(value) ? '"' + value + '"' : safeEval(value);
+               interpreterVariables[index]['value'] = value;
+            }
          }
       }
 
@@ -234,12 +251,29 @@ export function valueBuilder(node, enableVariables = true) {
       interpreterVariables.forEach(storedVariable => {
          if (storedVariable['identifier'] === node.value) {
             value = storedVariable['value'];
+            if (Array.isArray(value)) {
+               value = JSON.stringify(value);
+            }
          }
       });
    }
-   // Missing; ArrayIndexNode with activated variables
+   else if (node.name === 'ArrayIndexNode' && enableVariables) {
+      const arrayName = node.array.value;
+      const index = safeEval(valueBuilder(node.index));
+      interpreterVariables.forEach(storedVariable => {
+         if (storedVariable['identifier'] === arrayName) {
+            const arr = storedVariable['value'];
+            if (Array.isArray(arr)) {
+               value = arr[index];
+            }
+         }
+      });
+   }
    else if (node.name === 'ArrayIndexNode' && !enableVariables) {
       value = node.array.value + '[' + node.index.value + ']';
+   }
+   else if (node.name === 'ArrayNode') {
+      value = '[' + node.elements.map(el => valueBuilder(el, enableVariables)).join(',') + ']';
    }
    else if (node.name === 'ExpressionNode') {
       value = expressionBuilder(node, enableVariables);

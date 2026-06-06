@@ -89,7 +89,7 @@ export type Token =
 // *******************************************
 
 export type DeclarationNode =          { name: 'DeclarationNode', identifier: string, value: Node };
-export type AssignmentNode =           { name: 'AssignmentNode', identifier: string, value: Node };
+export type AssignmentNode =           { name: 'AssignmentNode', identifier: IdentifierNode | ArrayIndexNode, value: Node };
 export type PrintNode =                { name: 'PrintNode', value: Node };
 export type ReadNode =                 { name: 'ReadNode', identifier: IdentifierToken };
 export type IfNode =                   { name: 'IfNode', argument: Node, body: SentencesNode[], alternative: SentencesNode[] };

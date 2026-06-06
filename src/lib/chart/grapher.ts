@@ -106,8 +106,14 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const taskNode = taskSymbol(baseSize, position);
       treeNodeRect = addSymbol(taskNode);
 
-      console.log(node.identifier.length);
-      let textValue = node.identifier.length? node.identifier : node.identifier['value'];
+      let textValue = '';
+      if (node.name === 'DeclarationNode') {
+         textValue = node.identifier;
+      } else if (node.identifier.name === 'IdentifierNode') {
+         textValue = node.identifier.value;
+      } else if (node.identifier.name === 'ArrayIndexNode') {
+         textValue = node.identifier.array.value + '[' + valueBuilder(node.identifier.index, false) + ']';
+      }
       let builtValue = valueBuilder(node.value, false);
       if (builtValue !== undefined) {
          textValue += '=' + builtValue;
@@ -126,7 +132,6 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       treeNodeRect = addSymbol(decisionNode);
 
       // Symbol text
-      console.log('node.argument', node.argument);
       let textValue = valueBuilder(node.argument, false);
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,

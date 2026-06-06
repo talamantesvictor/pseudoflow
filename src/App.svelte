@@ -94,8 +94,8 @@
       enableUserInput = false;
       addSentence({ 
          name: 'AssignmentNode', 
-         identifier: lastExecutedSentence['identifier'].value, 
-         value: { name: 'StringNode', value:  value as string } 
+         identifier: { name: 'IdentifierNode', value: lastExecutedSentence['identifier'].value }, 
+         value: { name: 'StringNode', value: value as string } 
       }, 0)
 
       outputText += "<span class=\"hl-read\" style=\"opacity: 0.5\">" + e.detail.text.replaceAll(' ', '&nbsp;') + "</span><br>";
