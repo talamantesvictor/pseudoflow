@@ -60,24 +60,27 @@ function intepretTreeNode(node: atype.SentencesNode) {
    else if (node.name === 'AssignmentNode') {
       if (node.identifier.name === 'ArrayIndexNode') {
          const arrayName = node.identifier.array.value;
-         const index = safeEval(valueBuilder(node.identifier.index));
-         let value = valueBuilder(node.value);
-         value = isNaN(value) ? '"' + value + '"' : safeEval(value);
+          const index = safeEval(valueBuilder(node.identifier.index));
+          const builtValue = valueBuilder(node.value);
+          const value = safeEval(builtValue);
+          const storedValue = Array.isArray(value) ? value : (isNaN(value) ? '"' + value + '"' : value);
 
          for (let i = 0; i < interpreterVariables.length; i++) {
             if (interpreterVariables[i]['identifier'] === arrayName) {
-               const arr = interpreterVariables[i]['value'];
-               if (Array.isArray(arr)) {
-                  arr[index] = value;
+               let arr = interpreterVariables[i]['value'];
+               if (!Array.isArray(arr)) {
+                  interpreterVariables[i]['value'] = [];
+                  arr = interpreterVariables[i]['value'];
                }
+               arr[index] = storedValue;
             }
          }
       } else {
          for (let index = 0; index < interpreterVariables.length; index++) {
             if (interpreterVariables[index]['identifier'] === node.identifier.value) {
-               let value = valueBuilder(node.value);
-               value = isNaN(value) ? '"' + value + '"' : safeEval(value);
-               interpreterVariables[index]['value'] = value;
+               const builtValue = valueBuilder(node.value);
+               const value = safeEval(builtValue);
+               interpreterVariables[index]['value'] = Array.isArray(value) ? value : (isNaN(value) ? '"' + value + '"' : value);
             }
          }
       }
