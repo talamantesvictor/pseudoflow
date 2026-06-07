@@ -6,15 +6,28 @@
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
+   let userScale = 50;
    let konvaScale = 0.5;
-   let userScale = konvaScale * 100;
    let chartDimensions;
+   let autoFit = true;
    const arrowsLayer = new Konva.Layer();
    const symbolsLayer = new Konva.Layer();
    
    $: if (sintaxTree && konvaContainer) {
       chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8);
    }
+
+   $: if (autoFit && chartDimensions && konvaContainer) {
+      const containerW = konvaContainer.offsetWidth;
+      const containerH = konvaContainer.offsetHeight;
+      if (containerW > 0 && containerH > 0) {
+         const scaleX = containerW / chartDimensions.x;
+         const scaleY = containerH / chartDimensions.y;
+         userScale = Math.max(5, Math.min(100, Math.min(scaleX, scaleY) * 100));
+      }
+   }
+
+   $: konvaScale = userScale / 100;
 
    $: if (konvaStage) {
       konvaStage.width(chartDimensions.x * konvaScale);
@@ -29,6 +42,14 @@
          x: konvaScale, 
          y: konvaScale
       });
+   }
+
+   function disableAutoFit() {
+      autoFit = false;
+   }
+
+   function toggleAutoFit() {
+      autoFit = !autoFit;
    }
 
    onMount(() => { 
@@ -54,9 +75,17 @@
 <div id="konvaContainer" bind:this={konvaContainer} />
 <div id="scaler">
    <div>
-      <span>Zoom:</span> {userScale * 2}%
+      <span>Zoom:</span> {Math.round(userScale)}%
    </div>
-   <input type="range" min="5" max="100" bind:value="{userScale}" on:input="{() => konvaScale = userScale / 100}" />
+   <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
+   <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title="Fit to container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+         <polyline points="15 3 21 3 21 9" />
+         <polyline points="9 21 3 21 3 15" />
+         <line x1="21" y1="3" x2="14" y2="10" />
+         <line x1="3" y1="21" x2="10" y2="14" />
+      </svg>
+   </button>
 </div>
 
 
@@ -80,7 +109,7 @@
 
       div {
          text-align: left;
-         width: 40%;
+         width: 30%;
 
          span {
             color: rgba(255, 255, 255, 0.5);
@@ -133,7 +162,32 @@
          border-radius: 15px;
          cursor: pointer;
       }
-      
+
+      #autoFitBtn {
+         width: 36px;
+         height: 36px;
+         border-radius: 8px;
+         border: 2px solid #3F4254;
+         background: transparent;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         color: rgba(255, 255, 255, 0.5);
+         transition: all 0.2s;
+         flex-shrink: 0;
+
+         &:hover {
+            border-color: #00bbd3;
+            color: #00bbd3;
+         }
+
+         &.active {
+            border-color: #00bbd3;
+            background: rgba(0, 187, 211, 0.15);
+            color: #00bbd3;
+         }
+      }
    }
 
 </style>
