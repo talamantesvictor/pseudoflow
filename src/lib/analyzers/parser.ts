@@ -95,7 +95,11 @@ function expressionParser(): atype.Node {
       nextIndex();
       nextIndex();
       const property = parserTokens[parserIndex] as atype.IdentifierToken;
-      value = { name: 'PropertyAccessNode', object: value, property: property.value! };
+      let propertyName = property.value!;
+      if (reservedWords.CODE_LENGTH && propertyName === reservedWords.CODE_LENGTH) {
+         propertyName = 'length';
+      }
+      value = { name: 'PropertyAccessNode', object: value, property: propertyName };
    }
 
    let nextToken = parserTokens[parserIndex + 1];

@@ -18,7 +18,8 @@
    "CODE_ENDDOWHILE": "enddowhile",
    "CODE_PRINT": "print",
    "CODE_READ": "read",
-   "CODE_AND": "and",
+    "CODE_LENGTH": "length",
+    "CODE_AND": "and",
    "CODE_OR": "or",
    "CHART_YES": "yes",
    "CHART_NO": "no"
