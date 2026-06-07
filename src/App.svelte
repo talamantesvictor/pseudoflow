@@ -140,7 +140,8 @@
                pseudocode = data.toString();
                savedPseudocode = pseudocode;
                generateTree();
-               fileNameStore.set(filePath as string);
+               const segments = (filePath as string).split(/(\\|\/)/g);
+               fileNameStore.set(segments[segments.length - 1]);
             });
          }
       }
@@ -160,7 +161,8 @@
          });
          if (filePath) {
             await invoke('save_file', {path: filePath, contents: pseudocode});
-            fileNameStore.set(filePath);
+            const segments = filePath.split(/(\\|\/)/g);
+            fileNameStore.set(segments[segments.length - 1]);
             savedPseudocode = pseudocode;
             exported = true;
          }

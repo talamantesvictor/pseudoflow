@@ -45,6 +45,14 @@
    }
 
    $: executeButtonImage = isProgramRunning? stopButton : playButton;
+
+   function selectFileName(e) {
+      const input = e.target;
+      const value = input.value;
+      const dotIndex = value.lastIndexOf('.');
+      const end = dotIndex > 0 ? dotIndex : value.length;
+      input.setSelectionRange(0, end);
+   }
 </script>
 
 
@@ -85,8 +93,8 @@
    </div>
    <div class="right">
       <div id="fileinfo">
-         <span>{$translationStore.APP_FILE}:</span>
-         <span>{$fileNameStore.split(/(\\|\/)/g).pop()}</span>
+         <span id="fileinfo-label">{$translationStore.APP_FILE}</span>
+         <input id="fileinfo-name" type="text" bind:value={$fileNameStore} on:focus={selectFileName} spellcheck="false" />
       </div>
       {#if $flowchartDrawingStore}
       <div id="chartToggle" on:mouseup={chartToggleClick} class:active="{isChartVisible}" >
@@ -242,22 +250,45 @@
          display: flex;
 
          #fileinfo {
-            background-color: $fileinfo-background;
-            color: $fileinfo-foreground;
-            width: 300px;
             height: 2rem;
-            border-radius: 0.5rem;
-            padding: 0 0.8rem;
             align-items: center;
             display: none;
+            gap: 0;
 
-            span {
-               opacity: 0.5;
+            #fileinfo-label {
+               background-color: $accent-color;
+               color: black;
+               font-weight: bold;
+               font-size: 0.75rem;
+               height: 100%;
+               padding: 0 0.7rem;
+               border-radius: 0.5rem 0 0 0.5rem;
+               display: flex;
+               align-items: center;
+               text-transform: uppercase;
+               letter-spacing: 0.05em;
             }
 
-            span:first-child {
-               font-weight: bold;
-               margin-right: 0.3rem;
+            #fileinfo-name {
+               background-color: $fileinfo-background;
+               color: $fileinfo-foreground;
+               height: 100%;
+               width: 200px;
+               padding: 0 0.6rem;
+               border: 1px solid $fileinfo-background;
+               border-radius: 0 0.5rem 0.5rem 0;
+               outline: none;
+               font-family: inherit;
+               font-size: 0.85rem;
+
+               &::selection {
+                  background: $accent-color;
+                  color: black;
+               }
+
+               &:focus {
+                  border-color: $accent-color;
+               }
             }
 
             @media screen and (min-width: $breakpoint) {
