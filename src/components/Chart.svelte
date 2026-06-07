@@ -103,14 +103,18 @@
       width: 100%;
       height: 55px;
       background: #1C1F2D;
-      text-align: center;
       display: flex;
       align-items: center;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 0 1.5rem;
+      box-sizing: border-box;
 
-      div {
-         text-align: left;
-         width: 30%;
+      > div {
+         display: flex;
+         align-items: center;
+         white-space: nowrap;
+         flex-shrink: 0;
 
          span {
             color: rgba(255, 255, 255, 0.5);
@@ -118,8 +122,8 @@
       }
 
       input[type=range] {
-         width: 40%;
-         margin: 5px 0;
+         flex: 1 1 0;
+         min-width: 20px;
          background-color: transparent;
          appearance: none;
          -webkit-appearance: none;
