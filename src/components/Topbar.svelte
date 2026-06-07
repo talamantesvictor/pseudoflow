@@ -47,11 +47,19 @@
    $: executeButtonImage = isProgramRunning? stopButton : playButton;
 
    function selectFileName(e) {
-      const input = e.target;
+      const input = e.target || e;
       const value = input.value;
       const dotIndex = value.lastIndexOf('.');
       const end = dotIndex > 0 ? dotIndex : value.length;
       input.setSelectionRange(0, end);
+   }
+
+   function onLabelClick() {
+      const input = document.getElementById('fileinfo-name');
+      if (input) {
+         input.focus();
+         selectFileName(input);
+      }
    }
 </script>
 
@@ -90,7 +98,7 @@
             </li>
          </ul>
          <div id="fileinfo">
-            <span id="fileinfo-label">{$translationStore.APP_FILE}</span>
+            <span id="fileinfo-label" role="button" tabindex="-1" on:click={onLabelClick} on:keydown={onLabelClick}>{$translationStore.APP_FILE}</span>
             <input id="fileinfo-name" type="text" bind:value={$fileNameStore} on:focus={selectFileName} spellcheck="false" />
          </div>
       </div>
@@ -219,6 +227,7 @@
                   align-items: center;
                   text-transform: uppercase;
                   letter-spacing: 0.05em;
+                  cursor: pointer;
                }
 
                #fileinfo-name {
