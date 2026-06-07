@@ -3,6 +3,7 @@
    import { onMount } from "svelte";
    import { grapher } from "../lib/chart/grapher"
    import type { SentencesNode } from "src/lib/analyzers/atypes";
+   import { translationStore } from "../lib/stores";
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
@@ -78,7 +79,7 @@
       <span>Zoom:</span> {Math.round(userScale)}%
    </div>
    <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
-   <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title="Fit to container">
+   <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
          <polyline points="15 3 21 3 21 9" />
          <polyline points="9 21 3 21 3 15" />
