@@ -365,14 +365,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       treeNodeRect = addSymbol(decisionNode);
 
       // Symbol text
-      let textValue = node.declaration.identifier; 
-      
-      if (node.declaration.value['value'] < node.to['value']) {
-         textValue += '<=' + node.to['value'];
-      }
-      else {
-         textValue += '>=' + node.to['value'];
-      }
+      let textValue = node.declaration.identifier + ' <= ' + valueBuilder(node.to, false);
 
       let textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
@@ -442,9 +435,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       }, '#ff7070');
       const forLoopTask = addSymbol(taskNode);
 
-      textValue = node.declaration.identifier + '=' + node.declaration.identifier;
-      textValue +=  Number(node.steps['value']) > 0? '+' : '';
-      textValue += node.steps['value'];
+      textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + valueBuilder(node.steps, false);
       textNode = textLabel(
          textValue, 
          {

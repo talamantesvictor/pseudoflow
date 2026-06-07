@@ -91,6 +91,13 @@ function expressionParser(): atype.Node {
       value = arrayIndexParser();
    }
 
+   if (parserTokens[parserIndex + 1]?.name === 'DotToken') {
+      nextIndex();
+      nextIndex();
+      const property = parserTokens[parserIndex] as atype.IdentifierToken;
+      value = { name: 'PropertyAccessNode', object: value, property: property.value! };
+   }
+
    let nextToken = parserTokens[parserIndex + 1];
    if (nextToken) {
       const validTokens = [
@@ -289,13 +296,13 @@ function repeatParser() : atype.RepeatNode {
       throw new SyntaxError('Specify when the For loop should stop.');
    }
    nextIndex();
-   let to = tokenToNode(parserTokens[parserIndex]);
+   let to = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATSTEP) {
       throw new SyntaxError('Steps to increment on each iteration is missing.');
    }
    nextIndex();
-   let steps = tokenToNode(parserTokens[parserIndex]);
+   let steps = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
       throw new SyntaxError('Closing parenthesis is missing.');

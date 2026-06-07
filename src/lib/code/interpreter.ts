@@ -272,6 +272,12 @@ export function valueBuilder(node, enableVariables = true) {
    else if (node.name === 'ArrayIndexNode' && !enableVariables) {
       value = node.array.value + '[' + node.index.value + ']';
    }
+   else if (node.name === 'PropertyAccessNode' && !enableVariables) {
+      value = valueBuilder(node.object, false) + '.' + node.property;
+   }
+   else if (node.name === 'PropertyAccessNode') {
+      value = safeEval(valueBuilder(node.object, true) + '.' + node.property);
+   }
    else if (node.name === 'ArrayNode') {
       value = '[' + node.elements.map(el => valueBuilder(el, enableVariables)).join(',') + ']';
    }

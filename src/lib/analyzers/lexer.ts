@@ -37,6 +37,7 @@ codeWordStore.subscribe(word => {
       { name: 'OpenBracketToken',         rule: /^\[$/g },
       { name: 'CloseBracketToken',        rule: /^\]$/g }, 
       { name: 'CommaToken',               rule: /^\,$/g }, 
+      { name: 'DotToken',                 rule: /^\.$/g }, 
       { name: 'OtherToken',               rule: /./g }
    ];
 });

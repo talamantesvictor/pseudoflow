@@ -34,6 +34,7 @@ export type IdentifierToken =          { name: 'IdentifierToken', rule?: RegExp,
 export type OpenBracketToken =         { name: 'OpenBracketToken', rule?: RegExp, value?: string };
 export type CloseBracketToken =        { name: 'CloseBracketToken', rule?: RegExp, value?: string };
 export type CommaToken =               { name: 'CommaToken', rule?: RegExp, value?: string };
+export type DotToken =                 { name: 'DotToken', rule?: RegExp, value?: string };
 export type OtherToken =               { name: 'OtherToken', rule?: RegExp, value?: string };
 
 export type ArithmeticToken = 
@@ -49,9 +50,10 @@ export type OperatorToken =
    BooleanToken;
 
 export type ArrayToken = 
-   OpenBracketToken           | 
-   CloseBracketToken          |
-   CommaToken;
+    OpenBracketToken           |
+    CloseBracketToken          |
+    CommaToken                 |
+    DotToken;
 
 export type Token = 
    DeclarationToken           | 
@@ -104,6 +106,7 @@ export type StringNode =               { name: 'StringNode', value: string | und
 export type NumericNode =              { name: 'NumericNode', value: string | undefined };
 export type ArrayNode =                { name: 'ArrayNode', elements: Node[] };
 export type ArrayIndexNode =           { name: 'ArrayIndexNode', array: ArrayNode | IdentifierNode, index: Node }
+export type PropertyAccessNode =       { name: 'PropertyAccessNode', object: Node, property: string }
 
 export type SentencesNode = 
    DeclarationNode            | 
@@ -138,4 +141,5 @@ export type Node =
    StringNode                 | 
    NumericNode                |
    ArrayNode                  |
-   ArrayIndexNode;
+   ArrayIndexNode             |
+   PropertyAccessNode;
