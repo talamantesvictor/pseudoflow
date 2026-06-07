@@ -67,7 +67,7 @@
                <span></span>
             </div>
          </div>
-         <ul id="menu" class:active="{isMenuOpen}">
+         <ul class="menu left-menu" class:active="{isMenuOpen}">
             <li class="tooltip" on:mouseup={newButtonClick}>
                <img src="{newButton}" alt="New Button" />
                <span class="tooltiptext">{$translationStore.APP_NEW}</span>
@@ -80,21 +80,31 @@
                <img src="{saveButton}" alt="Save Button" />
                <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
             </li>
-            <li class="tooltip" on:mouseup={settingsButtonClick}>
+            <li class="tooltip mobile-only" on:mouseup={settingsButtonClick}>
                <img src="{settingsButton}" alt="Settings Button" />
                <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
             </li>
-            <li class="tooltip" on:mouseup={infoButtonClick}>
+            <li class="tooltip mobile-only" on:mouseup={infoButtonClick}>
                <img src="{infoButton}" alt="Info Button" />
                <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
             </li>
          </ul>
+         <div id="fileinfo">
+            <span id="fileinfo-label">{$translationStore.APP_FILE}</span>
+            <input id="fileinfo-name" type="text" bind:value={$fileNameStore} on:focus={selectFileName} spellcheck="false" />
+         </div>
       </div>
    </div>
    <div class="right">
-      <div id="fileinfo">
-         <span id="fileinfo-label">{$translationStore.APP_FILE}</span>
-         <input id="fileinfo-name" type="text" bind:value={$fileNameStore} on:focus={selectFileName} spellcheck="false" />
+      <div class="menu right-menu">
+         <div class="tooltip" on:mouseup={settingsButtonClick}>
+            <img src="{settingsButton}" alt="Settings Button" />
+            <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
+         </div>
+         <div class="tooltip" on:mouseup={infoButtonClick}>
+            <img src="{infoButton}" alt="Info Button" />
+            <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
+         </div>
       </div>
       {#if $flowchartDrawingStore}
       <div id="chartToggle" on:mouseup={chartToggleClick} class:active="{isChartVisible}" >
@@ -126,7 +136,12 @@
          #menuWrapper {
             height: 100%;
 
-            #menu {
+            @media screen and (min-width: $breakpoint) {
+               display: flex;
+               align-items: center;
+            }
+
+            .left-menu {
                display: none;
                width: 250px;
                position: absolute;
@@ -135,15 +150,13 @@
                list-style: none;
                margin: 0;
                padding: 0 0 0.5rem 0;
-               
+
                li {
                   display: flex;
                   align-items: center;
-                  justify-content:left;
+                  cursor: pointer;
                   margin-bottom: 0.4rem;
                   color: white;
-
-                  cursor: pointer;
 
                   &:hover {
                      color: $accent-color;
@@ -154,7 +167,7 @@
                      padding: 0 0.5rem;
                      width: calc($topbar-height * 0.4);
                      height: calc($topbar-height * 0.4);
-                     
+
                      &:first-child {
                         margin-left: 0.8rem;
                      }
@@ -168,18 +181,70 @@
                @media screen and (min-width: $breakpoint) {
                   width: auto;
                   height: 100%;
-                  position:relative;
+                  position: relative;
                   display: flex !important;
-                  justify-content: center;
+                  align-items: center;
                   padding: 0;
 
                   li {
                      margin: 0;
+                     color: white;
 
                      img {
                         margin: 0;
                      }
+
+                     &.mobile-only {
+                        display: none;
+                     }
                   }
+               }
+            }
+
+            #fileinfo {
+               height: 2rem;
+               align-items: center;
+               display: none;
+               margin-left: 1rem;
+
+               #fileinfo-label {
+                  background-color: $accent-color;
+                  color: black;
+                  font-weight: bold;
+                  font-size: 0.75rem;
+                  height: 100%;
+                  padding: 0 0.7rem;
+                  border-radius: 0.5rem 0 0 0.5rem;
+                  display: flex;
+                  align-items: center;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+               }
+
+               #fileinfo-name {
+                  background-color: $fileinfo-background;
+                  color: $fileinfo-foreground;
+                  height: 100%;
+                  width: 200px;
+                  padding: 0 0.6rem;
+                  border: 1px solid $fileinfo-background;
+                  border-radius: 0 0.5rem 0.5rem 0;
+                  outline: none;
+                  font-family: inherit;
+                  font-size: 0.85rem;
+
+                  &::selection {
+                     background: $accent-color;
+                     color: black;
+                  }
+
+                  &:focus {
+                     border-color: $accent-color;
+                  }
+               }
+
+               @media screen and (min-width: $breakpoint) {
+                  display: flex;
                }
             }
          }
@@ -203,7 +268,7 @@
                cursor: pointer;
                -webkit-touch-callout: none;
             }
-   
+
             div span {
                display: block;
                width: 25px;
@@ -213,20 +278,19 @@
                background: $accent-color;
                border-radius: 3px;
                z-index: 1;
-   
+
                transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
                   background 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.35s ease;
             }
-   
+
             div span:first-child {
                transform-origin: bottom left;
             }
-   
+
             div span:nth-last-child(1) {
                transform-origin: bottom left;
-               // transform-origin: 0% 100%;
             }
-   
+
             input:checked ~ div span:first-child {
                transform: rotate(45deg) scale(1.1, 1.1) translate(1px, -3px);
             }
@@ -249,46 +313,21 @@
       .right {
          display: flex;
 
-         #fileinfo {
-            height: 2rem;
-            align-items: center;
+         .right-menu {
             display: none;
-            gap: 0;
+            align-items: center;
 
-            #fileinfo-label {
-               background-color: $accent-color;
-               color: black;
-               font-weight: bold;
-               font-size: 0.75rem;
-               height: 100%;
-               padding: 0 0.7rem;
-               border-radius: 0.5rem 0 0 0.5rem;
+            > div {
                display: flex;
                align-items: center;
-               text-transform: uppercase;
-               letter-spacing: 0.05em;
-            }
+               cursor: pointer;
 
-            #fileinfo-name {
-               background-color: $fileinfo-background;
-               color: $fileinfo-foreground;
-               height: 100%;
-               width: 200px;
-               padding: 0 0.6rem;
-               border: 1px solid $fileinfo-background;
-               border-radius: 0 0.5rem 0.5rem 0;
-               outline: none;
-               font-family: inherit;
-               font-size: 0.85rem;
-
-               &::selection {
-                  background: $accent-color;
-                  color: black;
+               img {
+                  width: calc($topbar-height * 0.4);
+                  height: calc($topbar-height * 0.4);
+                  padding: 0 0.5rem 0 1rem;
                }
 
-               &:focus {
-                  border-color: $accent-color;
-               }
             }
 
             @media screen and (min-width: $breakpoint) {
