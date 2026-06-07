@@ -35,7 +35,7 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
    let lines = code.split('\n');
    for (let index = 0; index < lines.length; index++) {
       // Actual spaces should be replaced with HTML too
-      lines[index] = lines[index].replace(" ", "&nbsp;");
+      lines[index] = lines[index].replace(/ /g, "&nbsp;");
       // Temporary replace comments to avoid 
       // issues with styling of reserved words
       let comments = lines[index].match(/\/\/.*/g);;
