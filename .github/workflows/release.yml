@@ -42,6 +42,10 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
+      - name: Update time crate (fix Rust compat)
+        working-directory: ./src-tauri
+        run: cargo update -p time
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
 
