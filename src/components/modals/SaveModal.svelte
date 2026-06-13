@@ -6,7 +6,7 @@
 <span>{$translationStore.APP_SAVE_DISCLAIMER}</span><br>
 
 <style lang="scss">
-   @import "../../styles/variables.scss";
+   @use "../../styles/variables.scss" as *;
    
    span {
       color: $linenumbers-foreground;

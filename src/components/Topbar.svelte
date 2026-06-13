@@ -128,7 +128,7 @@
 
 
 <style lang="scss">
-   @import "../styles/variables.scss";
+   @use "../styles/variables.scss" as *;
 
    #topbar {
       width: 100vw;

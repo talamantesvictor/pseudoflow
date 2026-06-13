@@ -76,7 +76,7 @@
 
 
 <style lang="scss">
-   @import "../styles/variables.scss";
+   @use "../styles/variables.scss" as *;
 
    .commands-area {
       width: 100%;

@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import sveltePreprocess from "svelte-preprocess";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig({
    clearScreen: false,
@@ -9,6 +8,13 @@ export default defineConfig({
       host: true
    },
    envPrefix: ['VITE_', 'TAURI_PLATFORM', 'TAURI_ARCH', 'TAURI_FAMILY', 'TAURI_PLATFORM_VERSION', 'TAURI_PLATFORM_TYPE', 'TAURI_DEBUG'],
+   css: {
+      preprocessorOptions: {
+         scss: {
+            silenceDeprecations: ['legacy-js-api']
+         }
+      }
+   },
    build: {
       target: ["es2021", "chrome100", "safari13"],
       // don't minify for debug builds
@@ -18,7 +24,7 @@ export default defineConfig({
    },
    plugins: [
       svelte({
-         preprocess: sveltePreprocess(),
+         preprocess: vitePreprocess()
       }),
    ]
 });

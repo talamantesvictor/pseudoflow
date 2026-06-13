@@ -1,5 +1,6 @@
-@import "./variables.scss";
-@import "./highlights.scss";
+@use "variables" as *;
+@use "highlights";
+@use "sass:color";
 
 @font-face {
    font-family: 'Roboto';
@@ -124,7 +125,7 @@ input[type="checkbox"] {
       font-size: 0.8rem;
       text-align: center;
       background-color: $runbutton-background;
-      border: 1px solid transparentize($fileinfo-foreground, 0.5);
+      border: 1px solid color.adjust($fileinfo-foreground, $alpha: -0.5);
       border-radius: 6px;
 
       position: absolute;
