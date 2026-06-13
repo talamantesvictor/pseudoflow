@@ -84,23 +84,23 @@
             </div>
          </div>
          <ul class="menu left-menu" class:active="{isMenuOpen}">
-            <li class="tooltip" on:mouseup={newButtonClick}>
+            <li class="tooltip" on:click={newButtonClick}>
                <img src="{newButton}" alt="New Button" />
                <span class="tooltiptext">{$translationStore.APP_NEW}</span>
             </li>
-            <li class="tooltip" on:mouseup={importButtonClick}>
+            <li class="tooltip" on:click={importButtonClick}>
                <img src="{openButton}" alt="Open Button" />
                <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
             </li>
-            <li class="tooltip" on:mouseup={exportButtonClick}>
+            <li class="tooltip" on:click={exportButtonClick}>
                <img src="{saveButton}" alt="Save Button" />
                <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
             </li>
-            <li class="tooltip mobile-only" on:mouseup={settingsButtonClick}>
+            <li class="tooltip mobile-only" on:click={settingsButtonClick}>
                <img src="{settingsButton}" alt="Settings Button" />
                <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
             </li>
-            <li class="tooltip mobile-only" on:mouseup={infoButtonClick}>
+            <li class="tooltip mobile-only" on:click={infoButtonClick}>
                <img src="{infoButton}" alt="Info Button" />
                <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
             </li>
@@ -113,21 +113,21 @@
    </div>
    <div class="right">
       <div class="menu right-menu">
-         <div class="tooltip" on:mouseup={settingsButtonClick}>
+         <div class="tooltip" on:click={settingsButtonClick}>
             <img src="{settingsButton}" alt="Settings Button" />
             <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
          </div>
-         <div class="tooltip" on:mouseup={infoButtonClick}>
+         <div class="tooltip" on:click={infoButtonClick}>
             <img src="{infoButton}" alt="Info Button" />
             <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
          </div>
       </div>
       {#if $flowchartDrawingStore}
-      <div id="chartToggle" on:mouseup={chartToggleClick} class:active="{isChartVisible}" >
+      <div id="chartToggle" on:click={chartToggleClick} class:active="{isChartVisible}" >
          {$translationStore.APP_CHART_TOGGLE}
       </div>
       {/if}
-      <div id="runButton" on:mouseup={runButtonClick} class:blocked={hasSyntaxErrors && !isProgramRunning} class:shake={shakeButton}>
+      <div id="runButton" on:click={runButtonClick} class:blocked={hasSyntaxErrors && !isProgramRunning} class:shake={shakeButton}>
          <img src="{executeButtonImage}" alt="Play Button" />
          {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
       </div>
