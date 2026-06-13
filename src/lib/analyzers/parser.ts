@@ -9,18 +9,41 @@ codeWordStore.subscribe(value => {
 let parserIndex: number;
 let parserTokens: Array<atype.Token>;
 
-export const parser = (tokens: Array<atype.Token>) => {
-   let program = { type: 'program', body: new Array<atype.SentencesNode> }
+const STATEMENT_START_TOKENS = [
+   'DeclarationToken', 'PrintToken', 'ReadToken', 'IdentifierToken',
+   'OpenIfToken', 'OpenSwitchToken', 'OpenRepeatToken',
+   'OpenWhileToken', 'OpenDowhileToken'
+];
+
+export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[], errors: atype.AnalysisError[] } => {
+   let program = { type: 'program' as const, body: new Array<atype.SentencesNode>() }
+   const errors: atype.AnalysisError[] = []
    parserTokens = tokens;
    parserIndex = 0;
 
    while (parserIndex + 1 < parserTokens.length) {
-      program.body.push(parse());
-      if (parserTokens[parserIndex + 1])
-         parserIndex++;
+      try {
+         program.body.push(parse());
+         if (parserTokens[parserIndex + 1])
+            parserIndex++;
+      } catch (e) {
+         if (e instanceof SyntaxError) {
+            errors.push({
+               type: 'syntax',
+               message: e.message,
+               line: parserTokens[parserIndex]?.line
+            });
+            while (parserIndex < parserTokens.length - 1) {
+               parserIndex++;
+               if (STATEMENT_START_TOKENS.includes(parserTokens[parserIndex].name)) break;
+            }
+         } else {
+            throw e
+         }
+      }
    }
 
-   return program;
+   return { body: program.body, errors }
 };
 
 function parse() : atype.SentencesNode {

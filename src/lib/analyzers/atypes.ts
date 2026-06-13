@@ -55,7 +55,7 @@ export type ArrayToken =
     CommaToken                 |
     DotToken;
 
-export type Token = 
+export type Token = { line?: number } & (
    DeclarationToken           | 
    PrintToken                 | 
    ReadToken                  | 
@@ -84,7 +84,8 @@ export type Token =
    OtherToken                 |
    OpenBracketToken           |
    CloseBracketToken          |
-   CommaToken;
+   CommaToken
+);
 
 // *******************************************
 // Nodes

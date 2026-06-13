@@ -42,20 +42,30 @@ codeWordStore.subscribe(word => {
    ];
 });
 
-export const lexer = (code: string) : any => {
+export const lexer = (code: string) : Array<atype.Token> => {
    // remove comments
    code = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
    // separate words to lexer
    const regex = /(["'])(?:(?=(\\?))\2.)*?\1|(\-?\d?)+\.?\d+|(?:[=&|^+<>/*%!~-]{1,2})|(?:[\\(){}[\];\:\?]|(?:\w+))|[^\s]/g;
 
    let tokens : Array<atype.Token> = [];
-   code.match(regex)?.forEach((word) => {
+   let match;
+   let line = 1;
+   let lastIndex = 0;
+
+   while ((match = regex.exec(code)) !== null) {
+      for (let i = lastIndex; i < match.index; i++) {
+         if (code[i] === '\n') line++;
+      }
+      lastIndex = regex.lastIndex;
+
+      const word = match[0];
       for (const { name, rule } of tokenStringMap) {
          if (word.match(rule!)) {
-            tokens.push({name: name, value: word} as atype.Token);
+            tokens.push({ name, value: word, line } as atype.Token);
             break;
          }
       }
-   });
+   }
    return tokens;
 };
