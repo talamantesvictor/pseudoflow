@@ -136,6 +136,11 @@ export type AnalysisError = {
    line?: number
 }
 
+export type AnalysisResult = {
+   program: { body: SentencesNode[] } | null
+   errors: AnalysisError[]
+}
+
 export type Node = 
    StringExpressionNode       | 
    ArithmeticExpressionNode   | 
