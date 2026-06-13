@@ -130,6 +130,12 @@ export type BooleanExpressionNode =    { name: 'BooleanExpressionNode', left: No
 export type ExpressionNode =           { name: 'ExpressionNode', left: Node, right: Node, operator: OperatorToken};
 export type ConditionalExpressionNode ={ name: 'ConditionalExpressionNode', left: Node, right: Node, operator: RelationalToken, and?: ConditionalExpressionNode | Node, or?: ConditionalExpressionNode | Node};
 
+export type AnalysisError = {
+   type: 'syntax' | 'semantic'
+   message: string
+   line?: number
+}
+
 export type Node = 
    StringExpressionNode       | 
    ArithmeticExpressionNode   | 

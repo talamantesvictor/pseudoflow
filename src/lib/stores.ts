@@ -12,6 +12,7 @@ export const fileNameStore = writable(defaultName);
 export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
 export const flowchartDrawingStore = writable(isFlowchartVisible);
+export const errorStore = writable([]);
 
 export const changeTranslation = (langCode) => {
    switch (translationLang = langCode) {
