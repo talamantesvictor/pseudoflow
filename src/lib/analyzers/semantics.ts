@@ -8,6 +8,7 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
    function walkNode(node: atype.SentencesNode) {
       switch (node.name) {
          case 'DeclarationNode':
+            checkRedeclared(node.identifier)
             declared.push(node.identifier)
             walkValue(node.value)
             break
@@ -47,6 +48,7 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
             break
 
          case 'RepeatNode':
+            checkRedeclared(node.declaration.identifier)
             declared.push(node.declaration.identifier)
             walkValue(node.declaration.value)
             walkValue(node.to)
@@ -97,6 +99,15 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
          errors.push({
             type: 'semantic',
             message: `Variable '${name}' is not declared`
+         })
+      }
+   }
+
+   function checkRedeclared(name: string) {
+      if (declared.includes(name)) {
+         errors.push({
+            type: 'semantic',
+            message: `Variable '${name}' is already declared`
          })
       }
    }
