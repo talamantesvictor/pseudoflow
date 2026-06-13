@@ -1,10 +1,11 @@
 <script lang="ts">
-   import { translationStore, defaultName, fileNameStore, flowchartDrawingStore } from "./lib/stores";
+   import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
    import Output from "./components/Output.svelte";
    import Chart from "./components/Chart.svelte";
+   import ErrorPanel from "./components/ErrorPanel.svelte";
    import Modal from "./components/Modal.svelte";
    import SaveModal from "./components/modals/SaveModal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
@@ -12,8 +13,7 @@
    import { open, save } from "@tauri-apps/api/dialog";
    import { invoke } from "@tauri-apps/api/tauri";
    import { readTextFile } from "@tauri-apps/api/fs";
-   import { lexer } from "./lib/analyzers/lexer";
-   import { parser } from "./lib/analyzers/parser";
+   import { analyze } from "./lib/analyzers/analyze";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
    
    let modal: any;
@@ -61,6 +61,10 @@
    // Generate tree and perform pre-execution tasks on run button press
    function prepareExecution() {
       generateTree()
+      if ($errorStore.length > 0) {
+         isProgramRunning = false;
+         return;
+      }
       outputText = "<div class=\"hl-comments\">" + $translationStore.APP_PROGRAM_STARTED + " ***</div>";
       interpreterReset();
       execute(syntaxTree['body']);
@@ -70,8 +74,9 @@
    function generateTree() {
       if (pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
-         const tokens = lexer(pseudocode);
-         syntaxTree = parser(tokens);
+         const result = analyze(pseudocode);
+         syntaxTree = result.program ?? { body: null };
+         errorStore.set(result.errors);
       }
    }
 
@@ -233,6 +238,7 @@
       pendingSentencesToExecute = [];
       lastExecutedSentence = null;
       clearTimeout(timeoutToParse);
+      errorStore.set([]);
       fileNameStore.set(defaultName);
       generateTree();
    }
@@ -292,6 +298,7 @@
    <div id="resizer" on:mousedown={startResizing}></div>
    <div id="text-area" class:twoColumnLayout="{$flowchartDrawingStore}">
       <Editor bind:editorText={pseudocode} />
+      <ErrorPanel />
    </div>
 </div>
 
