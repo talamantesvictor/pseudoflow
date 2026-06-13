@@ -144,6 +144,11 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
             const leftType = inferType(node.left)
             const rightType = inferType(node.right)
             const op = node.operator.value
+            if (['/', '%'].includes(op)) {
+               if (node.right.name === 'NumericNode' && node.right.value === '0') {
+                  errors.push({ type: 'semantic', message: `Division by zero` })
+               }
+            }
             if (ARITHMETIC_OPS.includes(op) && op !== '+') {
                if (leftType && leftType !== 'number') {
                   errors.push({ type: 'semantic', message: `Operator '${op}' requires numeric operands, but left side is ${leftType}` })
@@ -160,6 +165,8 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
                   errors.push({ type: 'semantic', message: `Operator '${op}' requires boolean operands, but right side is ${rightType}` })
                }
             }
+            checkArrayInScalarContext(node.left)
+            checkArrayInScalarContext(node.right)
             checkTypeInValue(node.left)
             checkTypeInValue(node.right)
             break
@@ -202,6 +209,14 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
    function checkTypeConsistency(name: string, valueType: ValueType | undefined, declaredType: ValueType | undefined) {
       if (declaredType && valueType && valueType !== declaredType) {
          errors.push({ type: 'semantic', message: `Cannot assign ${valueType} value to variable '${name}' of type ${declaredType}` })
+      }
+   }
+
+   function checkArrayInScalarContext(node: atype.Node | undefined) {
+      if (!node || node.name !== 'IdentifierNode') return
+      const sym = findSymbol(node.value!)
+      if (sym?.type === 'array') {
+         errors.push({ type: 'semantic', message: `Array variable '${sym.name}' used without index` })
       }
    }
 
