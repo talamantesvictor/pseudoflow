@@ -95,6 +95,10 @@ function tokenToNode(token: atype.Token) : atype.Node {
 }
 
 function expressionParser(): atype.Node {
+   const validStartTokens = ['NumericToken', 'StringToken', 'IdentifierToken', 'OpenParenToken', 'OpenBracketToken'];
+   if (!validStartTokens.includes(parserTokens[parserIndex].name)) {
+      throw new SyntaxError('Expected a value');
+   }
    let value = tokenToNode(parserTokens[parserIndex]);
 
    if (parserTokens[parserIndex].name === 'OpenParenToken') {
