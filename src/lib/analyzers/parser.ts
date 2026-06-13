@@ -22,6 +22,7 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
    parserIndex = 0;
 
    while (parserIndex + 1 < parserTokens.length) {
+      const errorLine = parserTokens[parserIndex]?.line
       try {
          program.body.push(parse());
          if (parserTokens[parserIndex + 1])
@@ -31,7 +32,7 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
             errors.push({
                type: 'syntax',
                message: e.message,
-               line: parserTokens[parserIndex]?.line
+               line: errorLine
             });
             while (parserIndex < parserTokens.length - 1) {
                parserIndex++;
