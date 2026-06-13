@@ -1,9 +1,18 @@
 .line {
-   border-top: 1px solid transparent;
-   border-bottom: 1px solid transparent;
+   position: relative;
    height: 22px;
-   display: flex;
-   align-items: center;
+   line-height: 22px;
+   padding-left: 76px;
+}
+.line-num {
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 56px;
+   text-align: right;
+   padding-right: 20px;
+   color: #7B89B8;
+   user-select: none;
 }
 .hl-case, .hl-endcase, .hl-repeatdeclare, .hl-repeatto, .hl-repeatstep, .hl-and, .hl-or {color: #ff7070}
 .hl-print {color: #24a7ff}
@@ -13,6 +22,6 @@
 .hl-repeat, .hl-endrepeat {color: #ff66e5}
 .hl-while, .hl-endwhile {color: #ff66e5}
 .hl-dowhile, .hl-enddowhile {color: #ff66e5}
-.hl-activerow {border-color: #525572}
+.hl-activerow {outline: 1px solid #525572}
 .hl-comments {color: #7B89B8}
 .hl-string {color: #fdabab}

@@ -1,7 +1,6 @@
 <script lang="ts">
    import Commands from "./Commands.svelte";
    import {
-      getLineNumbers,
       insertTab,
       insertTemplate,
       insertLineBreak,
@@ -16,20 +15,10 @@
    let editorDynamicArea: HTMLElement;
    let editorElement: HTMLElement;
    let coloredElement: HTMLElement;
-   let numbersArea: HTMLElement;
-   let numbersElement: HTMLElement;
    let activeRowNumber: number;
    let lastRowNumber: number;
    let commandToInsert: any;
    let lastInsertedCommand: any;
-
-   $: {
-      if (numbersElement) {
-         // Redraw row numbers when editorHeight changes.
-         // The defined line-height is 24.
-         numbersElement.innerHTML = getLineNumbers(coloredElement.clientHeight / 24);
-      }
-   }
 
    $: {
       if (
@@ -39,9 +28,7 @@
          lastInsertedCommand = commandToInsert;
 
          if (editorElement !== document.activeElement) {
-            // If the editor area isn't focused, focus it
             focusOnEditableArea();
-            // and set the caret at the end of the text
             window.getSelection().removeAllRanges();
             let newRange = document.createRange();
             newRange.selectNodeContents(editorElement);
@@ -72,10 +59,13 @@
          window.getSelection(),
          editorElement
       );
-      coloredElement.innerHTML = beautifier(
-         editorElement.innerText,
-         $codeWordStore,
-         activeRowNumber
+      const text = editorElement.innerText;
+      const lines = text.endsWith('\n') ? text.split('\n').length - 1 : text.split('\n').length;
+      const highlighted = beautifier(text, $codeWordStore, activeRowNumber);
+      let lineNum = 1;
+      coloredElement.innerHTML = highlighted.replace(
+         /(<div class="line[^"]*">)/g,
+          (match) => match + '<span class="line-num">' + (lineNum++) + '</span>'
       );
       editorText = editorElement.innerText;
    }
@@ -91,7 +81,7 @@
             insertLineBreak(window.getSelection());
             var isChromium = !!window.CSS && window.CSS.supports && window.CSS.supports("(-webkit-appearance:none)");
             if (isChromium) {
-               editorDynamicArea.scrollTop += 24;
+               editorDynamicArea.scrollTop += 22;
                editorDynamicArea.scrollLeft = 0;
             }
             break;
@@ -136,18 +126,13 @@
       editorDynamicArea = document.querySelector("#editor-dynamic-area");
       editorElement = document.querySelector("#editor-editable-area");
       coloredElement = document.querySelector("#editor-colored-area");
-      numbersArea = document.querySelector(".numbers-area");
-      numbersElement = document.querySelector(".line-numbers");
       focusOnEditableArea();
    });
 </script>
 
 <Commands bind:command={commandToInsert} />
 <div class="editor-area" on:mouseup={focusOnEditableArea}>
-   <div class="numbers-area">
-      <div class="line-numbers" />
-   </div>
-   <div id="editor-dynamic-area" on:scroll={numbersArea.scrollTop = this.scrollTop}>
+   <div id="editor-dynamic-area">
       <div id="editor-colored-area" />
       <div
          id="editor-editable-area"
@@ -189,42 +174,34 @@
 
       #editor-colored-area {
          min-width: 100%;
-         min-height: 24px;
+         min-height: 22px;
          position: absolute;
+         top: 0;
          pointer-events: none;
          white-space: pre;
          color: white;
       }
 
       #editor-editable-area {
-         width: 100%;
          position: absolute;
          top: 0;
+         left: 76px;
+         right: 0;
          outline: 0px solid transparent;
          pointer-events: all;
          white-space: pre;
+         line-height: 22px;
          color: transparent;
          caret-color: white;
       }
    }
 
-   .numbers-area {
-      pointer-events: none;
-      overflow: hidden;
-
-      .line-numbers {
-         color: $linenumbers-foreground;
-         min-width: 36px;
-         text-align: right;
-         padding-right: 20px;
-
-         div {
-            border-top: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-            height: 22px;
-            display: flex;
-            align-items: center;
-         }
-      }
+   .line-num {
+      display: inline-block;
+      min-width: 36px;
+      text-align: right;
+      padding-right: 20px;
+      color: $linenumbers-foreground;
+      user-select: none;
    }
 </style>
