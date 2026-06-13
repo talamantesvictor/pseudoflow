@@ -1,6 +1,6 @@
 <script lang="ts">
    import { createEventDispatcher } from "svelte";
-   import { translationStore, fileNameStore, flowchartDrawingStore } from "../lib/stores";
+   import { translationStore, fileNameStore, flowchartDrawingStore, errorStore } from "../lib/stores";
    import newButton from '../../static/images/new_button.svg';
    import openButton from '../../static/images/open_button.svg';
    import saveButton from '../../static/images/save_button.svg';
@@ -14,15 +14,23 @@
    export let isChartVisible: boolean;
    let isMenuOpen: boolean;
    let executeButtonImage: any = playButton;
+   let shakeButton: boolean = false;
+
+   $: hasSyntaxErrors = $errorStore.some(e => e.type === 'syntax');
+
+   const runButtonClick = () => {
+      if (hasSyntaxErrors && !isProgramRunning) {
+         shakeButton = true;
+         setTimeout(() => shakeButton = false, 500);
+         return;
+      }
+      isProgramRunning = !isProgramRunning;
+      topbarDispatcher("runButtonClick", isProgramRunning);
+   };
 
    const chartToggleClick = () => {
       isChartVisible = !isChartVisible;
    }
-
-   const runButtonClick = () => {
-      isProgramRunning = !isProgramRunning;
-      topbarDispatcher("runButtonClick", isProgramRunning);
-   };
 
    const newButtonClick = () => {
       topbarDispatcher("newButtonClick");
@@ -119,7 +127,7 @@
          {$translationStore.APP_CHART_TOGGLE}
       </div>
       {/if}
-      <div id="runButton" on:mouseup={runButtonClick}>
+      <div id="runButton" on:mouseup={runButtonClick} class:blocked={hasSyntaxErrors && !isProgramRunning} class:shake={shakeButton}>
          <img src="{executeButtonImage}" alt="Play Button" />
          {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
       </div>
@@ -382,7 +390,24 @@
                width: 0.9rem;
                margin-right: 0.6rem;
             }
+
+            &.blocked {
+               opacity: 0.45;
+               cursor: not-allowed;
+            }
+
+            &.shake {
+               animation: shake 0.4s ease-in-out;
+            }
          }
       }
+   }
+
+   @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
    }
 </style>

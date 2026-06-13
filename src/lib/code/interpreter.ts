@@ -378,6 +378,8 @@ function safeEval(expression: any): any {
          consume();
          if (t.value === 'true') return true;
          if (t.value === 'false') return false;
+         if (t.value === 'undefined') return undefined;
+         if (t.value === 'null') return null;
          throw new Error(`Unexpected identifier: ${t.value}`);
       }
       if (t.type === 'parenOpen') {

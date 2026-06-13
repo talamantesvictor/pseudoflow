@@ -61,7 +61,7 @@
    // Generate tree and perform pre-execution tasks on run button press
    function prepareExecution() {
       generateTree()
-      if ($errorStore.length > 0) {
+      if ($errorStore.some(e => e.type === 'syntax')) {
          isProgramRunning = false;
          return;
       }
