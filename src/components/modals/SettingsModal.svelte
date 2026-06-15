@@ -8,16 +8,16 @@
       changeFlowchartVisibility, 
       isFlowchartVisible } from "../../lib/stores";
 
-   function selectTranslation(e) {
-      changeTranslation(e.srcElement['value']);
+    function selectTranslation(e: Event) {
+      changeTranslation((e.srcElement as HTMLInputElement)['value']);
    }
 
-   function selectcodeWordsStore(e) {
-      changecodeWordsStore(e.srcElement['value']);
+   function selectcodeWordsStore(e: Event) {
+      changecodeWordsStore((e.srcElement as HTMLInputElement)['value']);
    }
 
-   function toggleFlowchart(e) {
-      changeFlowchartVisibility(e.target['checked']);
+   function toggleFlowchart(e: Event) {
+      changeFlowchartVisibility((e.target as HTMLInputElement)['checked']);
    }
 </script>
 

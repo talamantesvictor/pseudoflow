@@ -70,7 +70,7 @@
       editorText = editorElement.innerText;
    }
 
-   function keyDownController(e) {
+   function keyDownController(e: KeyboardEvent) {
       switch (e.key) {
          case "Tab":
             e.preventDefault();
@@ -93,7 +93,7 @@
       }
    }
 
-   function keyUpController(e) {
+   function keyUpController(e: KeyboardEvent) {
       if (
          e.key === "Escape" ||
          e.key === "Enter" ||

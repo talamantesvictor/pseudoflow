@@ -58,8 +58,8 @@
 
    $: executeButtonImage = isProgramRunning? stopButton : playButton;
 
-   function selectFileName(e) {
-      const input = e.target || e;
+   function selectFileName(e: Event | HTMLInputElement) {
+      const input = (e as Event).target || e;
       const value = input.value;
       const dotIndex = value.lastIndexOf('.');
       const end = dotIndex > 0 ? dotIndex : value.length;

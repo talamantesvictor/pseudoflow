@@ -2,56 +2,56 @@
    import { codeWordStore, translationStore } from "../lib/stores";
    export let command: object = {};
 
-   function declareCmd(e) {
+   function declareCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_VAR + ' xyz',
          timestamp: Date.now()
       }
    }
-   function printCmd(e) {
+   function printCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_PRINT + ' "' + $translationStore.APP_PLACEHOLDER_PRINT + '"',
          timestamp: Date.now()
       }
    }
-   function readCmd(e) {
+   function readCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_READ + ' xyz',
          timestamp: Date.now()
       }
    }
-   function ifCmd(e) {
+   function ifCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_IF + ' (xyz == 1)\n' + $codeWordStore.CODE_ELSE + '\n' + $codeWordStore.CODE_ENDIF,
          timestamp: Date.now()
       }
    }
-   function switchCmd(e) {
+   function switchCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_SWITCH + ' (xyz)\n' + $codeWordStore.CODE_CASE + ' 1:\n' + $codeWordStore.CODE_ENDCASE + '\n' + $codeWordStore.CODE_CASE + ' 2:\n' + $codeWordStore.CODE_ENDCASE + '\n' + $codeWordStore.CODE_ENDSWITCH,
          timestamp: Date.now()
       }
    }
-   function forCmd(e) {
+   function forCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_REPEAT + ' (' + $codeWordStore.CODE_REPEATDECLARE + ' xyz = 1 ' + $codeWordStore.CODE_REPEATTO + ' 10 ' + $codeWordStore.CODE_REPEATSTEP + ' 1)\n\n' + $codeWordStore.CODE_ENDREPEAT,
          timestamp: Date.now()
       }
    }
-   function whileCmd(e) {
+   function whileCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_WHILE + ' (xyz > 0)\n\n' + $codeWordStore.CODE_ENDWHILE,
          timestamp: Date.now()
       }
    }
-   function dowhileCmd(e) {
+   function dowhileCmd(e: MouseEvent) {
       e.preventDefault();
       command = {
          template: $codeWordStore.CODE_DOWHILE + ' (xyz > 0)\n\n' + $codeWordStore.CODE_ENDDOWHILE,

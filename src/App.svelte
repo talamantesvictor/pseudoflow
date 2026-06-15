@@ -94,8 +94,8 @@
    }
 
    // Insert assignment node into the tree using the value captured from the user
-   function capturedMessage(e) {
-      const value = e.detail.text? e.detail.text : false;
+    function capturedMessage(e: CustomEvent<{text: string}>) {
+       const value = e.detail.text? e.detail.text : false;
       enableUserInput = false;
       addSentence({ 
          name: 'AssignmentNode', 
@@ -108,8 +108,9 @@
    }
 
    // Import code from a file using an input element in HTML
-   function importDataFromFile(e) {
-      fileNameStore.set(e.target.files[0].name);
+    function importDataFromFile(e: Event) {
+       const target = e.target as HTMLInputElement;
+       fileNameStore.set(target.files[0].name);
 
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
