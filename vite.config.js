@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-
 export default defineConfig({
    clearScreen: false,
    server: {
@@ -14,6 +13,12 @@ export default defineConfig({
             silenceDeprecations: ['legacy-js-api']
          }
       }
+   },
+   resolve: {
+      mainFields: ['browser', 'module', 'main']
+   },
+   optimizeDeps: {
+      exclude: ['konva']
    },
    build: {
       target: ["es2021", "chrome100", "safari13"],
