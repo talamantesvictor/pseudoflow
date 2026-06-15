@@ -43,31 +43,44 @@
    }
 
    $: {
-      if (editorElement) {
+      if (editorElement && editorText !== undefined) {
          if (editorElement.innerText !== editorText) {
             editorElement.innerText = editorText;
             setTimeout(() => {
-               focusOnEditableArea();
+               const sel = window.getSelection();
+               if (sel && sel.rangeCount) {
+                  sel.removeAllRanges();
+                  const range = document.createRange();
+                  range.selectNodeContents(editorElement);
+                  range.collapse(false);
+                  sel.addRange(range);
+               }
+               beautifyCode();
             });
          }
       }
    }
 
    function beautifyCode() {
+      const currentText = editorElement.innerText;
+      if (currentText !== editorText) {
+         editorText = currentText;
+      }
       lastRowNumber = activeRowNumber;
       activeRowNumber = getActiveRowNumber(
          window.getSelection(),
          editorElement
       );
-      const text = editorElement.innerText;
-      const lines = text.endsWith('\n') ? text.split('\n').length - 1 : text.split('\n').length;
-      const highlighted = beautifier(text, $codeWordStore, activeRowNumber);
+      const lines = currentText.endsWith('\n') ? currentText.split('\n').length - 1 : currentText.split('\n').length;
+      const highlighted = beautifier(currentText, $codeWordStore, activeRowNumber);
       let lineNum = 1;
-      coloredElement.innerHTML = highlighted.replace(
+      const newHTML = highlighted.replace(
          /(<div class="line[^"]*">)/g,
           (match) => match + '<span class="line-num">' + (lineNum++) + '</span>'
       );
-      editorText = editorElement.innerText;
+      if (coloredElement.innerHTML !== newHTML) {
+         coloredElement.innerHTML = newHTML;
+      }
    }
 
    function keyDownController(e: KeyboardEvent) {
@@ -108,11 +121,12 @@
    }
 
    function mouseEvent() {
-      activeRowNumber = getActiveRowNumber(
+      const row = getActiveRowNumber(
          window.getSelection(),
          editorElement
       );
-      if (activeRowNumber !== lastRowNumber) {
+      if (row >= 0 && row !== lastRowNumber) {
+         activeRowNumber = row;
          beautifyCode();
       }
    }
