@@ -1,5 +1,4 @@
 <script lang="ts">
-   import { createEventDispatcher } from "svelte";
    import { translationStore, fileNameStore, flowchartDrawingStore, errorStore } from "../lib/stores";
    import newButton from '../../static/images/new_button.svg';
    import openButton from '../../static/images/open_button.svg';
@@ -9,9 +8,14 @@
    import playButton from '../../static/images/play_button.svg';
    import stopButton from '../../static/images/stop_button.svg';
 
-   const topbarDispatcher = createEventDispatcher();
    export let isProgramRunning: boolean;
    export let isChartVisible: boolean;
+   export let onRunButtonClick: (running: boolean) => void = () => {};
+   export let onNewButtonClick: () => void = () => {};
+   export let onImportButtonClick: () => void = () => {};
+   export let onExportButtonClick: () => void = () => {};
+   export let onSettingsButtonClick: () => void = () => {};
+   export let onInfoButtonClick: () => void = () => {};
    let isMenuOpen: boolean;
    let executeButtonImage: any = playButton;
    let shakeButton: boolean = false;
@@ -25,7 +29,7 @@
          return;
       }
       isProgramRunning = !isProgramRunning;
-      topbarDispatcher("runButtonClick", isProgramRunning);
+      onRunButtonClick(isProgramRunning);
    };
 
    const chartToggleClick = () => {
@@ -33,23 +37,23 @@
    }
 
    const newButtonClick = () => {
-      topbarDispatcher("newButtonClick");
+      onNewButtonClick();
    }
 
    const importButtonClick = () => {
-      topbarDispatcher("importButtonClick");
+      onImportButtonClick();
    }
 
    const exportButtonClick = () => {
-      topbarDispatcher("exportButtonClick");
+      onExportButtonClick();
    }
 
    const settingsButtonClick = () => {
-      topbarDispatcher("settingsButtonClick");
+      onSettingsButtonClick();
    }
 
    const infoButtonClick = () => {
-      topbarDispatcher("infoButtonClick");
+      onInfoButtonClick();
    }
 
    $: executeButtonImage = isProgramRunning? stopButton : playButton;

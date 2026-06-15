@@ -10,11 +10,11 @@
    import SaveModal from "./components/modals/SaveModal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
-   import { open, save } from "@tauri-apps/api/dialog";
-   import { invoke } from "@tauri-apps/api/tauri";
-   import { readTextFile } from "@tauri-apps/api/fs";
+
    import { analyze } from "./lib/analyzers/analyze";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
+
+   const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
    
    let modal: any;
    let isProgramRunning: boolean = false;
@@ -136,60 +136,52 @@
    }
 
    // Handle "Open" button in top bar
-   async function importButtonClick() {
-      // Desktop
-      try {
-         const filePath = await open(({defaultPath: $fileNameStore}));
-         if (filePath) {
-            readTextFile(filePath as string).then((data) => {
+   function importButtonClick() {
+      if (isTauri) {
+         import("@tauri-apps/api/dialog").then(async ({ open }) => {
+            const { readTextFile } = await import("@tauri-apps/api/fs");
+            const filePath = await open({ defaultPath: $fileNameStore });
+            if (filePath) {
+               const data = await readTextFile(filePath as string);
                pseudocode = data.toString();
                savedPseudocode = pseudocode;
                generateTree();
-               const segments = (filePath as string).split(/(\\|\/)/g);
-               fileNameStore.set(segments[segments.length - 1]);
-            });
-         }
-      }
-      // Web
-      catch (err) {
+               fileNameStore.set((filePath as string).split(/(\\|\/)/g).pop());
+            }
+         });
+      } else {
          document.getElementById("file-import").click();
       }
    }
 
    // Handle "Save" button in top bar
-   async function exportButtonClick() {
-      let exported = false;
-      // Desktop
-      try {
-         const filePath = await save({
-            defaultPath: $fileNameStore
+   function exportButtonClick() {
+      if (isTauri) {
+         import("@tauri-apps/api/dialog").then(async ({ save }) => {
+            const { invoke } = await import("@tauri-apps/api/tauri");
+            const filePath = await save({ defaultPath: $fileNameStore });
+            if (filePath) {
+               await invoke('save_file', { path: filePath, contents: pseudocode });
+               fileNameStore.set(filePath.split(/(\\|\/)/g).pop());
+               savedPseudocode = pseudocode;
+            }
          });
-         if (filePath) {
-            await invoke('save_file', {path: filePath, contents: pseudocode});
-            const segments = filePath.split(/(\\|\/)/g);
-            fileNameStore.set(segments[segments.length - 1]);
-            savedPseudocode = pseudocode;
-            exported = true;
-         }
-      } 
-      // Web
-      catch (err) {
-         let textBlob = new Blob([pseudocode], {type: 'text/plain'});
-         let tempLink = document.createElement("a");
-         tempLink.setAttribute('href', URL.createObjectURL(textBlob));
-         tempLink.setAttribute('download', $fileNameStore);
-         tempLink.click();
-         URL.revokeObjectURL(tempLink.href);
-         savedPseudocode = pseudocode;
-         exported = true;
-      };
-
-      return exported;
+         return false;
+      }
+      let textBlob = new Blob([pseudocode], {type: 'text/plain'});
+      let tempLink = document.createElement("a");
+      tempLink.setAttribute('href', URL.createObjectURL(textBlob));
+      tempLink.setAttribute('download', $fileNameStore);
+      tempLink.click();
+      tempLink.remove();
+      URL.revokeObjectURL(tempLink.href);
+      savedPseudocode = pseudocode;
+      return true;
    }
 
    // Handle "Run" button in top bar
-   function runButtonClick(e) {
-      if (isProgramRunning = e.detail) {
+   function runButtonClick(running: boolean) {
+      if (running) {
          prepareExecution();
       }
       else {
@@ -277,12 +269,12 @@
 
 
 <Topbar 
-   on:runButtonClick={runButtonClick} 
-   on:newButtonClick={newButtonClick}
-   on:importButtonClick={importButtonClick}
-   on:exportButtonClick={exportButtonClick}
-   on:settingsButtonClick={settingsButtonClick}
-   on:infoButtonClick={infoButtonClick}
+   onRunButtonClick={runButtonClick}
+   onNewButtonClick={newButtonClick}
+   onImportButtonClick={importButtonClick}
+   onExportButtonClick={exportButtonClick}
+   onSettingsButtonClick={settingsButtonClick}
+   onInfoButtonClick={infoButtonClick}
    bind:isProgramRunning={isProgramRunning}
    bind:isChartVisible={isChartVisible} />
 
@@ -401,6 +393,8 @@
    }
 
    #file-import {
-		display: none;
-	}
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+   }
 </style>
