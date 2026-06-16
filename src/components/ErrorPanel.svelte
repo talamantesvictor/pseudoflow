@@ -26,14 +26,16 @@
 <style lang="scss">
    @use "../styles/variables.scss" as *;
 
-   .errors-panel {
-      background: #1C1F2D;
-      border-top: 1px solid #3F4254;
-      padding: 0.8rem 1.5rem;
-      max-height: 40%;
-      overflow-y: auto;
-      flex-shrink: 0;
-   }
+    .errors-panel {
+       background: #1C1F2D;
+       border-top: 1px solid #3F4254;
+       padding: 0.8rem 1.5rem;
+       min-height: 4rem;
+       max-height: 40%;
+       overflow-y: auto;
+       flex-shrink: 0;
+       box-sizing: border-box;
+    }
 
    .error-entry {
       display: flex;

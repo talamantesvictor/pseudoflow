@@ -73,42 +73,54 @@
 </script>
 
 
-<div id="konvaContainer" bind:this={konvaContainer} />
-<div id="scaler">
-   <div>
-      <span>Zoom:</span> {Math.round(userScale)}%
+<div id="chart-wrapper">
+   <div id="konvaContainer" bind:this={konvaContainer} />
+   <div id="scaler">
+      <div>
+         <span>Zoom:</span> {Math.round(userScale)}%
+      </div>
+      <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
+      <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
+         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+         </svg>
+      </button>
    </div>
-   <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
-   <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-         <polyline points="15 3 21 3 21 9" />
-         <polyline points="9 21 3 21 3 15" />
-         <line x1="21" y1="3" x2="14" y2="10" />
-         <line x1="3" y1="21" x2="10" y2="14" />
-      </svg>
-   </button>
 </div>
 
 
 <style lang="scss">
    @use "../styles/variables.scss" as *;
 
-   #konvaContainer {
-      width: 100%;
-      height: calc(100% - 55px);
-      overflow: auto;
-   }
+    #chart-wrapper {
+       width: 100%;
+       height: 100%;
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
+    }
 
-   #scaler {
-      width: 100%;
-      height: 55px;
-      background: #1C1F2D;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2.5rem;
-      padding: 0 1.5rem;
-      box-sizing: border-box;
+    #konvaContainer {
+       width: 100%;
+       flex: 1;
+       overflow: auto;
+    }
+
+    #scaler {
+       width: 100%;
+       background: #1C1F2D;
+       border-top: 1px solid #3F4254;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       gap: 2.5rem;
+       padding: 0.8rem 1.5rem;
+       box-sizing: border-box;
+       flex-shrink: 0;
+       min-height: 4rem;
 
       > div {
          display: flex;

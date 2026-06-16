@@ -377,16 +377,17 @@
          }
       }
 
-      #flowchart-area {
-         width: 100%;
-         max-width: 100%;
-         height: calc(100% - $topbar-height);
-         background-color: $flowchart-background;
-         color: white;
-         border-left: 1px solid $editor-background;
-         position: absolute;
-         right: 0;
-         z-index: 0;
+       #flowchart-area {
+          width: 100%;
+          max-width: 100%;
+          height: calc(100% - $topbar-height);
+          background-color: $flowchart-background;
+          color: white;
+          border-left: 1px solid $editor-background;
+          position: absolute;
+          right: 0;
+          z-index: 0;
+          overflow: hidden;
 
          &.active {
             z-index: 3;
