@@ -293,9 +293,12 @@ function ifParser() : atype.IfNode {
    let storeSentencesInBody = true;
    while (parserTokens[parserIndex].name !== 'CloseIfToken') {
 
-      if (parserTokens[parserIndex].name === 'OpenIfElseToken') {
-         storeSentencesInBody = false;
-      }
+       if (parserTokens[parserIndex].name === 'OpenIfElseToken') {
+          if (!storeSentencesInBody) {
+             throw new SyntaxError('An if statement can only have one else clause.');
+          }
+          storeSentencesInBody = false;
+       }
       else {
          if (storeSentencesInBody) {
             body.push(parse());
@@ -329,9 +332,13 @@ function switchParser() : atype.SwitchNode {
    }
    nextIndex();
 
-   let cases = new Array<atype.CaseNode>;
+    let cases = new Array<atype.CaseNode>;
 
-   while (parserTokens[parserIndex].name !== 'CloseSwitchToken') {
+    if (parserTokens[parserIndex].name === 'CloseSwitchToken') {
+       throw new SyntaxError('A switch statement must have at least one case clause.');
+    }
+
+    while (parserTokens[parserIndex].name !== 'CloseSwitchToken') {
       if (parserTokens[parserIndex].name !== 'OpenCaseToken') {
          throw new SyntaxError('Switch should start with a case statement.');
       }
