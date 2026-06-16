@@ -1,12 +1,16 @@
 <script lang="ts">
-   import { 
-      translationStore, 
-      changeTranslation, 
-      changecodeWordsStore, 
-      codeWordLang, 
-      translationLang, 
-      changeFlowchartVisibility, 
-      isFlowchartVisible } from "../../lib/stores";
+    import { 
+       translationStore, 
+       changeTranslation, 
+       changecodeWordsStore, 
+       codeWordLang, 
+       translationLang, 
+       changeFlowchartVisibility, 
+       isFlowchartVisible,
+       changeSyntaxErrors,
+       changeSemanticErrors,
+       syntaxErrorsEnabled,
+       semanticErrorsEnabled } from "../../lib/stores";
 
     function selectTranslation(e: Event) {
       changeTranslation((e.srcElement as HTMLInputElement)['value']);
@@ -16,9 +20,17 @@
       changecodeWordsStore((e.srcElement as HTMLInputElement)['value']);
    }
 
-   function toggleFlowchart(e: Event) {
-      changeFlowchartVisibility((e.target as HTMLInputElement)['checked']);
-   }
+    function toggleFlowchart(e: Event) {
+       changeFlowchartVisibility((e.target as HTMLInputElement)['checked']);
+    }
+
+    function toggleSyntaxErrors(e: Event) {
+       changeSyntaxErrors((e.target as HTMLInputElement)['checked']);
+    }
+
+    function toggleSemanticErrors(e: Event) {
+       changeSemanticErrors((e.target as HTMLInputElement)['checked']);
+    }
 </script>
 
 <div class="languageSettings">
@@ -64,6 +76,14 @@
          <label for="flowchart">{$translationStore.APP_SETTINGS_OTHER_FLOWCHART}. 
             <span>{$translationStore.APP_SETTINGS_OTHER_FLOWCHART_INFO}</span>
          </label>
+      </div>
+      <div>
+         <input type="checkbox" id="syntax-errors" on:input={toggleSyntaxErrors} checked="{syntaxErrorsEnabled}">
+         <label for="syntax-errors">{$translationStore.APP_SETTINGS_OTHER_SYNTAX}</label>
+      </div>
+      <div>
+         <input type="checkbox" id="semantic-errors" on:input={toggleSemanticErrors} checked="{semanticErrorsEnabled}">
+         <label for="semantic-errors">{$translationStore.APP_SETTINGS_OTHER_SEMANTIC}</label>
       </div>
    </div>
 </div>

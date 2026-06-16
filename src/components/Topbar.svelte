@@ -1,12 +1,13 @@
 <script lang="ts">
-  import {
-    translationStore,
-    fileNameStore,
-    flowchartDrawingStore,
-    errorStore,
-    canUndoStore,
-    canRedoStore,
-  } from "../lib/stores";
+   import {
+     translationStore,
+     fileNameStore,
+     flowchartDrawingStore,
+     errorStore,
+     canUndoStore,
+     canRedoStore,
+     syntaxErrorsStore,
+   } from "../lib/stores";
   import newButton from "../../static/images/new_button.svg";
   import openButton from "../../static/images/open_button.svg";
   import saveButton from "../../static/images/save_button.svg";
@@ -31,7 +32,7 @@
   let executeButtonImage: any = playButton;
   let shakeButton: boolean = false;
 
-  $: hasSyntaxErrors = $errorStore.some((e) => e.type === "syntax");
+  $: hasSyntaxErrors = $syntaxErrorsStore && $errorStore.some((e) => e.type === "syntax");
 
   const runButtonClick = () => {
     if (hasSyntaxErrors && !isProgramRunning) {

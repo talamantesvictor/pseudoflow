@@ -1,10 +1,15 @@
 <script lang="ts">
-   import { errorStore } from "../lib/stores";
+   import { errorStore, syntaxErrorsStore, semanticErrorsStore } from "../lib/stores";
+
+   $: visibleErrors = $errorStore.filter(e =>
+      (e.type === 'syntax' && $syntaxErrorsStore) ||
+      (e.type === 'semantic' && $semanticErrorsStore)
+   );
 </script>
 
-{#if $errorStore.length > 0}
+{#if visibleErrors.length > 0}
 <div class="errors-panel">
-   {#each $errorStore as error}
+   {#each visibleErrors as error}
    <div class="error-entry">
       <span class="badge" class:syntax={error.type === 'syntax'} class:semantic={error.type === 'semantic'}>
          {error.type === 'syntax' ? 'Syntax' : 'Semantic'}

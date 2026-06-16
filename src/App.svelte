@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore } from "./lib/stores";
+    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -60,9 +60,9 @@
    });
 
    // Generate tree and perform pre-execution tasks on run button press
-   function prepareExecution() {
-      generateTree()
-      if ($errorStore.some(e => e.type === 'syntax')) {
+    function prepareExecution() {
+       generateTree()
+       if ($syntaxErrorsStore && $errorStore.some(e => e.type === 'syntax')) {
          isProgramRunning = false;
          return;
       }
