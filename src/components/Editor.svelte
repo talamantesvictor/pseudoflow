@@ -50,7 +50,7 @@
 
    $: {
        if (editorElement && editorText !== undefined && editorElement.innerText !== editorText) {
-          editorElement.innerText = editorText;
+          editorElement.textContent = editorText;
           undoer.setLastSnapshot(editorElement.innerText);
           setTimeout(() => {
             const sel = window.getSelection();
@@ -265,13 +265,15 @@
       }
    }
 
-   function onPaste(e: ClipboardEvent) {
-      e.preventDefault();
-      const text = e.clipboardData?.getData('text/plain');
-      if (!text) return;
-      document.execCommand('insertHTML', false, text.replace(/\n/g, '<br>'));
-      beautifyCode();
-   }
+    function onPaste(e: ClipboardEvent) {
+       e.preventDefault();
+       const text = e.clipboardData?.getData('text/plain');
+       if (!text) return;
+       document.execCommand('insertHTML', false, text.replace(/\n/g, '<br>'));
+       editorElement.textContent = editorElement.innerText;
+       undoer.setLastSnapshot(editorElement.innerText);
+       beautifyCode();
+    }
 
    function keyUpController(e: KeyboardEvent) {
       if (e.key === "Escape" || e.key === "Enter" || e.key.startsWith("Arrow") || (e.ctrlKey && e.key === "a")) {
