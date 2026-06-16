@@ -36,9 +36,15 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
                 line: errorLine
              });
             while (parserIndex < parserTokens.length - 1) {
-               parserIndex++;
-               if (STATEMENT_START_TOKENS.includes(parserTokens[parserIndex].name)) break;
-            }
+                parserIndex++;
+                const token = parserTokens[parserIndex];
+                if (token.name === 'IdentifierToken') {
+                    const next = parserTokens[parserIndex + 1];
+                    if (next && (next.name === 'AssignmentToken' || next.name === 'OpenBracketToken')) break;
+                    continue;
+                }
+                if (STATEMENT_START_TOKENS.includes(token.name)) break;
+             }
          } else {
             throw e
          }
@@ -185,15 +191,18 @@ function expressionParser(minPrecedence: number = 0): atype.Node {
 function declarationParser() : atype.DeclarationNode {
    nextIndex();
    const identifier = parserTokens[parserIndex];
-   let value: any;
-   if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
-      nextIndex();
-      nextIndex();
-      value = expressionParser();
-   }
-   else {
-      value = { name: 'StringNode', value: undefined };
-   }
+    let value: any;
+    if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
+       nextIndex();
+       nextIndex();
+       value = expressionParser();
+    }
+    else if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'RelationalToken' && parserTokens[parserIndex+1].value === '==') {
+       throw new SyntaxError(`Expected '=' after '${identifier.value}' but found '=='. Use '=' for assignment, '==' only for comparison.`);
+    }
+    else {
+       value = { name: 'StringNode', value: undefined };
+    }
 
    return { 
       name: 'DeclarationNode',
@@ -218,6 +227,9 @@ function assignmentParser(): atype.AssignmentNode {
    }
 
     if (parserTokens[parserIndex].name !== 'AssignmentToken') {
+       if (parserTokens[parserIndex].name === 'RelationalToken' && parserTokens[parserIndex].value === '==') {
+          throw new SyntaxError(`Expected '=' after '${identifier.value}' but found '=='. Use '=' for assignment, '==' only for comparison.`);
+       }
        throw new SyntaxError(`Expected '=' after identifier but found '${parserTokens[parserIndex].value}'. Use 'identifier = value' to assign.`);
     }
    nextIndex();
