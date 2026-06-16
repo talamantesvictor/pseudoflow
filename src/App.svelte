@@ -29,9 +29,10 @@
    let lastExecutedSentence: atype.SentencesNode;
    let timeoutToParse: any;
 
-   let pointerStartX, rightColumnStartWidth;
+    let pointerStartX, rightColumnStartWidth;
+    let editorRef: any;
 
-   // Shortcut key handling
+    // Shortcut key handling
    window.onkeydown = function (event) {
       clearTimeout(timeoutToParse);
       timeoutToParse = setTimeout(generateTree, 350);
@@ -199,13 +200,16 @@
       };
    }
 
-   // Handle "Information" button in top bar
-   function infoButtonClick() {
-      modal = {
-         title: $translationStore.APP_INFO_TITLE,
-         component: InformationModal
-      };
-   }
+    // Handle "Information" button in top bar
+    function infoButtonClick() {
+       modal = {
+          title: $translationStore.APP_INFO_TITLE,
+          component: InformationModal
+       };
+    }
+
+    function undoClick() { editorRef?.undoAction(); }
+    function redoClick() { editorRef?.redoAction(); }
 
    // Used in save-warning-dialog modal
    async function saveAndClose() {
@@ -276,6 +280,8 @@
    onExportButtonClick={exportButtonClick}
    onSettingsButtonClick={settingsButtonClick}
    onInfoButtonClick={infoButtonClick}
+   onUndoClick={undoClick}
+   onRedoClick={redoClick}
    bind:isProgramRunning={isProgramRunning}
    bind:isChartVisible={isChartVisible} />
 
@@ -290,7 +296,7 @@
    </div>
    <div id="resizer" on:mousedown={startResizing}></div>
    <div id="text-area" class:twoColumnLayout="{$flowchartDrawingStore}">
-      <Editor bind:editorText={pseudocode} />
+      <Editor bind:editorText={pseudocode} bind:this={editorRef} />
       <ErrorPanel />
    </div>
 </div>

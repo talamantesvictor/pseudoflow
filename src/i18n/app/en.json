@@ -32,6 +32,8 @@
    "APP_PROGRAM_STARTED": "Program started",
    "APP_PROGRAM_END": "Program end",
    "APP_PLACEHOLDER_PRINT": "HELLO WORLD",
-   "APP_CHART_TOGGLE": "Flowchart",
-   "APP_CHART_AUTOFIT": "Fit to container"
+    "APP_CHART_TOGGLE": "Flowchart",
+    "APP_CHART_AUTOFIT": "Fit to container",
+    "APP_UNDO": "Undo",
+    "APP_REDO": "Redo"
 }

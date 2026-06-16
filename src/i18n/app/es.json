@@ -32,6 +32,8 @@
    "APP_PROGRAM_STARTED": "Comenzó el programa",
    "APP_PROGRAM_END": "Finalizó el programa",
    "APP_PLACEHOLDER_PRINT": "HOLA MUNDO",
-   "APP_CHART_TOGGLE": "Diagrama",
-   "APP_CHART_AUTOFIT": "Ajustar al contenedor"
+    "APP_CHART_TOGGLE": "Diagrama",
+    "APP_CHART_AUTOFIT": "Ajustar al contenedor",
+    "APP_UNDO": "Deshacer",
+    "APP_REDO": "Rehacer"
 }

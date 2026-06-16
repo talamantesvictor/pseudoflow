@@ -13,7 +13,7 @@
    } from "../lib/editor";
    import type { SelectedRange } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
-   import { codeWordStore } from "../lib/stores";
+    import { codeWordStore, canUndoStore, canRedoStore } from "../lib/stores";
     import { onMount } from "svelte";
     import { EditorUndo } from "../lib/undo";
 
@@ -40,6 +40,7 @@
              window.getSelection().addRange(newRange);
           }
           undoer.pushManual(editorElement.innerText, getCurrentRow());
+          syncUndoState();
           undoer.beginBatch();
           insertTemplate(commandToInsert.template);
           undoer.endBatch(editorElement.innerText);
@@ -86,6 +87,7 @@
 
     function handleInput() {
         undoer.snapshot(editorElement.innerText, getCurrentRow(), getCursorOffset());
+        syncUndoState();
         beautifyCode();
     }
 
@@ -167,6 +169,7 @@
                     savedLines?.startLine,
                     savedLines?.endLine
                 );
+                syncUndoState();
                 const savedLine = sel ? getApproxLine(sel, editorElement) : 1;
                 editorText = newText;
                 editorElement.textContent = newText;
@@ -178,6 +181,7 @@
                 });
              } else if (!e.shiftKey) {
                 undoer.pushManual(editorElement.innerText, getCurrentRow());
+                syncUndoState();
                 insertTab();
                 undoer.setLastSnapshot(editorElement.innerText);
                 beautifyCode();
@@ -215,6 +219,7 @@
                    if (parent && parent !== editorElement) {
                       e.preventDefault();
                       undoer.pushManual(editorElement.innerText, getCurrentRow());
+                      syncUndoState();
                       parent.innerHTML = '&nbsp;';
                       undoer.setLastSnapshot(editorElement.innerText);
                      const child = parent.firstChild;
@@ -291,6 +296,7 @@
             ? undoer.undo(currentText, currentRow, savedLines?.startLine, savedLines?.endLine, cursorOff)
             : undoer.redo(currentText, currentRow, savedLines?.startLine, savedLines?.endLine, cursorOff);
         if (!entry) return;
+        syncUndoState();
         editorText = entry.text;
         editorElement.textContent = entry.text;
         requestAnimationFrame(() => {
@@ -309,6 +315,14 @@
             beautifyCode();
         });
     }
+
+    function syncUndoState() {
+        canUndoStore.set(undoer.canUndo);
+        canRedoStore.set(undoer.canRedo);
+    }
+
+    export function undoAction() { applyUndoRedo(true); }
+    export function redoAction() { applyUndoRedo(false); }
 
     function restoreCursorAtLine(line: number) {
         const lines = editorElement.innerText.split('\n');

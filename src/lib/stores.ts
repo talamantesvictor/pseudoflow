@@ -13,6 +13,8 @@ export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
 export const flowchartDrawingStore = writable(isFlowchartVisible);
 export const errorStore = writable([]);
+export const canUndoStore = writable(false);
+export const canRedoStore = writable(false);
 
 export const changeTranslation = (langCode) => {
    switch (translationLang = langCode) {

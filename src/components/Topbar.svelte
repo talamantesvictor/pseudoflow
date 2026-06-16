@@ -1,417 +1,510 @@
 <script lang="ts">
-   import { translationStore, fileNameStore, flowchartDrawingStore, errorStore } from "../lib/stores";
-   import newButton from '../../static/images/new_button.svg';
-   import openButton from '../../static/images/open_button.svg';
-   import saveButton from '../../static/images/save_button.svg';
-   import settingsButton from '../../static/images/settings_button.svg';
-   import infoButton from '../../static/images/info_button.svg';
-   import playButton from '../../static/images/play_button.svg';
-   import stopButton from '../../static/images/stop_button.svg';
+  import {
+    translationStore,
+    fileNameStore,
+    flowchartDrawingStore,
+    errorStore,
+    canUndoStore,
+    canRedoStore,
+  } from "../lib/stores";
+  import newButton from "../../static/images/new_button.svg";
+  import openButton from "../../static/images/open_button.svg";
+  import saveButton from "../../static/images/save_button.svg";
+  import settingsButton from "../../static/images/settings_button.svg";
+  import infoButton from "../../static/images/info_button.svg";
+  import playButton from "../../static/images/play_button.svg";
+  import stopButton from "../../static/images/stop_button.svg";
+  import undoButton from "../../static/images/undo_button.svg";
+  import redoButton from "../../static/images/redo_button.svg";
 
-   export let isProgramRunning: boolean;
-   export let isChartVisible: boolean;
-   export let onRunButtonClick: (running: boolean) => void = () => {};
-   export let onNewButtonClick: () => void = () => {};
-   export let onImportButtonClick: () => void = () => {};
-   export let onExportButtonClick: () => void = () => {};
-   export let onSettingsButtonClick: () => void = () => {};
-   export let onInfoButtonClick: () => void = () => {};
-   let isMenuOpen: boolean;
-   let executeButtonImage: any = playButton;
-   let shakeButton: boolean = false;
+  export let isProgramRunning: boolean;
+  export let isChartVisible: boolean;
+  export let onRunButtonClick: (running: boolean) => void = () => {};
+  export let onNewButtonClick: () => void = () => {};
+  export let onImportButtonClick: () => void = () => {};
+  export let onExportButtonClick: () => void = () => {};
+  export let onSettingsButtonClick: () => void = () => {};
+  export let onInfoButtonClick: () => void = () => {};
+  export let onUndoClick: () => void = () => {};
+  export let onRedoClick: () => void = () => {};
+  let isMenuOpen: boolean;
+  let executeButtonImage: any = playButton;
+  let shakeButton: boolean = false;
 
-   $: hasSyntaxErrors = $errorStore.some(e => e.type === 'syntax');
+  $: hasSyntaxErrors = $errorStore.some((e) => e.type === "syntax");
 
-   const runButtonClick = () => {
-      if (hasSyntaxErrors && !isProgramRunning) {
-         shakeButton = true;
-         setTimeout(() => shakeButton = false, 500);
-         return;
-      }
-      isProgramRunning = !isProgramRunning;
-      onRunButtonClick(isProgramRunning);
-   };
+  const runButtonClick = () => {
+    if (hasSyntaxErrors && !isProgramRunning) {
+      shakeButton = true;
+      setTimeout(() => (shakeButton = false), 500);
+      return;
+    }
+    isProgramRunning = !isProgramRunning;
+    onRunButtonClick(isProgramRunning);
+  };
 
-   const chartToggleClick = () => {
-      isChartVisible = !isChartVisible;
-   }
+  const chartToggleClick = () => {
+    isChartVisible = !isChartVisible;
+  };
 
-   const newButtonClick = () => {
-      onNewButtonClick();
-   }
+  const newButtonClick = () => {
+    onNewButtonClick();
+  };
 
-   const importButtonClick = () => {
-      onImportButtonClick();
-   }
+  const importButtonClick = () => {
+    onImportButtonClick();
+  };
 
-   const exportButtonClick = () => {
-      onExportButtonClick();
-   }
+  const exportButtonClick = () => {
+    onExportButtonClick();
+  };
 
-   const settingsButtonClick = () => {
-      onSettingsButtonClick();
-   }
+  const settingsButtonClick = () => {
+    onSettingsButtonClick();
+  };
 
-   const infoButtonClick = () => {
-      onInfoButtonClick();
-   }
+  const infoButtonClick = () => {
+    onInfoButtonClick();
+  };
 
-   $: executeButtonImage = isProgramRunning? stopButton : playButton;
+  $: executeButtonImage = isProgramRunning ? stopButton : playButton;
 
-   function selectFileName(e: Event | HTMLInputElement) {
-      const input = (e as Event).target || e;
-      const value = input.value;
-      const dotIndex = value.lastIndexOf('.');
-      const end = dotIndex > 0 ? dotIndex : value.length;
-      input.setSelectionRange(0, end);
-   }
+  function selectFileName(e: Event | HTMLInputElement) {
+    const input = (e as Event).target || e;
+    const value = input.value;
+    const dotIndex = value.lastIndexOf(".");
+    const end = dotIndex > 0 ? dotIndex : value.length;
+    input.setSelectionRange(0, end);
+  }
 
-   function onLabelClick() {
-      const input = document.getElementById('fileinfo-name');
-      if (input) {
-         input.focus();
-         selectFileName(input);
-      }
-   }
+  function onLabelClick() {
+    const input = document.getElementById("fileinfo-name");
+    if (input) {
+      input.focus();
+      selectFileName(input);
+    }
+  }
 </script>
 
-
 <div id="topbar">
-   <div class="left">
-      <div id="menuWrapper">
-         <div id="toggleButton">
-            <input type="checkbox" on:click="{() => isMenuOpen = !isMenuOpen}" />
-            <div>
-               <span></span>
-               <span></span>
-               <span></span>
-            </div>
-         </div>
-         <ul class="menu left-menu" class:active="{isMenuOpen}">
-            <li class="tooltip" on:click={newButtonClick}>
-               <img src="{newButton}" alt="New Button" />
-               <span class="tooltiptext">{$translationStore.APP_NEW}</span>
-            </li>
-            <li class="tooltip" on:click={importButtonClick}>
-               <img src="{openButton}" alt="Open Button" />
-               <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
-            </li>
-            <li class="tooltip" on:click={exportButtonClick}>
-               <img src="{saveButton}" alt="Save Button" />
-               <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
-            </li>
-            <li class="tooltip mobile-only" on:click={settingsButtonClick}>
-               <img src="{settingsButton}" alt="Settings Button" />
-               <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
-            </li>
-            <li class="tooltip mobile-only" on:click={infoButtonClick}>
-               <img src="{infoButton}" alt="Info Button" />
-               <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
-            </li>
-         </ul>
-         <div id="fileinfo">
-            <span id="fileinfo-label" role="button" tabindex="-1" on:click={onLabelClick} on:keydown={onLabelClick}>{$translationStore.APP_FILE}</span>
-            <input id="fileinfo-name" type="text" bind:value={$fileNameStore} on:focus={selectFileName} spellcheck="false" />
-         </div>
+  <div class="left">
+    <div id="menuWrapper">
+      <div id="toggleButton">
+        <input type="checkbox" on:click={() => (isMenuOpen = !isMenuOpen)} />
+        <div>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
-   </div>
-   <div class="right">
-      <div class="menu right-menu">
-         <div class="tooltip" on:click={settingsButtonClick}>
-            <img src="{settingsButton}" alt="Settings Button" />
-            <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
-         </div>
-         <div class="tooltip" on:click={infoButtonClick}>
-            <img src="{infoButton}" alt="Info Button" />
-            <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
-         </div>
+      <ul class="menu left-menu" class:active={isMenuOpen}>
+        <li class="tooltip" on:click={newButtonClick}>
+          <img src={newButton} alt="New Button" />
+          <span class="tooltiptext">{$translationStore.APP_NEW}</span>
+        </li>
+        <li class="tooltip" on:click={importButtonClick}>
+          <img src={openButton} alt="Open Button" />
+          <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
+        </li>
+        <li class="tooltip" on:click={exportButtonClick}>
+          <img src={saveButton} alt="Save Button" />
+          <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
+        </li>
+        <li class="tooltip mobile-only" on:click={settingsButtonClick}>
+          <img src={settingsButton} alt="Settings Button" />
+          <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span
+          >
+        </li>
+        <li class="tooltip mobile-only" on:click={infoButtonClick}>
+          <img src={infoButton} alt="Info Button" />
+          <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
+        </li>
+      </ul>
+      <div id="fileinfo">
+        <span
+          id="fileinfo-label"
+          role="button"
+          tabindex="-1"
+          on:click={onLabelClick}
+          on:keydown={onLabelClick}>{$translationStore.APP_FILE}</span
+        >
+        <input
+          id="fileinfo-name"
+          type="text"
+          bind:value={$fileNameStore}
+          on:focus={selectFileName}
+          spellcheck="false"
+        />
       </div>
-      {#if $flowchartDrawingStore}
-      <div id="chartToggle" on:click={chartToggleClick} class:active="{isChartVisible}" >
-         {$translationStore.APP_CHART_TOGGLE}
+      <div class="undo-redo">
+        <div
+          class="tooltip"
+          class:disabled={!$canUndoStore}
+          on:click={() => $canUndoStore && onUndoClick()}
+        >
+          <img src={undoButton} alt="Undo" />
+          <span class="tooltiptext">{$translationStore.APP_UNDO} (Ctrl+Z)</span>
+        </div>
+        <div
+          class="tooltip"
+          class:disabled={!$canRedoStore}
+          on:click={() => $canRedoStore && onRedoClick()}
+        >
+          <img src={redoButton} alt="Redo" />
+          <span class="tooltiptext">{$translationStore.APP_REDO} (Ctrl+Y)</span>
+        </div>
       </div>
-      {/if}
-      <div id="runButton" on:click={runButtonClick} class:blocked={hasSyntaxErrors && !isProgramRunning} class:shake={shakeButton}>
-         <img src="{executeButtonImage}" alt="Play Button" />
-         {isProgramRunning? $translationStore.APP_STOP : $translationStore.APP_RUN}
+    </div>
+  </div>
+  <div class="right">
+    <div class="menu right-menu">
+      <div class="tooltip" on:click={settingsButtonClick}>
+        <img src={settingsButton} alt="Settings Button" />
+        <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
       </div>
-   </div>
+      <div class="tooltip" on:click={infoButtonClick}>
+        <img src={infoButton} alt="Info Button" />
+        <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
+      </div>
+    </div>
+    {#if $flowchartDrawingStore}
+      <div
+        id="chartToggle"
+        on:click={chartToggleClick}
+        class:active={isChartVisible}
+      >
+        {$translationStore.APP_CHART_TOGGLE}
+      </div>
+    {/if}
+    <div
+      id="runButton"
+      on:click={runButtonClick}
+      class:blocked={hasSyntaxErrors && !isProgramRunning}
+      class:shake={shakeButton}
+    >
+      <img src={executeButtonImage} alt="Play Button" />
+      {isProgramRunning
+        ? $translationStore.APP_STOP
+        : $translationStore.APP_RUN}
+    </div>
+  </div>
 </div>
 
-
 <style lang="scss">
-   @use "../styles/variables.scss" as *;
+  @use "../styles/variables.scss" as *;
 
-   #topbar {
-      width: 100vw;
-      height: $topbar-height;
-      background-color: $topbar-background;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  #topbar {
+    width: 100vw;
+    height: $topbar-height;
+    background-color: $topbar-background;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      .left {
-         height: 100%;
+    .left {
+      height: 100%;
 
-         #menuWrapper {
-            height: 100%;
+      #menuWrapper {
+        height: 100%;
 
-            @media screen and (min-width: $breakpoint) {
-               display: flex;
-               align-items: center;
-            }
+        @media screen and (min-width: $breakpoint) {
+          display: flex;
+          align-items: center;
+        }
 
-            .left-menu {
-               display: none;
-               width: 250px;
-               position: absolute;
-               z-index: 4;
-               background: $topbar-background;
-               list-style: none;
-               margin: 0;
-               padding: 0 0 0.5rem 0;
+        .left-menu {
+          display: none;
+          width: 250px;
+          position: absolute;
+          z-index: 4;
+          background: $topbar-background;
+          list-style: none;
+          margin: 0;
+          padding: 0 0 0.5rem 0;
 
-               li {
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  margin-bottom: 0.4rem;
-                  color: white;
-
-                  &:hover {
-                     color: $accent-color;
-                  }
-
-                  img {
-                     margin: 0.4rem;
-                     padding: 0 0.5rem;
-                     width: calc($topbar-height * 0.4);
-                     height: calc($topbar-height * 0.4);
-
-                     &:first-child {
-                        margin-left: 0.8rem;
-                     }
-                  }
-               }
-
-               &.active {
-                  display: block;
-               }
-
-               @media screen and (min-width: $breakpoint) {
-                  width: auto;
-                  height: 100%;
-                  position: relative;
-                  display: flex !important;
-                  align-items: center;
-                  padding: 0;
-
-                  li {
-                     margin: 0;
-                     color: white;
-
-                     img {
-                        margin: 0;
-                     }
-
-                     &.mobile-only {
-                        display: none;
-                     }
-                  }
-               }
-            }
-
-            #fileinfo {
-               height: 2rem;
-               align-items: center;
-               display: none;
-               margin-left: 1rem;
-
-               #fileinfo-label {
-                  background-color: $accent-color;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 0.75rem;
-                  height: 100%;
-                  padding: 0 0.7rem;
-                  border-radius: 0.5rem 0 0 0.5rem;
-                  display: flex;
-                  align-items: center;
-                  text-transform: uppercase;
-                  letter-spacing: 0.05em;
-                  cursor: pointer;
-               }
-
-               #fileinfo-name {
-                  background-color: $fileinfo-background;
-                  color: $fileinfo-foreground;
-                  height: 100%;
-                  width: 200px;
-                  padding: 0 0.6rem;
-                  border: 1px solid $fileinfo-background;
-                  border-radius: 0 0.5rem 0.5rem 0;
-                  outline: none;
-                  font-family: inherit;
-                  font-size: 0.85rem;
-
-                  &::selection {
-                     background: $accent-color;
-                     color: black;
-                  }
-
-                  &:focus {
-                     border-color: $accent-color;
-                  }
-               }
-
-               @media screen and (min-width: $breakpoint) {
-                  display: flex;
-               }
-            }
-         }
-
-         #toggleButton {
-            margin-left: 1rem;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-
-            input {
-               display: block;
-               width: 30px;
-               height: 30px;
-               position: absolute;
-               opacity: 0;
-               z-index: 2;
-               cursor: pointer;
-               -webkit-touch-callout: none;
-            }
-
-            div span {
-               display: block;
-               width: 25px;
-               height: 2px;
-               margin: 6px 0;
-               position: relative;
-               background: $accent-color;
-               border-radius: 3px;
-               z-index: 1;
-
-               transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
-                  background 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.35s ease;
-            }
-
-            div span:first-child {
-               transform-origin: bottom left;
-            }
-
-            div span:nth-last-child(1) {
-               transform-origin: bottom left;
-            }
-
-            input:checked ~ div span:first-child {
-               transform: rotate(45deg) scale(1.1, 1.1) translate(1px, -3px);
-            }
-
-            input:checked ~ div span:nth-last-child(1) {
-               transform: rotate(-45deg) scale(1.1, 1.1) translate(1.5px, 3.5px);
-            }
-
-            input:checked ~ div span:nth-last-child(2) {
-               opacity: 0;
-               transform: rotate(0deg) scale(0.2, 0.2);
-            }
-
-            @media screen and (min-width: $breakpoint) {
-               display: none;
-            }
-         }
-      }
-
-      .right {
-         display: flex;
-
-         .right-menu {
-            display: none;
-            align-items: center;
-
-            > div {
-               display: flex;
-               align-items: center;
-               cursor: pointer;
-
-               img {
-                  width: calc($topbar-height * 0.4);
-                  height: calc($topbar-height * 0.4);
-                  padding: 0 0.5rem 0 1rem;
-               }
-
-            }
-
-            @media screen and (min-width: $breakpoint) {
-               display: flex;
-            }
-         }
-
-         #chartToggle {
-            background-color: $accent-color;
-            height: 2rem;
-            display: flex;
-            justify-content: center;
-            padding: 0 1.4rem;
-            border-radius: 1rem;
+          li {
             display: flex;
             align-items: center;
             cursor: pointer;
+            margin-bottom: 0.4rem;
+            color: white;
 
-            &.active {
-               background-color: #3F4254;
-               color: white;
+            &:hover {
+              color: $accent-color;
             }
-
-            @media screen and (min-width: $breakpoint) {
-               display: none;
-            }
-         }
-
-         #runButton {
-            background-color: $runbutton-background;
-            color: $accent-color;
-            height: 2rem;
-            display: flex;
-            justify-content: center;
-            padding: 0 1.4rem;
-            margin: 0 1rem;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
 
             img {
-               width: 0.9rem;
-               margin-right: 0.6rem;
+              margin: 0.4rem;
+              padding: 0 0.5rem;
+              width: calc($topbar-height * 0.4);
+              height: calc($topbar-height * 0.4);
+
+              &:first-child {
+                margin-left: 0.8rem;
+              }
+            }
+          }
+
+          &.active {
+            display: block;
+          }
+
+          @media screen and (min-width: $breakpoint) {
+            width: auto;
+            height: 100%;
+            position: relative;
+            display: flex !important;
+            align-items: center;
+            padding: 0;
+
+            li {
+              margin: 0;
+              color: white;
+
+              img {
+                margin: 0;
+              }
+
+              &.mobile-only {
+                display: none;
+              }
+            }
+          }
+        }
+
+        #fileinfo {
+          height: 2rem;
+          align-items: center;
+          display: none;
+          margin-left: 1rem;
+
+          #fileinfo-label {
+            background-color: $accent-color;
+            color: black;
+            font-weight: bold;
+            font-size: 0.75rem;
+            height: 100%;
+            padding: 0 0.7rem;
+            border-radius: 0.5rem 0 0 0.5rem;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+          }
+
+          #fileinfo-name {
+            background-color: $fileinfo-background;
+            color: $fileinfo-foreground;
+            height: 100%;
+            width: 200px;
+            padding: 0 0.6rem;
+            border: 1px solid $fileinfo-background;
+            border-radius: 0 0.5rem 0.5rem 0;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+
+            &::selection {
+              background: $accent-color;
+              color: black;
             }
 
-            &.blocked {
-               opacity: 0.45;
-               cursor: not-allowed;
+            &:focus {
+              border-color: $accent-color;
+            }
+          }
+
+          @media screen and (min-width: $breakpoint) {
+            display: flex;
+          }
+        }
+
+        .undo-redo {
+          display: none;
+          align-items: center;
+          margin-left: 1rem;
+
+          @media screen and (min-width: $breakpoint) {
+            display: flex;
+          }
+
+          > div {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.2s;
+
+            img {
+              width: calc($topbar-height * 0.4);
+              height: calc($topbar-height * 0.4);
+              padding: 0 0.5rem;
             }
 
-            &.shake {
-               animation: shake 0.4s ease-in-out;
+            &.disabled {
+              opacity: 0.35;
+              cursor: default;
+              pointer-events: none;
             }
-         }
+          }
+        }
       }
-   }
 
-   @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-   }
+      #toggleButton {
+        margin-left: 1rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        input {
+          display: block;
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          opacity: 0;
+          z-index: 2;
+          cursor: pointer;
+          -webkit-touch-callout: none;
+        }
+
+        div span {
+          display: block;
+          width: 25px;
+          height: 2px;
+          margin: 6px 0;
+          position: relative;
+          background: $accent-color;
+          border-radius: 3px;
+          z-index: 1;
+
+          transition:
+            transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
+            background 0.3s cubic-bezier(0.77, 0.2, 0.05, 1),
+            opacity 0.35s ease;
+        }
+
+        div span:first-child {
+          transform-origin: bottom left;
+        }
+
+        div span:nth-last-child(1) {
+          transform-origin: bottom left;
+        }
+
+        input:checked ~ div span:first-child {
+          transform: rotate(45deg) scale(1.1, 1.1) translate(1px, -3px);
+        }
+
+        input:checked ~ div span:nth-last-child(1) {
+          transform: rotate(-45deg) scale(1.1, 1.1) translate(1.5px, 3.5px);
+        }
+
+        input:checked ~ div span:nth-last-child(2) {
+          opacity: 0;
+          transform: rotate(0deg) scale(0.2, 0.2);
+        }
+
+        @media screen and (min-width: $breakpoint) {
+          display: none;
+        }
+      }
+    }
+
+    .right {
+      display: flex;
+
+      .right-menu {
+        display: none;
+        align-items: center;
+
+        > div {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+
+          img {
+            width: calc($topbar-height * 0.4);
+            height: calc($topbar-height * 0.4);
+            padding: 0 0.5rem 0 1rem;
+          }
+        }
+
+        @media screen and (min-width: $breakpoint) {
+          display: flex;
+        }
+      }
+
+      #chartToggle {
+        background-color: $accent-color;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        padding: 0 1.4rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &.active {
+          background-color: #3f4254;
+          color: white;
+        }
+
+        @media screen and (min-width: $breakpoint) {
+          display: none;
+        }
+      }
+
+      #runButton {
+        background-color: $runbutton-background;
+        color: $accent-color;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        padding: 0 1.4rem;
+        margin: 0 1rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        img {
+          width: 0.9rem;
+          margin-right: 0.6rem;
+        }
+
+        &.blocked {
+          opacity: 0.45;
+          cursor: not-allowed;
+        }
+
+        &.shake {
+          animation: shake 0.4s ease-in-out;
+        }
+      }
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-6px);
+    }
+    40% {
+      transform: translateX(6px);
+    }
+    60% {
+      transform: translateX(-4px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+  }
 </style>
