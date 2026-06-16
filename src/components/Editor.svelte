@@ -14,37 +14,44 @@
    import type { SelectedRange } from "../lib/editor";
    import { beautifier } from "../lib/code/beautifier";
    import { codeWordStore } from "../lib/stores";
-   import { onMount } from "svelte";
+    import { onMount } from "svelte";
+    import { EditorUndo } from "../lib/undo";
 
-   export let editorText: string = "";
-   let editorDynamicArea: HTMLElement;
-   let editorElement: HTMLElement;
-   let coloredElement: HTMLElement;
-   let activeRowNumber: number;
-   let lastRowNumber: number;
-   let commandToInsert: any;
-   let lastInsertedCommand: any;
+     export let editorText: string = "";
+     let editorDynamicArea: HTMLElement;
+     let editorElement: HTMLElement;
+     let coloredElement: HTMLElement;
+     let activeRowNumber: number;
+     let lastRowNumber: number;
+     let commandToInsert: any;
+     let lastInsertedCommand: any;
+
+    const undoer = new EditorUndo();
+
+    $: {
+       if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
+          lastInsertedCommand = commandToInsert;
+          if (editorElement && editorElement !== document.activeElement) {
+             focusOnEditableArea();
+             window.getSelection().removeAllRanges();
+             let newRange = document.createRange();
+             newRange.selectNodeContents(editorElement);
+             newRange.collapse(false);
+             window.getSelection().addRange(newRange);
+          }
+          undoer.pushManual(editorElement.innerText, getCurrentRow());
+          undoer.beginBatch();
+          insertTemplate(commandToInsert.template);
+          undoer.endBatch(editorElement.innerText);
+          setTimeout(() => beautifyCode());
+       }
+    }
 
    $: {
-      if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
-         lastInsertedCommand = commandToInsert;
-         if (editorElement && editorElement !== document.activeElement) {
-            focusOnEditableArea();
-            window.getSelection().removeAllRanges();
-            let newRange = document.createRange();
-            newRange.selectNodeContents(editorElement);
-            newRange.collapse(false);
-            window.getSelection().addRange(newRange);
-         }
-         insertTemplate(commandToInsert.template);
-         setTimeout(() => beautifyCode());
-      }
-   }
-
-   $: {
-      if (editorElement && editorText !== undefined && editorElement.innerText !== editorText) {
-         editorElement.innerText = editorText;
-         setTimeout(() => {
+       if (editorElement && editorText !== undefined && editorElement.innerText !== editorText) {
+          editorElement.innerText = editorText;
+          undoer.setLastSnapshot(editorElement.innerText);
+          setTimeout(() => {
             const sel = window.getSelection();
             if (sel && sel.rangeCount) {
                sel.removeAllRanges();
@@ -58,7 +65,31 @@
       }
    }
 
-   function beautifyCode() {
+    function getCurrentRow(): number {
+        const sel = window.getSelection();
+        const row = sel && sel.isCollapsed ? getActiveRowNumber(sel, editorElement) : 1;
+        return Math.max(1, row);
+    }
+
+    function getCursorOffset(): number {
+        const sel = window.getSelection();
+        if (!sel || !sel.rangeCount || !sel.isCollapsed) return -1;
+        const selRange = sel.getRangeAt(0);
+        const body = editorElement.closest('[contenteditable]') || editorElement;
+        const range = document.createRange();
+        try {
+            range.selectNodeContents(body);
+            range.setEnd(selRange.startContainer, selRange.startOffset);
+            return range.toString().length;
+        } catch { return -1; }
+    }
+
+    function handleInput() {
+        undoer.snapshot(editorElement.innerText, getCurrentRow(), getCursorOffset());
+        beautifyCode();
+    }
+
+    function beautifyCode() {
       const currentText = editorElement.innerText;
       if (currentText !== editorText) editorText = currentText;
       lastRowNumber = activeRowNumber;
@@ -123,27 +154,46 @@
    }
 
    function keyDownController(e: KeyboardEvent) {
-      switch (e.key) {
-         case "Tab": {
-            e.preventDefault();
-            const newText = e.shiftKey ? outdentLines(editorElement) : indentLines(editorElement);
-            if (newText !== null) {
-               const sel = window.getSelection();
-               const savedLine = sel ? getApproxLine(sel, editorElement) : 1;
-               const savedLines = getSelectedLines(editorElement);
-               editorText = newText;
-               editorElement.textContent = newText;
-               requestAnimationFrame(() => {
-                  restoreSelectionAfterEdit(newText, savedLine, savedLines);
-                  beautifyCode();
-                  updateSelectionIndicator();
-               });
-            } else if (!e.shiftKey) {
-               insertTab();
-               beautifyCode();
-            }
-            break;
-         }
+       switch (e.key) {
+          case "Tab": {
+             e.preventDefault();
+             const newText = e.shiftKey ? outdentLines(editorElement) : indentLines(editorElement);
+             if (newText !== null) {
+                const sel = window.getSelection();
+                const savedLines = getSelectedLines(editorElement);
+                undoer.pushManual(
+                    editorElement.innerText,
+                    getCurrentRow(),
+                    savedLines?.startLine,
+                    savedLines?.endLine
+                );
+                const savedLine = sel ? getApproxLine(sel, editorElement) : 1;
+                editorText = newText;
+                editorElement.textContent = newText;
+                undoer.setLastSnapshot(newText);
+                requestAnimationFrame(() => {
+                   restoreSelectionAfterEdit(newText, savedLine, savedLines);
+                   beautifyCode();
+                   updateSelectionIndicator();
+                });
+             } else if (!e.shiftKey) {
+                undoer.pushManual(editorElement.innerText, getCurrentRow());
+                insertTab();
+                undoer.setLastSnapshot(editorElement.innerText);
+                beautifyCode();
+             }
+             break;
+          }
+          case "z":
+             if (e.ctrlKey && !e.shiftKey && undoer.canUndo) { e.preventDefault(); applyUndoRedo(true); }
+             break;
+          case "Z":
+             if (e.ctrlKey && e.shiftKey && undoer.canRedo) { e.preventDefault(); applyUndoRedo(false); }
+             break;
+          case "y":
+          case "Y":
+             if (e.ctrlKey && !e.shiftKey && undoer.canRedo) { e.preventDefault(); applyUndoRedo(false); }
+             break;
          case "Enter":
             e.preventDefault();
             insertLineBreak(window.getSelection());
@@ -159,12 +209,14 @@
                const range = sel.getRangeAt(0);
                const text = editorElement.innerText;
                const lines = text.split('\n');
-               const currentLine = getActiveRowNumber(sel, editorElement);
-               if (currentLine === lines.length && currentLine > 1 && range.startOffset === 1 && lines[currentLine - 1].length === 1) {
-                  const parent = range.startContainer.parentElement;
-                  if (parent && parent !== editorElement) {
-                     e.preventDefault();
-                     parent.innerHTML = '&nbsp;';
+                const currentLine = getActiveRowNumber(sel, editorElement);
+                if (currentLine === lines.length && currentLine > 1 && range.startOffset === 1 && lines[currentLine - 1].length === 1) {
+                   const parent = range.startContainer.parentElement;
+                   if (parent && parent !== editorElement) {
+                      e.preventDefault();
+                      undoer.pushManual(editorElement.innerText, getCurrentRow());
+                      parent.innerHTML = '&nbsp;';
+                      undoer.setLastSnapshot(editorElement.innerText);
                      const child = parent.firstChild;
                      if (child) {
                         const r = document.createRange();
@@ -203,9 +255,57 @@
       if (row >= 0 && row !== lastRowNumber) { activeRowNumber = row; beautifyCode(); }
    }
 
-   function focusOnEditableArea() { editorElement.focus(); beautifyCode(); updateSelectionIndicator(); }
+    function focusOnEditableArea() { editorElement.focus(); beautifyCode(); updateSelectionIndicator(); }
 
-   onMount(() => {
+    function applyUndoRedo(isUndo: boolean) {
+        const savedLines = getSelectedLines(editorElement);
+        const currentText = editorElement.innerText;
+        const currentRow = getCurrentRow();
+        const cursorOff = getCursorOffset();
+        const entry = isUndo
+            ? undoer.undo(currentText, currentRow, savedLines?.startLine, savedLines?.endLine, cursorOff)
+            : undoer.redo(currentText, currentRow, savedLines?.startLine, savedLines?.endLine, cursorOff);
+        if (!entry) return;
+        editorText = entry.text;
+        editorElement.textContent = entry.text;
+        requestAnimationFrame(() => {
+            if (entry.selStartLine && entry.selEndLine && entry.selStartLine !== entry.selEndLine) {
+                restoreSelectionAfterEdit(entry.text, entry.activeRow, {
+                    startLine: entry.selStartLine,
+                    endLine: entry.selEndLine,
+                    partialStart: false,
+                    partialEnd: false,
+                });
+            } else if (entry.cursorOffset !== undefined && entry.cursorOffset >= 0) {
+                restoreCursorAt(entry.cursorOffset);
+            } else {
+                restoreCursorAtLine(entry.activeRow);
+            }
+            beautifyCode();
+        });
+    }
+
+    function restoreCursorAtLine(line: number) {
+        const lines = editorElement.innerText.split('\n');
+        const targetLine = Math.min(line, lines.length);
+        let offset = 0;
+        for (let i = 0; i < targetLine - 1; i++) offset += lines[i].length + 1;
+        restoreCursorAt(offset);
+    }
+
+    function restoreCursorAt(offset: number) {
+        const tn = editorElement.firstChild;
+        if (!tn || tn.nodeType !== Node.TEXT_NODE || !tn.textContent) return;
+        const clamped = Math.min(offset, tn.textContent.length);
+        const range = document.createRange();
+        range.setStart(tn, clamped);
+        range.collapse(true);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+    }
+
+    onMount(() => {
       editorDynamicArea = document.querySelector("#editor-dynamic-area")!;
       editorElement = document.querySelector("#editor-editable-area")!;
       coloredElement = document.querySelector("#editor-colored-area")!;
@@ -219,10 +319,10 @@
       <div id="editor-colored-area" />
       <div
          id="editor-editable-area"
-         contenteditable="true"
-         spellcheck="false"
-         on:input={beautifyCode}
-         on:keydown={keyDownController}
+          contenteditable="true"
+          spellcheck="false"
+          on:input={handleInput}
+          on:keydown={keyDownController}
          on:keyup={keyUpController}
          on:paste={onPaste}
          on:mousemove={mouseEvent}
