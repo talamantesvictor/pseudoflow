@@ -110,30 +110,50 @@ function tokenToNode(token: atype.Token) : atype.Node {
    }
 }
 
-function expressionParser(): atype.Node {
+function precedenceOf(token: atype.Token): number {
+   switch (token.name) {
+      case 'BooleanToken':    return 1;
+      case 'RelationalToken':  return 2;
+      case 'AdditionToken':
+      case 'SubstractionToken':
+      case 'MultiplicationToken':
+      case 'DivisionToken':
+      case 'ModuleToken':     return 3;
+      default:                 return 0;
+   }
+}
+
+function atomParser(): atype.Node {
+   const token = parserTokens[parserIndex];
    const validStartTokens = ['NumericToken', 'StringToken', 'IdentifierToken', 'OpenParenToken', 'OpenBracketToken'];
-   if (!validStartTokens.includes(parserTokens[parserIndex].name)) {
+   if (!validStartTokens.includes(token.name)) {
       throw new SyntaxError('Expected a value');
    }
-   let value = tokenToNode(parserTokens[parserIndex]);
 
-   if (parserTokens[parserIndex].name === 'OpenParenToken') {
+   if (token.name === 'OpenParenToken') {
       nextIndex();
-      value = {
-         name: 'GroupNode',
-         body: expressionParser()
-      };
+      const inner = expressionParser(0);
       nextIndex();
+      if (parserTokens[parserIndex].name !== 'CloseParenToken') {
+         throw new SyntaxError("Missing ')' after expression.");
+      }
+      return { name: 'GroupNode', body: inner };
    }
-   else if (parserTokens[parserIndex].name === 'OpenBracketToken') {
-      value = arrayParser();
+   else if (token.name === 'OpenBracketToken') {
+      return arrayParser();
    }
    else if (
-      parserTokens[parserIndex].name === 'IdentifierToken' &&
+      token.name === 'IdentifierToken' &&
       parserTokens[parserIndex + 1]?.name === 'OpenBracketToken'
    ) {
-      value = arrayIndexParser();
+      return arrayIndexParser();
    }
+
+   return tokenToNode(token);
+}
+
+function expressionParser(minPrecedence: number = 0): atype.Node {
+   let left = atomParser();
 
    if (parserTokens[parserIndex + 1]?.name === 'DotToken') {
       nextIndex();
@@ -143,30 +163,22 @@ function expressionParser(): atype.Node {
       if (reservedWords.CODE_LENGTH && propertyName === reservedWords.CODE_LENGTH) {
          propertyName = 'length';
       }
-      value = { name: 'PropertyAccessNode', object: value, property: propertyName };
+      left = { name: 'PropertyAccessNode', object: left, property: propertyName };
    }
 
-   let nextToken = parserTokens[parserIndex + 1];
-   if (nextToken) {
-      const validTokens = [
-         'AdditionToken', 
-         'SubstractionToken', 
-         'MultiplicationToken',
-         'DivisionToken',
-         'ModuleToken',
-         'RelationalToken',
-         'BooleanToken'
-      ];
-      if (validTokens.includes(nextToken.name)) {
-         nextIndex();
-         let operator = parserTokens[parserIndex] as atype.OperatorToken;
-         nextIndex();
-         let right = expressionParser();
-         value = { name: 'ExpressionNode', left: value, right: right, operator: operator };
-      }
+   while (true) {
+      const nextToken = parserTokens[parserIndex + 1];
+      if (!nextToken) break;
+      const prec = precedenceOf(nextToken);
+      if (prec === 0 || prec <= minPrecedence) break;
+      nextIndex();
+      const operator = parserTokens[parserIndex] as atype.OperatorToken;
+      nextIndex();
+      const right = expressionParser(prec);
+      left = { name: 'ExpressionNode', left, right, operator };
    }
 
-   return value;
+   return left;
 }
 
 

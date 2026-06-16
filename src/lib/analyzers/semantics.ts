@@ -50,9 +50,11 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
             break
          }
 
-         case 'ReadNode':
-            checkDeclared(node.identifier.value!)
-            break
+          case 'ReadNode':
+             if (!findSymbol(node.identifier.value!)) {
+                symbols.push({ name: node.identifier.value! })
+             }
+             break
 
          case 'PrintNode':
             checkTypeInValue(node.value)

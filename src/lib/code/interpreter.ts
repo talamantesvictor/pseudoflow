@@ -228,7 +228,12 @@ function expressionBuilder(node: atype.ExpressionNode, enableVariables = true) {
       expression = valueBuilder(node.left, enableVariables);
    }
 
-   expression += node.operator.value;
+   if (node.operator.name === 'BooleanToken') {
+      const isAnd = node.operator.value === 'and' || node.operator.value === 'y';
+      expression += isAnd ? ' && ' : ' || ';
+   } else {
+      expression += node.operator.value;
+   }
 
    if (node.right.name === 'GroupNode') {
       expression += groupBuilder(node.right, enableVariables);
