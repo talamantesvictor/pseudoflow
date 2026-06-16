@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .line {
    position: relative;
    height: 22px;
@@ -23,5 +25,15 @@
 .hl-while, .hl-endwhile {color: #ff66e5}
 .hl-dowhile, .hl-enddowhile {color: #ff66e5}
 .hl-activerow {outline: 1px solid #525572}
+.line-selected::before {
+   content: '';
+   position: absolute;
+   left: 76px;
+   top: 2px;
+   bottom: 2px;
+   width: 3px;
+   background: $editor-selection;
+   border-radius: 1px;
+}
 .hl-comments {color: #7B89B8}
 .hl-string {color: #fdabab}

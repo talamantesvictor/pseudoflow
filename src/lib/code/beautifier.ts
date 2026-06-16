@@ -1,7 +1,9 @@
+import type { SelectedRange } from "../editor";
+
 // Highlight the code by injecting spans
 // with the corresponding classes and
 // takes care of spaces and tabs
-export const beautifier = (code: string, reservedWords: object, highlightedRow: number) : string => {
+export const beautifier = (code: string, reservedWords: object, highlightedRow: number, selectedLines: SelectedRange | null = null) : string => {
    // Calculate needed spaces to replace all tabs 
    // and maintain columns aligned   
    let tabsArray: number[] = [];
@@ -79,15 +81,22 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
          }
       }
       
-      // Rows styling
-      if (index == highlightedRow - 1) {
-         lines[index] = '<div class="line hl-activerow">' + lines[index] + '</div>';
-      }
-      else {
-         if (lines[index] || index + 1 < lines.length) {
-            lines[index] = '<div class="line">' + lines[index] + '</div>';
-         }
-      }
+       // Rows styling
+       const lineNum = index + 1;
+       let showSelection = false;
+       if (selectedLines && lineNum >= selectedLines.startLine && lineNum <= selectedLines.endLine) {
+          if (lineNum === selectedLines.startLine && selectedLines.partialStart) {
+             showSelection = false;
+          } else if (lineNum === selectedLines.endLine && selectedLines.partialEnd) {
+             showSelection = false;
+          } else {
+             showSelection = true;
+          }
+       }
+        let lineClass = 'line';
+        if (index == highlightedRow - 1) lineClass += ' hl-activerow';
+        if (showSelection) lineClass += ' line-selected';
+        lines[index] = '<div class="' + lineClass + '">' + lines[index] + '</div>';
    }
 
    return lines.join('');
