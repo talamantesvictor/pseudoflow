@@ -163,8 +163,8 @@ export const getSelectedLines = (element: HTMLElement): SelectedRange | null => 
       const endLine = Math.max(start.line, end.line);
       const startCol = start.line <= end.line ? start.column : end.column;
       const endCol = start.line <= end.line ? end.column : start.column;
-      const partialStart = startCol > 0;
-      const partialEnd = endCol < (lines[endLine - 1] || '').length;
+       const partialStart = startCol > 0;
+      const partialEnd = endCol > 0 && endCol < (lines[endLine - 1] || '').length;
       if (startLine === endLine && partialStart && partialEnd) return null;
       return { startLine, endLine, partialStart, partialEnd };
    } catch { return null; }
