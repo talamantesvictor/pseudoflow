@@ -131,6 +131,18 @@ function precedenceOf(token: atype.Token): number {
 
 function atomParser(): atype.Node {
    const token = parserTokens[parserIndex];
+
+   if (token.name === 'SubstractionToken') {
+      nextIndex();
+      const operand = atomParser();
+      return {
+         name: 'ExpressionNode',
+         left: { name: 'NumericNode', value: '0' } as atype.NumericNode,
+         right: operand,
+         operator: token as atype.SubstractionToken
+      };
+   }
+
    const validStartTokens = ['NumericToken', 'StringToken', 'IdentifierToken', 'OpenParenToken', 'OpenBracketToken'];
    if (!validStartTokens.includes(token.name)) {
       throw new SyntaxError('Expected a value');

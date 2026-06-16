@@ -46,7 +46,7 @@ export const lexer = (code: string) : Array<atype.Token> => {
    // remove comments
    code = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
    // separate words to lexer
-   const regex = /(["'])(?:(?=(\\?))\2.)*?\1|(\-?\d?)+\.?\d+|(?:[=&|^+<>/*%!~-]{1,2})|(?:[\\(){}[\];\:\?]|(?:\w+))|[^\s]/g;
+    const regex = /(["'])(?:(?=(\\?))\2.)*?\1|(?:[=&|^+<>/*%!~-]{1,2})|(\-?\d?)+\.?\d+|(?:[\\(){}[\];\:\?]|(?:\w+))|[^\s]/g;
 
    let tokens : Array<atype.Token> = [];
    let match;
