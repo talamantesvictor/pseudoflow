@@ -21,19 +21,20 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
    parserTokens = tokens;
    parserIndex = 0;
 
-   while (parserIndex + 1 < parserTokens.length) {
-      const errorLine = parserTokens[parserIndex]?.line
-      try {
-         program.body.push(parse());
-         if (parserTokens[parserIndex + 1])
-            parserIndex++;
-      } catch (e) {
-         if (e instanceof SyntaxError) {
-            errors.push({
-               type: 'syntax',
-               message: e.message,
-               line: errorLine
-            });
+    while (parserIndex + 1 < parserTokens.length) {
+       const outerLine = parserTokens[parserIndex]?.line
+       try {
+          program.body.push(parse());
+          if (parserTokens[parserIndex + 1])
+             parserIndex++;
+       } catch (e) {
+          if (e instanceof SyntaxError) {
+             const errorLine = parserTokens[parserIndex]?.line ?? outerLine;
+             errors.push({
+                type: 'syntax',
+                message: e.message,
+                line: errorLine
+             });
             while (parserIndex < parserTokens.length - 1) {
                parserIndex++;
                if (STATEMENT_START_TOKENS.includes(parserTokens[parserIndex].name)) break;
@@ -78,13 +79,28 @@ function parse() : atype.SentencesNode {
       return dowhileParser();
    }
 
-   throw new SyntaxError('Wrong syntax');
+    throw new SyntaxError(`Unexpected '${token.value || token.name}'. A statement like declare, if, while, or an identifier was expected here.`);
 }
 
 function nextIndex() {
-   if (!parserTokens[parserIndex + 1])
-      throw new SyntaxError('Missing syntax');
-   parserIndex++;
+    if (!parserTokens[parserIndex + 1])
+        throw new SyntaxError('Unexpected end of code. The statement appears incomplete.');
+    parserIndex++;
+}
+
+function expectOpenParen(keyword: string) {
+    const token = parserTokens[parserIndex];
+    const got = token.value !== undefined ? `'${token.value}'` : token.name;
+    throw new SyntaxError(`Expected '(' after '${keyword}' but found ${got}.`);
+}
+
+function expectCloseParen(context: string) {
+    const token = parserTokens[parserIndex];
+    if (token.name === 'AssignmentToken') {
+        throw new SyntaxError(`Unexpected '=' in ${context} condition. Use '==' to compare values, not '=' (assignment).`);
+    }
+    const got = token.value !== undefined ? `'${token.value}'` : token.name;
+    throw new SyntaxError(`Missing ')' after ${context} condition, found ${got} instead.`);
 }
 
 function tokenToNode(token: atype.Token) : atype.Node {
@@ -189,9 +205,9 @@ function assignmentParser(): atype.AssignmentNode {
       nextIndex();
    }
 
-   if (parserTokens[parserIndex].name !== 'AssignmentToken') {
-      throw new SyntaxError('Identificador o acceso a índice debe ser seguido por un operador de asignación.');
-   }
+    if (parserTokens[parserIndex].name !== 'AssignmentToken') {
+       throw new SyntaxError(`Expected '=' after identifier but found '${parserTokens[parserIndex].value}'. Use 'identifier = value' to assign.`);
+    }
    nextIndex();
 
    let value = expressionParser();
@@ -227,13 +243,13 @@ function readParser() : atype.ReadNode {
 function ifParser() : atype.IfNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
-      throw new SyntaxError('Opening parenthesis is missing.');
+      expectOpenParen('if');
    }
    nextIndex();
    let expression = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
-      throw new SyntaxError('Closing parenthesis is missing.');
+      expectCloseParen('if');
    }
    nextIndex();
    let body = new Array<atype.SentencesNode>;
@@ -267,13 +283,13 @@ function ifParser() : atype.IfNode {
 function switchParser() : atype.SwitchNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
-      throw new SyntaxError('Opening parenthesis is missing.');
+      expectOpenParen('switch');
    }
    nextIndex();
    let expression = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
-      throw new SyntaxError('Closing parenthesis is missing.');
+      expectCloseParen('switch');
    }
    nextIndex();
 
@@ -315,29 +331,29 @@ function switchParser() : atype.SwitchNode {
 function repeatParser() : atype.RepeatNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
-      throw new SyntaxError('Opening parenthesis is missing.');
+      expectOpenParen('repeat');
    }
    nextIndex();
    if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATDECLARE &&
          parserTokens[parserIndex].name !== 'DeclarationToken') {
-      throw new SyntaxError('Declare a variable to keep track of the iterations');
+      throw new SyntaxError(`Expected '${reservedWords.CODE_REPEATDECLARE}' or 'declare' after '('. A repeat loop needs a counter variable.`);
    }
    let declaration = declarationParser();
    nextIndex();
    if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATTO) {
-      throw new SyntaxError('Specify when the For loop should stop.');
+      throw new SyntaxError(`Expected '${reservedWords.CODE_REPEATTO}' to set the upper limit of the loop.`);
    }
    nextIndex();
    let to = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATSTEP) {
-      throw new SyntaxError('Steps to increment on each iteration is missing.');
+      throw new SyntaxError(`Expected '${reservedWords.CODE_REPEATSTEP}' to set the increment.`);
    }
    nextIndex();
    let steps = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
-      throw new SyntaxError('Closing parenthesis is missing.');
+      expectCloseParen('repeat');
    }
    nextIndex();
 
@@ -359,13 +375,13 @@ function repeatParser() : atype.RepeatNode {
 function whileParser() : atype.WhileNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
-      throw new SyntaxError('Opening parenthesis is missing.');
+      expectOpenParen('while');
    }
    nextIndex();
    let expression = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
-      throw new SyntaxError('Closing parenthesis is missing.');
+      expectCloseParen('while');
    }
    nextIndex();
 
@@ -385,13 +401,13 @@ function whileParser() : atype.WhileNode {
 function dowhileParser() : atype.DowhileNode {
    nextIndex();
    if (parserTokens[parserIndex].name !== 'OpenParenToken') {
-      throw new SyntaxError('Opening parenthesis is missing.');
+      expectOpenParen('dowhile');
    }
    nextIndex();
    let expression = expressionParser();
    nextIndex();
    if (parserTokens[parserIndex].name !== 'CloseParenToken') {
-      throw new SyntaxError('Closing parenthesis is missing.');
+      expectCloseParen('dowhile');
    }
    nextIndex();
 
