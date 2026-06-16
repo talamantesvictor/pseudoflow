@@ -231,7 +231,32 @@
             }
             break;
          }
-         default: break;
+           case "ArrowUp":
+          case "ArrowDown": {
+             const sel = window.getSelection();
+             if (!sel || sel.isCollapsed || e.shiftKey) break;
+             const range = getSelectedLines(editorElement);
+             if (!range) break;
+             e.preventDefault();
+             const lines = editorElement.innerText.split('\n');
+             const isUp = e.key === "ArrowUp";
+             let targetLine = isUp ? range.startLine - 1 : range.endLine + 1;
+             const targetCol = isUp ? range.startCol : range.endCol;
+             if (targetLine < 1) targetLine = range.startLine;
+             if (targetLine > lines.length) targetLine = range.endLine;
+             const lineText = lines[targetLine - 1] || '';
+             const col = Math.min(targetCol, lineText.length);
+             let offset = 0;
+             for (let i = 0; i < targetLine - 1; i++) offset += lines[i].length + 1;
+             offset += col;
+             editorElement.textContent = editorElement.innerText;
+             undoer.setLastSnapshot(editorElement.innerText);
+             restoreCursorAt(offset);
+             beautifyCode();
+             updateSelectionIndicator();
+             break;
+          }
+          default: break;
       }
    }
 

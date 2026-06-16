@@ -128,6 +128,8 @@ export interface SelectedRange {
    endLine: number;
    partialStart: boolean;
    partialEnd: boolean;
+   startCol: number;
+   endCol: number;
 }
 
 function getNodeLineNumber(container: Node, offset: number): { line: number; column: number } {
@@ -166,7 +168,7 @@ export const getSelectedLines = (element: HTMLElement): SelectedRange | null => 
        const partialStart = startCol > 0;
       const partialEnd = endCol > 0 && endCol < (lines[endLine - 1] || '').length;
       if (startLine === endLine && partialStart && partialEnd) return null;
-      return { startLine, endLine, partialStart, partialEnd };
+       return { startLine, endLine, partialStart, partialEnd, startCol, endCol };
    } catch { return null; }
 }
 
