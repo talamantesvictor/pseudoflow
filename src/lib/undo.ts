@@ -60,6 +60,12 @@ export class EditorUndo {
     get canUndo(): boolean { return this.undoStack.length > 0; }
     get canRedo(): boolean { return this.redoStack.length > 0; }
 
+    reset(): void {
+        this.undoStack = [];
+        this.redoStack = [];
+        this.lastSnapshot = '';
+    }
+
     private pushEntry(text: string, activeRow: number, selStartLine?: number, selEndLine?: number, cursorOffset?: number): void {
         if (this.undoStack.length >= MAX_UNDO) this.undoStack.shift();
         this.undoStack.push({ text, activeRow, selStartLine, selEndLine, cursorOffset });

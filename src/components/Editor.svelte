@@ -29,24 +29,30 @@
     const undoer = new EditorUndo();
 
     $: {
-       if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
-          lastInsertedCommand = commandToInsert;
-          if (editorElement && editorElement !== document.activeElement) {
-             focusOnEditableArea();
-             window.getSelection().removeAllRanges();
-             let newRange = document.createRange();
-             newRange.selectNodeContents(editorElement);
-             newRange.collapse(false);
-             window.getSelection().addRange(newRange);
-          }
-          undoer.pushManual(editorElement.innerText, getCurrentRow());
-          syncUndoState();
-          undoer.beginBatch();
-          insertTemplate(commandToInsert.template);
-          undoer.endBatch(editorElement.innerText);
-          setTimeout(() => beautifyCode());
-       }
+        if (commandToInsert?.template && lastInsertedCommand !== commandToInsert) {
+           lastInsertedCommand = commandToInsert;
+           if (editorElement && editorElement !== document.activeElement) {
+              focusOnEditableArea();
+              window.getSelection().removeAllRanges();
+              let newRange = document.createRange();
+              newRange.selectNodeContents(editorElement);
+              newRange.collapse(false);
+              window.getSelection().addRange(newRange);
+           }
+           undoer.pushManual(editorElement.innerText, getCurrentRow());
+           syncUndoState();
+           undoer.beginBatch();
+           insertTemplate(commandToInsert.template);
+           undoer.endBatch(editorElement.innerText);
+           setTimeout(() => beautifyCode());
+        }
     }
+
+   $: {
+      if ($codeWordStore && editorElement) {
+         beautifyCode();
+      }
+   }
 
    $: {
        if (editorElement && editorText !== undefined && editorElement.innerText !== editorText) {
@@ -325,6 +331,7 @@
 
     export function undoAction() { applyUndoRedo(true); }
     export function redoAction() { applyUndoRedo(false); }
+    export function resetUndo() { undoer.reset(); syncUndoState(); }
 
     function restoreCursorAtLine(line: number) {
         const lines = editorElement.innerText.split('\n');
