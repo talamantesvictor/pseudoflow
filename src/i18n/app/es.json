@@ -37,5 +37,13 @@
     "APP_CHART_TOGGLE": "Diagrama",
     "APP_CHART_AUTOFIT": "Ajustar al contenedor",
     "APP_UNDO": "Deshacer",
-    "APP_REDO": "Rehacer"
+    "APP_REDO": "Rehacer",
+    "APP_FILE_LANGUAGE_MISMATCH": "Este archivo usa pseudocódigo en %s.",
+    "APP_FILE_LANGUAGE_MISMATCH_DESC": "¿Quieres cambiar el editor para que coincida?",
+    "APP_FILE_LANGUAGE_MISMATCH_SWITCH": "Cambiar",
+    "APP_FILE_LANGUAGE_MISMATCH_KEEP": "Mantener actual",
+    "APP_FILE_NEW_VERSION": "Este archivo fue creado con una versión más reciente de PseudoFlow.",
+    "APP_FILE_OLD_FORMAT": "Este archivo usa un formato antiguo que ya no es compatible.",
+    "APP_FILE_OLD_FORMAT_DESC": "Por favor descarga la última versión de PseudoFlow para abrir este archivo.",
+    "APP_FILE_OLD_FORMAT_DISMISS": "OK"
 }

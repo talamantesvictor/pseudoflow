@@ -37,5 +37,13 @@
     "APP_CHART_TOGGLE": "Flowchart",
     "APP_CHART_AUTOFIT": "Fit to container",
     "APP_UNDO": "Undo",
-    "APP_REDO": "Redo"
+    "APP_REDO": "Redo",
+    "APP_FILE_LANGUAGE_MISMATCH": "This file uses %s pseudocode.",
+    "APP_FILE_LANGUAGE_MISMATCH_DESC": "Do you want to switch the editor to match?",
+    "APP_FILE_LANGUAGE_MISMATCH_SWITCH": "Switch",
+    "APP_FILE_LANGUAGE_MISMATCH_KEEP": "Keep current",
+    "APP_FILE_NEW_VERSION": "This file was created with a newer version of PseudoFlow.",
+    "APP_FILE_OLD_FORMAT": "This file uses an older format that is no longer supported.",
+    "APP_FILE_OLD_FORMAT_DESC": "Please download the latest version of PseudoFlow to open this file.",
+    "APP_FILE_OLD_FORMAT_DISMISS": "OK"
 }
