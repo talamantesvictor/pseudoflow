@@ -1,0 +1,4 @@
+{bad json
+---
+declare x = 10
+print x

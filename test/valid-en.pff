@@ -1,0 +1,4 @@
+{"format":"pseudoflow","format_version":"1.0","version":"0.13.0","lang":"en","created":"2026-06-17T18:00:00.000Z","modified":"2026-06-17T18:00:00.000Z"}
+---
+declare x = 10
+print "Hello World"
