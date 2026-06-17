@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore } from "./lib/stores";
+    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore, codeWordLang, codeWordStore, APP_VERSION } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -10,13 +10,17 @@
    import SaveModal from "./components/modals/SaveModal.svelte";
    import SettingsModal from "./components/modals/SettingsModal.svelte";
    import InformationModal from "./components/modals/InformationModal.svelte";
+    import LanguageMismatchModal from "./components/modals/LanguageMismatchModal.svelte";
+   import FormatVersionModal from "./components/modals/FormatVersionModal.svelte";
 
    import { analyze } from "./lib/analyzers/analyze";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
+    import { parsePffFile, serializePffFile, createPffMeta, updatePffMeta, compareVersions } from "./lib/pff";
+   import type { PffMeta, ParseResult } from "./lib/pff";
 
    const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
    
-   let modal: any;
+    let modal: any;
    let isProgramRunning: boolean = false;
    let isChartVisible: boolean = false;
    let enableUserInput: boolean;
@@ -28,6 +32,10 @@
    let pendingSentencesToExecute: atype.SentencesNode[];
    let lastExecutedSentence: atype.SentencesNode;
    let timeoutToParse: any;
+   let pffMeta: PffMeta | null = null;
+    let showNewVersionWarning = false;
+   let versionWarningTimer: any = null;
+   let versionWarningCountdown = 0;
 
     let pointerStartX, rightColumnStartWidth;
     let editorRef: any;
@@ -59,6 +67,13 @@
       }
    });
 
+   // Re-parse when pseudocode language changes
+   codeWordStore.subscribe(() => {
+      lastPseudocode = '';
+      clearTimeout(timeoutToParse);
+      generateTree();
+   });
+
    // Generate tree and perform pre-execution tasks on run button press
     function prepareExecution() {
        generateTree()
@@ -73,7 +88,7 @@
 
    // Generate syntax tree for code interpretation and flowchart visualization
    function generateTree() {
-      if (pseudocode !== lastPseudocode) {
+      if (pseudocode && pseudocode !== lastPseudocode) {
          lastPseudocode = pseudocode;
          const result = analyze(pseudocode);
          syntaxTree = result.program ?? { body: null };
@@ -108,17 +123,56 @@
       execute();
    }
 
+   // Parse file content, handle language/version checks, load into editor
+   function loadFileContent(rawText: string, fileName: string) {
+      const parsed = parsePffFile(rawText);
+      pffMeta = parsed.meta;
+      pseudocode = parsed.content;
+      savedPseudocode = pseudocode;
+      clearInterval(versionWarningTimer);
+      showNewVersionWarning = false;
+      fileNameStore.set(fileName);
+      editorRef?.resetUndo();
+      generateTree();
+
+      if (parsed.oldFormat) {
+         modal = {
+            title: '',
+            component: FormatVersionModal,
+         };
+         return;
+      }
+
+      if (parsed.meta && parsed.meta.lang !== codeWordLang) {
+         modal = {
+            title: '',
+            component: LanguageMismatchModal,
+            componentProps: { fileLang: parsed.meta.lang }
+         };
+      }
+
+      if (parsed.meta && compareVersions(parsed.meta.version, APP_VERSION) > 0) {
+         showNewVersionWarning = true;
+         versionWarningCountdown = 30;
+         clearInterval(versionWarningTimer);
+         versionWarningTimer = setInterval(() => {
+            versionWarningCountdown -= 1;
+            if (versionWarningCountdown <= 0) {
+               clearInterval(versionWarningTimer);
+               showNewVersionWarning = false;
+            }
+         }, 1000);
+      }
+   }
+
    // Import code from a file using an input element in HTML
     function importDataFromFile(e: Event) {
        const target = e.target as HTMLInputElement;
-       fileNameStore.set(target.files[0].name);
+      const fileName = target.files[0].name;
 
       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
-			const result = event.target.result;
-         pseudocode = result.toString();
-         savedPseudocode = pseudocode;
-         generateTree();
+         loadFileContent(event.target.result.toString(), fileName);
 		});
 		reader.readAsText(e.target.files[0], "UTF-8");
    }
@@ -145,10 +199,10 @@
             const filePath = await open({ defaultPath: $fileNameStore });
             if (filePath) {
                const data = await readTextFile(filePath as string);
-               pseudocode = data.toString();
-               savedPseudocode = pseudocode;
-               generateTree();
-               fileNameStore.set((filePath as string).split(/(\\|\/)/g).pop());
+               loadFileContent(
+                  data.toString(),
+                  (filePath as string).split(/(\\|\/)/g).pop()
+               );
             }
          });
       } else {
@@ -158,19 +212,29 @@
 
    // Handle "Save" button in top bar
    function exportButtonClick() {
+      const contentChanged = pseudocode !== savedPseudocode;
+      let meta: PffMeta;
+      if (pffMeta) {
+         meta = contentChanged ? updatePffMeta(pffMeta, APP_VERSION) : pffMeta;
+      } else {
+         meta = createPffMeta(codeWordLang, APP_VERSION);
+      }
+      const fileContents = serializePffFile(meta, pseudocode);
+
       if (isTauri) {
          import("@tauri-apps/api/dialog").then(async ({ save }) => {
             const { invoke } = await import("@tauri-apps/api/tauri");
             const filePath = await save({ defaultPath: $fileNameStore });
             if (filePath) {
-               await invoke('save_file', { path: filePath, contents: pseudocode });
+               await invoke('save_file', { path: filePath, contents: fileContents });
                fileNameStore.set(filePath.split(/(\\|\/)/g).pop());
                savedPseudocode = pseudocode;
+               pffMeta = meta;
             }
          });
          return false;
       }
-      let textBlob = new Blob([pseudocode], {type: 'text/plain'});
+      let textBlob = new Blob([fileContents], {type: 'text/plain'});
       let tempLink = document.createElement("a");
       tempLink.setAttribute('href', URL.createObjectURL(textBlob));
       tempLink.setAttribute('download', $fileNameStore);
@@ -178,6 +242,7 @@
       tempLink.remove();
       URL.revokeObjectURL(tempLink.href);
       savedPseudocode = pseudocode;
+      pffMeta = meta;
       return true;
    }
 
@@ -237,6 +302,10 @@
       clearTimeout(timeoutToParse);
       errorStore.set([]);
       fileNameStore.set(defaultName);
+      pffMeta = null;
+      clearInterval(versionWarningTimer);
+      showNewVersionWarning = false;
+      editorRef?.resetUndo();
       generateTree();
    }
 
@@ -285,6 +354,16 @@
    bind:isProgramRunning={isProgramRunning}
    bind:isChartVisible={isChartVisible} />
 
+{#if showNewVersionWarning}
+<div id="version-warning">
+   <span>{$translationStore.APP_FILE_NEW_VERSION}</span>
+   <span class="right-group">
+      <span class="countdown">{versionWarningCountdown}s</span>
+      <span class="close" role="button" tabindex="0" on:click={() => { clearInterval(versionWarningTimer); showNewVersionWarning = false; }} on:keydown={() => { clearInterval(versionWarningTimer); showNewVersionWarning = false; }}>&times;</span>
+   </span>
+</div>
+{/if}
+
 <div id="wrapper" on:mousedown={generateTree}>
    {#if $flowchartDrawingStore}
    <div id="flowchart-area" class:active={isChartVisible}>
@@ -304,7 +383,7 @@
 <input type="file" id="file-import" on:change={importDataFromFile} />
 
 {#if modal} 
-<Modal title="{modal.title}" component="{modal.component}" saveDialog="{modal.saveDialog}"
+<Modal title="{modal.title}" component="{modal.component}" saveDialog="{modal.saveDialog}" componentProps="{modal.componentProps || {}}"
    on:closeModal="{closeModal}"
    on:saveAndClose="{saveAndClose}"
    on:closeAndNew="{closeAndNew}"></Modal> 
@@ -312,6 +391,35 @@
 
 <style lang="scss">
    @use "./styles/variables.scss" as *;
+
+   #version-warning {
+      height: 2rem;
+      background: $accent-color;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      font-size: 0.85rem;
+
+      .right-group {
+         display: flex;
+         align-items: center;
+         gap: 0.5rem;
+      }
+
+      .countdown {
+         opacity: 0.7;
+         font-size: 0.8rem;
+      }
+
+      .close {
+         cursor: pointer;
+         font-size: 1.2rem;
+         line-height: 1;
+         padding: 0 0.3rem;
+      }
+   }
 
    #wrapper {
       height: calc(100% - $topbar-height);
