@@ -7,8 +7,9 @@
 
    const topbarDispatcher = createEventDispatcher();
    export let title: string = 'Modal';
-   export let component: any;
-   export let saveDialog: boolean;
+    export let component: any;
+    export let componentProps: Record<string, unknown> = {};
+    export let saveDialog: boolean;
 
    const closeModal = () => {
       topbarDispatcher("closeModal");
@@ -36,7 +37,7 @@
    </div>
    <div class="content">
       <div class="inner-content">
-         <svelte:component this={component} />
+          <svelte:component this={component} {...componentProps} on:closeModal={closeModal} />
       </div>
       {#if saveDialog}
       <div class="inner-options">
