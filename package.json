@@ -2,6 +2,8 @@
    "name": "pseudoflow",
    "private": true,
    "version": "0.13.0",
+   "formatVersion": "1.0",
+   "minFormatVersion": "1.0",
    "type": "module",
    "scripts": {
       "start": "vite",

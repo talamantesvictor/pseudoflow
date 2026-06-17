@@ -1,16 +1,25 @@
 import { writable } from 'svelte/store';
+import type { PffMeta } from './pff';
 import englishWords from "../i18n/code/en.json";
 import spanishWords from "../i18n/code/es.json";
 import englishTranslations from "../i18n/app/en.json";
 import spanishTranslations from "../i18n/app/es.json";
+
+declare const __APP_VERSION__: string;
+declare const __FORMAT_VERSION__: string;
+declare const __MIN_FORMAT_VERSION__: string;
 
 export let codeWordLang = 'en';
 export let translationLang = 'en';
 export let isFlowchartVisible = true;
 export let syntaxErrorsEnabled = true;
 export let semanticErrorsEnabled = true;
+export const APP_VERSION: string = __APP_VERSION__;
+export const FORMAT_VERSION: string = __FORMAT_VERSION__;
+export const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;
 export const defaultName = 'pseudocode.pff';
 export const fileNameStore = writable(defaultName);
+export const pffMetaStore = writable<PffMeta | null>(null);
 export const codeWordStore = writable(englishWords);
 export const translationStore = writable(englishTranslations);
 export const flowchartDrawingStore = writable(isFlowchartVisible);
