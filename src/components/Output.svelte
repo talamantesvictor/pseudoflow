@@ -90,7 +90,7 @@
    #output-content {
       width: calc(100% - 2rem);
       padding: 1rem;
-      color: white;
+      color: var(--color-text-primary, white);
       word-wrap: break-word;
       overflow-x: hidden;
 

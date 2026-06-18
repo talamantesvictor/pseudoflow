@@ -3,7 +3,7 @@
    import { createEventDispatcher } from "svelte";
    import { scale, fade } from "svelte/transition";
    import { quintOut } from "svelte/easing";
-   import closeButton from '../../static/images/close_button.svg';
+   import closeButton from '../../static/images/close_button.svg?raw';
 
    const topbarDispatcher = createEventDispatcher();
    export let title: string = 'Modal';
@@ -32,7 +32,7 @@
          {title}
       </div>
       <div class="close">
-         <img src="{closeButton}" alt="Close Button" on:mouseup={closeModal} />
+          <span class="close-icon" on:mouseup={closeModal}>{@html closeButton}</span>
       </div>
    </div>
    <div class="content">
@@ -90,11 +90,13 @@
          padding: 0 1rem;
 
          .close {
-            height: 2rem;
+            height: 1.56rem;
             cursor: pointer;
+            margin-right: 0.2rem;
 
-            img {
+            :global(svg) {
                height: 100%;
+               width: auto;
             }
          }
       }

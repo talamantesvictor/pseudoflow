@@ -50,6 +50,9 @@
    --color-badge-syntax-text: #ff7070;
    --color-badge-semantic-bg: rgba(255, 210, 62, 0.2);
    --color-badge-semantic-text: #ffd23e;
+
+   --color-runbutton-bg: var(--color-button-bg);
+   --color-runbutton-text: var(--color-accent);
 }
 
 [data-theme="monokai"] {
@@ -90,7 +93,7 @@
    --color-editor-bg: #ffffff;
    --color-surface-bg: #f6f8fa;
    --color-topbar-bg: #f6f8fa;
-   --color-flowchart-bg: #ffffff;
+   --color-flowchart-bg: #f0f2f5;
    --color-accent: #0969da;
    --color-accent-secondary: #8250df;
    --color-text-primary: #1f2328;
@@ -118,6 +121,9 @@
    --color-badge-syntax-text: #cf222e;
    --color-badge-semantic-bg: rgba(154, 103, 0, 0.15);
    --color-badge-semantic-text: #9a6700;
+
+   --color-runbutton-bg: #0969da;
+   --color-runbutton-text: #ffffff;
 }
 
 body {
@@ -176,14 +182,18 @@ input[type="checkbox"] {
    cursor: pointer;
 
    &::before {
-      content: url(../../../static/images/check_icon.svg);
-      transform: scale(0);
+      content: '';
+      width: 0.55em;
+      height: 0.3em;
+      border-left: 2px solid $alternative-color;
+      border-bottom: 2px solid $alternative-color;
+      transform: rotate(-45deg) translate(0.1em, -0.1em) scale(0);
    }
 
    &:checked {
       border-color: $alternative-color;
       &::before {
-         transform: scale(0.4) translateY(0.3rem); 
+         transform: rotate(-45deg) translate(0.1em, -0.1em) scale(1);
       }
    }
 }

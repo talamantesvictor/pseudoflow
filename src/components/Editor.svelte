@@ -397,13 +397,13 @@
 
       #editor-colored-area {
          min-width: 100%; min-height: 22px; position: absolute; top: 0;
-         pointer-events: none; white-space: pre; color: white;
+         pointer-events: none; white-space: pre; color: var(--color-text-primary, white);
       }
 
       #editor-editable-area {
          position: absolute; top: 0; left: 76px; right: 0;
          outline: 0px solid transparent; pointer-events: all; white-space: pre;
-         line-height: 22px; color: transparent; caret-color: white;
+         line-height: 22px; color: transparent; caret-color: var(--color-accent, white);
       }
    }
 

@@ -8,15 +8,15 @@
      canRedoStore,
      syntaxErrorsStore,
    } from "../lib/stores";
-  import newButton from "../../static/images/new_button.svg";
-  import openButton from "../../static/images/open_button.svg";
-  import saveButton from "../../static/images/save_button.svg";
-  import settingsButton from "../../static/images/settings_button.svg";
-  import infoButton from "../../static/images/info_button.svg";
-  import playButton from "../../static/images/play_button.svg";
-  import stopButton from "../../static/images/stop_button.svg";
-  import undoButton from "../../static/images/undo_button.svg";
-  import redoButton from "../../static/images/redo_button.svg";
+   import newButton from "../../static/images/new_button.svg?raw";
+   import openButton from "../../static/images/open_button.svg?raw";
+   import saveButton from "../../static/images/save_button.svg?raw";
+   import settingsButton from "../../static/images/settings_button.svg?raw";
+   import infoButton from "../../static/images/info_button.svg?raw";
+   import playButton from "../../static/images/play_button.svg?raw";
+   import stopButton from "../../static/images/stop_button.svg?raw";
+   import undoButton from "../../static/images/undo_button.svg?raw";
+   import redoButton from "../../static/images/redo_button.svg?raw";
 
   export let isProgramRunning: boolean;
   export let isChartVisible: boolean;
@@ -100,24 +100,24 @@
       </div>
       <ul class="menu left-menu" class:active={isMenuOpen}>
         <li class="tooltip" on:click={newButtonClick}>
-          <img src={newButton} alt="New Button" />
+          <span class="btn-icon">{@html newButton}</span>
           <span class="tooltiptext">{$translationStore.APP_NEW}</span>
         </li>
         <li class="tooltip" on:click={importButtonClick}>
-          <img src={openButton} alt="Open Button" />
+          <span class="btn-icon">{@html openButton}</span>
           <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
         </li>
         <li class="tooltip" on:click={exportButtonClick}>
-          <img src={saveButton} alt="Save Button" />
+          <span class="btn-icon">{@html saveButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
         </li>
         <li class="tooltip mobile-only" on:click={settingsButtonClick}>
-          <img src={settingsButton} alt="Settings Button" />
+          <span class="btn-icon">{@html settingsButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span
           >
         </li>
         <li class="tooltip mobile-only" on:click={infoButtonClick}>
-          <img src={infoButton} alt="Info Button" />
+          <span class="btn-icon">{@html infoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
         </li>
       </ul>
@@ -143,7 +143,7 @@
           class:disabled={!$canUndoStore}
           on:click={() => $canUndoStore && onUndoClick()}
         >
-          <img src={undoButton} alt="Undo" />
+          <span class="btn-icon">{@html undoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_UNDO} (Ctrl+Z)</span>
         </div>
         <div
@@ -151,7 +151,7 @@
           class:disabled={!$canRedoStore}
           on:click={() => $canRedoStore && onRedoClick()}
         >
-          <img src={redoButton} alt="Redo" />
+          <span class="btn-icon">{@html redoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_REDO} (Ctrl+Y)</span>
         </div>
       </div>
@@ -160,11 +160,11 @@
   <div class="right">
     <div class="menu right-menu">
       <div class="tooltip" on:click={settingsButtonClick}>
-        <img src={settingsButton} alt="Settings Button" />
+        <span class="btn-icon">{@html settingsButton}</span>
         <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
       </div>
       <div class="tooltip" on:click={infoButtonClick}>
-        <img src={infoButton} alt="Info Button" />
+        <span class="btn-icon">{@html infoButton}</span>
         <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
       </div>
     </div>
@@ -183,7 +183,7 @@
       class:blocked={hasSyntaxErrors && !isProgramRunning}
       class:shake={shakeButton}
     >
-      <img src={executeButtonImage} alt="Play Button" />
+      <span class="btn-icon">{@html executeButtonImage}</span>
       {isProgramRunning
         ? $translationStore.APP_STOP
         : $translationStore.APP_RUN}
@@ -228,20 +228,28 @@
             align-items: center;
             cursor: pointer;
             margin-bottom: 0.4rem;
-            color: white;
+            color: var(--color-text-primary, white);
 
             &:hover {
               color: $accent-color;
             }
 
-            img {
+            .btn-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
               margin: 0.4rem;
-              padding: 0 0.5rem;
+              padding: 0 0.3rem;
               width: calc($topbar-height * 0.4);
               height: calc($topbar-height * 0.4);
 
               &:first-child {
                 margin-left: 0.8rem;
+              }
+
+              :global(svg) {
+                width: 100%;
+                height: 100%;
               }
             }
           }
@@ -258,12 +266,13 @@
             align-items: center;
             padding: 0;
 
-            li {
+             li {
               margin: 0;
-              color: white;
+              color: var(--color-text-primary, white);
 
-              img {
+              .btn-icon {
                 margin: 0;
+                padding: 0 0.3rem;
               }
 
               &.mobile-only {
@@ -336,11 +345,20 @@
             cursor: pointer;
             opacity: 1;
             transition: opacity 0.2s;
+            color: var(--color-text-primary, white);
 
-            img {
+            .btn-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
               width: calc($topbar-height * 0.4);
               height: calc($topbar-height * 0.4);
               padding: 0 0.5rem;
+
+              :global(svg) {
+                width: 100%;
+                height: 100%;
+              }
             }
 
             &.disabled {
@@ -426,11 +444,20 @@
           display: flex;
           align-items: center;
           cursor: pointer;
+          color: var(--color-text-primary, white);
 
-          img {
+          .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             width: calc($topbar-height * 0.4);
             height: calc($topbar-height * 0.4);
-            padding: 0 0.5rem 0 1rem;
+            padding: 0 0.5rem;
+
+            :global(svg) {
+              width: 100%;
+              height: 100%;
+            }
           }
         }
 
@@ -441,18 +468,18 @@
 
       #chartToggle {
         background-color: $accent-color;
+        color: white;
         height: 2rem;
+        align-items: center;
         display: flex;
         justify-content: center;
         padding: 0 1.4rem;
         border-radius: 1rem;
-        display: flex;
-        align-items: center;
         cursor: pointer;
 
         &.active {
-          background-color: #3f4254;
-          color: white;
+          background-color: $border-color;
+          color: var(--color-text-primary, white);
         }
 
         @media screen and (min-width: $breakpoint) {
@@ -461,21 +488,30 @@
       }
 
       #runButton {
-        background-color: $runbutton-background;
-        color: $accent-color;
+        background-color: var(--color-runbutton-bg, $runbutton-background);
+        color: var(--color-runbutton-text, $accent-color);
+        border: 1px solid var(--color-runbutton-text, $accent-color);
         height: 2rem;
+        align-items: center;
         display: flex;
         justify-content: center;
         padding: 0 1.4rem;
         margin: 0 1rem;
         border-radius: 1rem;
-        display: flex;
-        align-items: center;
         cursor: pointer;
 
-        img {
-          width: 0.9rem;
+        .btn-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: calc($topbar-height * 0.4);
+          height: calc($topbar-height * 0.4);
           margin-right: 0.6rem;
+
+          :global(svg) {
+            width: 100%;
+            height: 100%;
+          }
         }
 
         &.blocked {
