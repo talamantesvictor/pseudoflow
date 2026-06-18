@@ -87,14 +87,14 @@
       ul {
          width: calc(100% - 1.6rem);
          border-radius: 0.8rem;
-         background-color: #1C1F2D;
+         background-color: $surface-background;
          list-style-type: none;
          margin: 0.8rem auto;
          padding: 0;
          display: none;
 
          li {
-            color: rgba(255, 255, 255, 0.5);
+            color: $linenumbers-foreground;
             display: inline-block;
             padding: 0.3rem 0.9rem;
             cursor: pointer;

@@ -1,20 +1,38 @@
 $topbar-height: 3.3rem;
-$topbar-background: #2d303d;
+$topbar-background: var(--color-topbar-bg, #2d303d);
 
-$accent-color: #00bbd3;
-$alternative-color: #BB4CC4;
-$fileinfo-background: #3f4254;
-$fileinfo-foreground: white;
-$runbutton-background: black;
+$accent-color: var(--color-accent, #00bbd3);
+$alternative-color: var(--color-accent-secondary, #BB4CC4);
+$fileinfo-background: var(--color-border-primary, #3f4254);
+$fileinfo-foreground: var(--color-text-primary, white);
+$runbutton-background: var(--color-button-bg, black);
 
-$editor-background: #282A36;
-$editor-selection: #00bbd3;
-$flowchart-background: black;
+$editor-background: var(--color-editor-bg, #282A36);
+$editor-selection: var(--color-selection, #00bbd3);
+$flowchart-background: var(--color-flowchart-bg, black);
 
-$linenumbers-foreground: #7B89B8;
+$linenumbers-foreground: var(--color-text-dimmed, #7B89B8);
+$surface-background: var(--color-surface-bg, #1C1F2D);
+$border-color: var(--color-border-primary, #3F4254);
+$slider-track: var(--color-slider-track, rgba(63, 66, 84, 0.78));
+$accent-transparent: var(--color-accent-transparent, rgba(0, 187, 211, 0.15));
 
-$chromium-scrollbar-thumb: #616a86;
-$chromium-scrollbar-track: #3f4254;
+$chromium-scrollbar-thumb: var(--color-scrollbar-thumb, #616a86);
+$chromium-scrollbar-track: var(--color-scrollbar-track, #3f4254);
+
+$hl-red: var(--color-hl-red, #ff7070);
+$hl-info-blue: var(--color-hl-info-blue, #24a7ff);
+$hl-info-green: var(--color-hl-info-green, #00ff95);
+$hl-gold: var(--color-hl-gold, #ffd23e);
+$hl-purple: var(--color-hl-purple, #ff66e5);
+$hl-active-outline: var(--color-hl-active-outline, #525572);
+$hl-comments: var(--color-hl-comments, #7B89B8);
+$hl-string: var(--color-hl-string, #fdabab);
+
+$badge-syntax-bg: var(--color-badge-syntax-bg, rgba(255, 112, 112, 0.2));
+$badge-syntax-text: var(--color-badge-syntax-text, #ff7070);
+$badge-semantic-bg: var(--color-badge-semantic-bg, rgba(255, 210, 62, 0.2));
+$badge-semantic-text: var(--color-badge-semantic-text, #ffd23e);
 
 $font-size: 16px;
 $line-height: 24px;

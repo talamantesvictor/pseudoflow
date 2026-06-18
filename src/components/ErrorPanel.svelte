@@ -27,8 +27,8 @@
    @use "../styles/variables.scss" as *;
 
     .errors-panel {
-       background: #1C1F2D;
-       border-top: 1px solid #3F4254;
+       background: $surface-background;
+       border-top: 1px solid $border-color;
        padding: 0.8rem 1.5rem;
        min-height: 4rem;
        max-height: 40%;
@@ -55,13 +55,13 @@
       flex-shrink: 0;
 
       &.syntax {
-         background: rgba(255, 112, 112, 0.2);
-         color: #ff7070;
+         background: $badge-syntax-bg;
+         color: $badge-syntax-text;
       }
 
       &.semantic {
-         background: rgba(255, 210, 62, 0.2);
-         color: #ffd23e;
+         background: $badge-semantic-bg;
+         color: $badge-semantic-text;
       }
    }
 
@@ -72,6 +72,6 @@
    }
 
    .message {
-      color: white;
+      color: var(--color-text-primary, white);
    }
 </style>

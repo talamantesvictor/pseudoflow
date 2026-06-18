@@ -1,6 +1,5 @@
 @use "variables" as *;
 @use "highlights";
-@use "sass:color";
 
 @font-face {
    font-family: 'Roboto';
@@ -19,6 +18,106 @@
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    -webkit-text-size-adjust: 100%;
+
+   --color-editor-bg: #282A36;
+   --color-surface-bg: #1C1F2D;
+   --color-topbar-bg: #2d303d;
+   --color-flowchart-bg: #000000;
+   --color-accent: #00bbd3;
+   --color-accent-secondary: #BB4CC4;
+   --color-text-primary: #ffffff;
+   --color-text-on-dark: #ffffff;
+   --color-text-dimmed: #7B89B8;
+   --color-text-muted-border: rgba(255, 255, 255, 0.5);
+   --color-border-primary: #3F4254;
+   --color-button-bg: #000000;
+   --color-selection: #00bbd3;
+   --color-slider-track: rgba(63, 66, 84, 0.78);
+   --color-accent-transparent: rgba(0, 187, 211, 0.15);
+   --color-scrollbar-thumb: #616a86;
+   --color-scrollbar-track: #3f4254;
+
+   --color-hl-red: #ff7070;
+   --color-hl-info-blue: #24a7ff;
+   --color-hl-info-green: #00ff95;
+   --color-hl-gold: #ffd23e;
+   --color-hl-purple: #ff66e5;
+   --color-hl-active-outline: #525572;
+   --color-hl-comments: #7B89B8;
+   --color-hl-string: #fdabab;
+
+   --color-badge-syntax-bg: rgba(255, 112, 112, 0.2);
+   --color-badge-syntax-text: #ff7070;
+   --color-badge-semantic-bg: rgba(255, 210, 62, 0.2);
+   --color-badge-semantic-text: #ffd23e;
+}
+
+[data-theme="monokai"] {
+   --color-editor-bg: #2d2a2e;
+   --color-surface-bg: #221f22;
+   --color-topbar-bg: #19181a;
+   --color-flowchart-bg: #1c1a1d;
+   --color-accent: #ffd866;
+   --color-accent-secondary: #fc9867;
+   --color-text-primary: #fcfcfa;
+   --color-text-on-dark: #fcfcfa;
+   --color-text-dimmed: #727072;
+   --color-text-muted-border: rgba(252, 252, 250, 0.5);
+   --color-border-primary: #403e41;
+   --color-button-bg: #1c1a1d;
+   --color-selection: #5b595c;
+   --color-slider-track: rgba(64, 62, 65, 0.78);
+   --color-accent-transparent: rgba(255, 216, 102, 0.15);
+   --color-scrollbar-thumb: #5b595c;
+   --color-scrollbar-track: #403e41;
+
+   --color-hl-red: #f92672;
+   --color-hl-info-blue: #66d9ef;
+   --color-hl-info-green: #a6e22e;
+   --color-hl-gold: #e6db74;
+   --color-hl-purple: #ae81ff;
+   --color-hl-active-outline: #49483e;
+   --color-hl-comments: #75715e;
+   --color-hl-string: #e6db74;
+
+   --color-badge-syntax-bg: rgba(249, 38, 114, 0.2);
+   --color-badge-syntax-text: #f92672;
+   --color-badge-semantic-bg: rgba(230, 219, 116, 0.2);
+   --color-badge-semantic-text: #e6db74;
+}
+
+[data-theme="github-light"] {
+   --color-editor-bg: #ffffff;
+   --color-surface-bg: #f6f8fa;
+   --color-topbar-bg: #f6f8fa;
+   --color-flowchart-bg: #ffffff;
+   --color-accent: #0969da;
+   --color-accent-secondary: #8250df;
+   --color-text-primary: #1f2328;
+   --color-text-on-dark: #ffffff;
+   --color-text-dimmed: #656d76;
+   --color-text-muted-border: rgba(31, 35, 40, 0.3);
+   --color-border-primary: #d0d7de;
+   --color-button-bg: #1f2328;
+   --color-selection: rgba(9, 105, 218, 0.2);
+   --color-slider-track: rgba(208, 215, 222, 0.78);
+   --color-accent-transparent: rgba(9, 105, 218, 0.15);
+   --color-scrollbar-thumb: #d0d7de;
+   --color-scrollbar-track: #f6f8fa;
+
+   --color-hl-red: #cf222e;
+   --color-hl-info-blue: #0969da;
+   --color-hl-info-green: #1f883d;
+   --color-hl-gold: #9a6700;
+   --color-hl-purple: #8250df;
+   --color-hl-active-outline: #ddf4ff;
+   --color-hl-comments: #656d76;
+   --color-hl-string: #0a3069;
+
+   --color-badge-syntax-bg: rgba(207, 34, 46, 0.15);
+   --color-badge-syntax-text: #cf222e;
+   --color-badge-semantic-bg: rgba(154, 103, 0, 0.15);
+   --color-badge-semantic-text: #9a6700;
 }
 
 body {
@@ -66,7 +165,7 @@ input[type="checkbox"] {
    appearance: none;
    margin: 0;
    font: inherit;
-   color: white;
+   color: var(--color-text-primary, white);
    width: 1.3rem;
    height: 1.3rem;
    border: 2px solid $accent-color;
@@ -121,11 +220,11 @@ input[type="checkbox"] {
       min-width: max-content;
       top: calc(100% + 8px);
       padding: 3px 1rem;
-      color: $fileinfo-foreground;
+      color: var(--color-text-on-dark, white);
       font-size: 0.8rem;
       text-align: center;
       background-color: $runbutton-background;
-      border: 1px solid color.adjust($fileinfo-foreground, $alpha: -0.5);
+      border: 1px solid var(--color-text-muted-border, rgba(255, 255, 255, 0.5));
       border-radius: 6px;
 
       position: absolute;

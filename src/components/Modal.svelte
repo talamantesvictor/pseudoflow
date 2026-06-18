@@ -73,8 +73,8 @@
       max-height: 500px;
       width: 90%;
       height: auto;
-      background: #282A36;
-      color: white;
+      background: $editor-background;
+      color: var(--color-text-primary, white);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -83,7 +83,7 @@
       .header {
          width: calc(100% - 1.6rem);
          height: 3rem;
-         background: #424453;
+         background: $surface-background;
          display: flex;
          justify-content: space-between;
          align-items: center;

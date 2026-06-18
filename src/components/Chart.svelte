@@ -3,7 +3,8 @@
    import { onMount } from "svelte";
    import { grapher } from "../lib/chart/grapher"
    import type { SentencesNode } from "src/lib/analyzers/atypes";
-   import { translationStore } from "../lib/stores";
+   import { translationStore, chartPaletteStore } from "../lib/stores";
+   import type { ChartPalette } from "../lib/themes";
 
    export let sintaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
@@ -11,11 +12,14 @@
    let konvaScale = 0.5;
    let chartDimensions;
    let autoFit = true;
+   let palette: ChartPalette;
    const arrowsLayer = new Konva.Layer();
    const symbolsLayer = new Konva.Layer();
+
+   $: palette = $chartPaletteStore;
    
-   $: if (sintaxTree && konvaContainer) {
-      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8);
+   $: if (sintaxTree && konvaContainer && palette) {
+      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8, palette);
    }
 
    $: if (autoFit && chartDimensions && konvaContainer) {
@@ -54,12 +58,13 @@
    }
 
    function exportPng() {
-      if (!konvaStage) return;
+      if (!konvaStage || !palette) return;
+      const whiteLabel = palette.whiteLabel;
       const textNodes: Array<{ node: Konva.Text; original: string }> = [];
       symbolsLayer.getChildren().forEach((child) => {
-         if (child instanceof Konva.Text && child.fill() === '#ffffff') {
-            textNodes.push({ node: child, original: '#ffffff' });
-            child.fill('#000000');
+         if (child instanceof Konva.Text && child.fill() === whiteLabel) {
+            textNodes.push({ node: child, original: whiteLabel });
+            child.fill(palette.text);
          }
       });
       symbolsLayer.draw();
@@ -139,8 +144,8 @@
 
     #scaler {
        width: 100%;
-       background: #1C1F2D;
-       border-top: 1px solid #3F4254;
+        background: $surface-background;
+        border-top: 1px solid $border-color;
        display: flex;
        align-items: center;
        justify-content: center;
@@ -156,9 +161,9 @@
          white-space: nowrap;
          flex-shrink: 0;
 
-         span {
-         color: #00bbd3;
-         }
+          span {
+          color: $accent-color;
+          }
       }
 
       input[type=range] {
@@ -170,7 +175,7 @@
       }
 
       input[type=range]::-webkit-slider-runnable-track {
-         background: rgba(63, 66, 84, 0.78);
+          background: $slider-track;
          border: 0;
          border-radius: 25px;
          width: 100%;
@@ -183,7 +188,7 @@
          height: 20px;
          margin-top: 2.5px;
          transform: translateY(-50%);
-         background: #00bbd3;
+          background: $accent-color;
          border: 0;
          border-radius: 15px;
          cursor: pointer;
@@ -191,7 +196,7 @@
       } 
 
       input[type=range]::-moz-range-track {
-         background: rgba(63, 66, 84, 0.78);
+          background: $slider-track;
          border: 0;
          border-radius: 25px;
          width: 100%;
@@ -202,37 +207,37 @@
       input[type=range]::-moz-range-thumb {
          width: 10px;
          height: 20px;
-         background: #00bbd3;
+          background: $accent-color;
          border: 0;
          border-radius: 15px;
          cursor: pointer;
       }
 
-      .scalerBtn {
+       .scalerBtn {
          width: 36px;
          height: 36px;
          border-radius: 8px;
-         border: 2px solid #3F4254;
+         border: 2px solid $border-color;
          background: transparent;
          cursor: pointer;
          display: flex;
          align-items: center;
          justify-content: center;
-         color: #00bbd3;
+         color: $accent-color;
          transition: all 0.2s;
          flex-shrink: 0;
 
          &:hover {
-            border-color: #00bbd3;
-            color: #00bbd3;
+            border-color: $accent-color;
+            color: $accent-color;
          }
       }
 
       #autoFitBtn {
          &.active {
-            border-color: #00bbd3;
-            background: rgba(0, 187, 211, 0.15);
-            color: #00bbd3;
+            border-color: $accent-color;
+            background: $accent-transparent;
+            color: $accent-color;
          }
       }
    }
