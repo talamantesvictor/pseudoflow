@@ -328,7 +328,7 @@
    function resize(event) {
       const currentX = event.clientX;
       const deltaX = currentX - pointerStartX;
-      const rightColumnWidth = rightColumnStartWidth - deltaX;
+      const rightColumnWidth = Math.max(rightColumnStartWidth - deltaX, 300);
       const leftColumnWidth = document.getElementById('wrapper').offsetWidth - rightColumnWidth;
 
       document.getElementById('flowchart-area').style.width = `${rightColumnWidth}px`;
@@ -492,6 +492,7 @@
        #flowchart-area {
           width: 100%;
           max-width: 100%;
+          min-width: 300px;
           height: calc(100% - $topbar-height);
           background-color: $flowchart-background;
           color: var(--color-text-primary, white);
