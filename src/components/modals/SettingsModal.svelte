@@ -11,8 +11,11 @@
        changeSemanticErrors,
        syntaxErrorsEnabled,
        semanticErrorsEnabled,
-       themeId,
-       changeTheme } from "../../lib/stores";
+        themeStore,
+        changeTheme } from "../../lib/stores";
+   import draculaThumb from "../../../static/themes/dracula.webp";
+   import monokaiThumb from "../../../static/themes/monokai.webp";
+   import lightThumb from "../../../static/themes/light.webp";
 
     function selectTranslation(e: Event) {
       changeTranslation((e.srcElement as HTMLInputElement)['value']);
@@ -34,8 +37,8 @@
        changeSemanticErrors((e.target as HTMLInputElement)['checked']);
     }
 
-    function selectTheme(e: Event) {
-       changeTheme((e.srcElement as HTMLInputElement)['value']);
+    function selectTheme(id: string) {
+       changeTheme(id);
     }
 </script>
 
@@ -97,18 +100,18 @@
     <div class="title">
        {$translationStore.APP_SETTINGS_THEME}
     </div>
-    <div class="options">
-       <div>
-          <input type="radio" id="theme-dracula" name="theme" value="dracula" on:input={selectTheme} checked="{themeId === 'dracula'}">
-          <label for="theme-dracula">{$translationStore.APP_SETTINGS_THEME_DRACULA}</label>
+    <div class="themeOptions">
+       <div class="theme-card" class:active={$themeStore === 'dracula'} on:click={() => selectTheme('dracula')}>
+          <img src={draculaThumb} alt="Dracula" />
+          <span>{$translationStore.APP_SETTINGS_THEME_DRACULA}</span>
        </div>
-       <div>
-          <input type="radio" id="theme-monokai" name="theme" value="monokai" on:input={selectTheme} checked="{themeId === 'monokai'}">
-          <label for="theme-monokai">{$translationStore.APP_SETTINGS_THEME_MONOKAI}</label>
+       <div class="theme-card" class:active={$themeStore === 'monokai'} on:click={() => selectTheme('monokai')}>
+          <img src={monokaiThumb} alt="Monokai Pro" />
+          <span>{$translationStore.APP_SETTINGS_THEME_MONOKAI}</span>
        </div>
-       <div>
-          <input type="radio" id="theme-github-light" name="theme" value="github-light" on:input={selectTheme} checked="{themeId === 'github-light'}">
-          <label for="theme-github-light">{$translationStore.APP_SETTINGS_THEME_GITHUB_LIGHT}</label>
+       <div class="theme-card" class:active={$themeStore === 'github-light'} on:click={() => selectTheme('github-light')}>
+          <img src={lightThumb} alt="GitHub Light" />
+          <span>{$translationStore.APP_SETTINGS_THEME_GITHUB_LIGHT}</span>
        </div>
     </div>
 </div>
@@ -140,6 +143,52 @@
    }
 
    .otherSettings {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+
+      .title {
+         margin-bottom: 1rem;
+      }
+   }
+
+   .themeOptions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+
+      .theme-card {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         cursor: pointer;
+         border: 2px solid $border-color;
+         border-radius: 0.5rem;
+         padding: 0.5rem;
+         transition: border-color 0.2s;
+
+         &:hover {
+            border-color: $accent-color;
+         }
+
+         &.active {
+            border-color: $accent-color;
+         }
+
+         img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+         }
+
+         span {
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
+            color: $linenumbers-foreground;
+         }
+      }
+
+      @media screen and (max-width: calc($breakpoint - 1px)) {
+         flex-direction: column;
+      }
    }
 </style>

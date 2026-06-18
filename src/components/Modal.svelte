@@ -70,7 +70,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       max-width: 700px;
-      max-height: 500px;
+      max-height: 85vh;
       width: 90%;
       height: auto;
       background: $editor-background;

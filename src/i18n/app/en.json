@@ -20,7 +20,7 @@
     "APP_SETTINGS_OTHER_FLOWCHART_INFO": "Requires WebGL",
      "APP_SETTINGS_OTHER_SYNTAX": "Syntactic errors",
      "APP_SETTINGS_OTHER_SEMANTIC": "Semantic errors",
-    "APP_SETTINGS_THEME": "Color palette",
+    "APP_SETTINGS_THEME": "Color theme",
     "APP_SETTINGS_THEME_DRACULA": "Dracula",
     "APP_SETTINGS_THEME_MONOKAI": "Monokai Pro",
     "APP_SETTINGS_THEME_GITHUB_LIGHT": "GitHub Light",
