@@ -1,9 +1,11 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import type { PffMeta } from './pff';
 import englishWords from "../i18n/code/en.json";
 import spanishWords from "../i18n/code/es.json";
 import englishTranslations from "../i18n/app/en.json";
 import spanishTranslations from "../i18n/app/es.json";
+import { chartPalettes } from './themes';
+import type { ChartPalette } from './themes';
 
 declare const __APP_VERSION__: string;
 declare const __FORMAT_VERSION__: string;
@@ -14,6 +16,7 @@ export let translationLang = 'en';
 export let isFlowchartVisible = true;
 export let syntaxErrorsEnabled = true;
 export let semanticErrorsEnabled = true;
+export let themeId = (typeof localStorage !== 'undefined' && localStorage.getItem('pseudoflow-theme')) || 'dracula';
 export const APP_VERSION: string = __APP_VERSION__;
 export const FORMAT_VERSION: string = __FORMAT_VERSION__;
 export const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;
@@ -28,6 +31,8 @@ export const semanticErrorsStore = writable(semanticErrorsEnabled);
 export const errorStore = writable([]);
 export const canUndoStore = writable(false);
 export const canRedoStore = writable(false);
+export const themeStore = writable(themeId);
+export const chartPaletteStore = derived(themeStore, ($theme) => chartPalettes[$theme] || chartPalettes.dracula);
 
 export const changeTranslation = (langCode) => {
    switch (translationLang = langCode) {
@@ -66,4 +71,15 @@ export const changeSyntaxErrors = (isEnabled) => {
 export const changeSemanticErrors = (isEnabled) => {
    semanticErrorsEnabled = isEnabled;
    semanticErrorsStore.set(isEnabled);
+};
+
+export const changeTheme = (id: string) => {
+   themeId = id;
+   themeStore.set(id);
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-theme', id);
+   }
+   if (typeof document !== 'undefined') {
+      document.documentElement.dataset.theme = id;
+   }
 };
