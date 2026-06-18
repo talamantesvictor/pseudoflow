@@ -101,15 +101,15 @@
        {$translationStore.APP_SETTINGS_THEME}
     </div>
     <div class="themeOptions">
-       <div class="theme-card" class:active={$themeStore === 'dracula'} on:click={() => selectTheme('dracula')}>
+       <div class="theme-card" class:active={$themeStore === 'dracula'} role="button" tabindex="0" on:click={() => selectTheme('dracula')} on:keydown={() => selectTheme('dracula')}>
           <img src={draculaThumb} alt="Dracula" />
           <span>{$translationStore.APP_SETTINGS_THEME_DRACULA}</span>
        </div>
-       <div class="theme-card" class:active={$themeStore === 'monokai'} on:click={() => selectTheme('monokai')}>
+       <div class="theme-card" class:active={$themeStore === 'monokai'} role="button" tabindex="0" on:click={() => selectTheme('monokai')} on:keydown={() => selectTheme('monokai')}>
           <img src={monokaiThumb} alt="Monokai Pro" />
           <span>{$translationStore.APP_SETTINGS_THEME_MONOKAI}</span>
        </div>
-       <div class="theme-card" class:active={$themeStore === 'github-light'} on:click={() => selectTheme('github-light')}>
+       <div class="theme-card" class:active={$themeStore === 'github-light'} role="button" tabindex="0" on:click={() => selectTheme('github-light')} on:keydown={() => selectTheme('github-light')}>
           <img src={lightThumb} alt="GitHub Light" />
           <span>{$translationStore.APP_SETTINGS_THEME_GITHUB_LIGHT}</span>
        </div>

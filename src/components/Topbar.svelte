@@ -1,22 +1,22 @@
 <script lang="ts">
-   import {
-     translationStore,
-     fileNameStore,
-     flowchartDrawingStore,
-     errorStore,
-     canUndoStore,
-     canRedoStore,
-     syntaxErrorsStore,
-   } from "../lib/stores";
-   import newButton from "../../static/images/new_button.svg?raw";
-   import openButton from "../../static/images/open_button.svg?raw";
-   import saveButton from "../../static/images/save_button.svg?raw";
-   import settingsButton from "../../static/images/settings_button.svg?raw";
-   import infoButton from "../../static/images/info_button.svg?raw";
-   import playButton from "../../static/images/play_button.svg?raw";
-   import stopButton from "../../static/images/stop_button.svg?raw";
-   import undoButton from "../../static/images/undo_button.svg?raw";
-   import redoButton from "../../static/images/redo_button.svg?raw";
+  import {
+    translationStore,
+    fileNameStore,
+    flowchartDrawingStore,
+    errorStore,
+    canUndoStore,
+    canRedoStore,
+    syntaxErrorsStore,
+  } from "../lib/stores";
+  import newButton from "../../static/images/new_button.svg?raw";
+  import openButton from "../../static/images/open_button.svg?raw";
+  import saveButton from "../../static/images/save_button.svg?raw";
+  import settingsButton from "../../static/images/settings_button.svg?raw";
+  import infoButton from "../../static/images/info_button.svg?raw";
+  import playButton from "../../static/images/play_button.svg?raw";
+  import stopButton from "../../static/images/stop_button.svg?raw";
+  import undoButton from "../../static/images/undo_button.svg?raw";
+  import redoButton from "../../static/images/redo_button.svg?raw";
 
   export let isProgramRunning: boolean;
   export let isChartVisible: boolean;
@@ -32,7 +32,8 @@
   let executeButtonImage: any = playButton;
   let shakeButton: boolean = false;
 
-  $: hasSyntaxErrors = $syntaxErrorsStore && $errorStore.some((e) => e.type === "syntax");
+  $: hasSyntaxErrors =
+    $syntaxErrorsStore && $errorStore.some((e) => e.type === "syntax");
 
   const runButtonClick = () => {
     if (hasSyntaxErrors && !isProgramRunning) {
@@ -99,24 +100,44 @@
         </div>
       </div>
       <ul class="menu left-menu" class:active={isMenuOpen}>
-        <li class="tooltip" on:click={newButtonClick}>
+        <li
+          class="tooltip"
+          on:click={newButtonClick}
+          on:keydown={newButtonClick}
+        >
           <span class="btn-icon">{@html newButton}</span>
           <span class="tooltiptext">{$translationStore.APP_NEW}</span>
         </li>
-        <li class="tooltip" on:click={importButtonClick}>
+        <li
+          class="tooltip"
+          on:click={importButtonClick}
+          on:keydown={importButtonClick}
+        >
           <span class="btn-icon">{@html openButton}</span>
           <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
         </li>
-        <li class="tooltip" on:click={exportButtonClick}>
+        <li
+          class="tooltip"
+          on:click={exportButtonClick}
+          on:keydown={exportButtonClick}
+        >
           <span class="btn-icon">{@html saveButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
         </li>
-        <li class="tooltip mobile-only" on:click={settingsButtonClick}>
+        <li
+          class="tooltip mobile-only"
+          on:click={settingsButtonClick}
+          on:keydown={settingsButtonClick}
+        >
           <span class="btn-icon">{@html settingsButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span
           >
         </li>
-        <li class="tooltip mobile-only" on:click={infoButtonClick}>
+        <li
+          class="tooltip mobile-only"
+          on:click={infoButtonClick}
+          on:keydown={infoButtonClick}
+        >
           <span class="btn-icon">{@html infoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
         </li>
@@ -141,7 +162,10 @@
         <div
           class="tooltip"
           class:disabled={!$canUndoStore}
+          role="button"
+          tabindex="0"
           on:click={() => $canUndoStore && onUndoClick()}
+          on:keydown={() => $canUndoStore && onUndoClick()}
         >
           <span class="btn-icon">{@html undoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_UNDO} (Ctrl+Z)</span>
@@ -149,7 +173,10 @@
         <div
           class="tooltip"
           class:disabled={!$canRedoStore}
+          role="button"
+          tabindex="0"
           on:click={() => $canRedoStore && onRedoClick()}
+          on:keydown={() => $canRedoStore && onRedoClick()}
         >
           <span class="btn-icon">{@html redoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_REDO} (Ctrl+Y)</span>
@@ -159,11 +186,23 @@
   </div>
   <div class="right">
     <div class="menu right-menu">
-      <div class="tooltip" on:click={settingsButtonClick}>
+      <div
+        class="tooltip"
+        role="button"
+        tabindex="0"
+        on:click={settingsButtonClick}
+        on:keydown={settingsButtonClick}
+      >
         <span class="btn-icon">{@html settingsButton}</span>
         <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
       </div>
-      <div class="tooltip" on:click={infoButtonClick}>
+      <div
+        class="tooltip"
+        role="button"
+        tabindex="0"
+        on:click={infoButtonClick}
+        on:keydown={infoButtonClick}
+      >
         <span class="btn-icon">{@html infoButton}</span>
         <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
       </div>
@@ -171,7 +210,10 @@
     {#if $flowchartDrawingStore}
       <div
         id="chartToggle"
+        role="button"
+        tabindex="0"
         on:click={chartToggleClick}
+        on:keydown={chartToggleClick}
         class:active={isChartVisible}
       >
         {$translationStore.APP_CHART_TOGGLE}
@@ -179,7 +221,10 @@
     {/if}
     <div
       id="runButton"
+      role="button"
+      tabindex="0"
       on:click={runButtonClick}
+      on:keydown={runButtonClick}
       class:blocked={hasSyntaxErrors && !isProgramRunning}
       class:shake={shakeButton}
     >
@@ -266,7 +311,7 @@
             align-items: center;
             padding: 0;
 
-             li {
+            li {
               margin: 0;
               color: var(--color-text-primary, white);
 
@@ -353,7 +398,7 @@
               justify-content: center;
               width: calc($topbar-height * 0.4);
               height: calc($topbar-height * 0.4);
-            padding: 0 0.5rem;
+              padding: 0 0.5rem;
 
               :global(svg) {
                 width: 100%;
@@ -445,6 +490,7 @@
           align-items: center;
           cursor: pointer;
           color: var(--color-text-primary, white);
+          padding: 0 0.3rem;
 
           .btn-icon {
             display: inline-flex;
