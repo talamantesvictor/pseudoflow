@@ -10,7 +10,9 @@
        changeSyntaxErrors,
        changeSemanticErrors,
        syntaxErrorsEnabled,
-       semanticErrorsEnabled } from "../../lib/stores";
+       semanticErrorsEnabled,
+       themeId,
+       changeTheme } from "../../lib/stores";
 
     function selectTranslation(e: Event) {
       changeTranslation((e.srcElement as HTMLInputElement)['value']);
@@ -30,6 +32,10 @@
 
     function toggleSemanticErrors(e: Event) {
        changeSemanticErrors((e.target as HTMLInputElement)['checked']);
+    }
+
+    function selectTheme(e: Event) {
+       changeTheme((e.srcElement as HTMLInputElement)['value']);
     }
 </script>
 
@@ -81,11 +87,30 @@
          <input type="checkbox" id="syntax-errors" on:input={toggleSyntaxErrors} checked="{syntaxErrorsEnabled}">
          <label for="syntax-errors">{$translationStore.APP_SETTINGS_OTHER_SYNTAX}</label>
       </div>
-      <div>
-         <input type="checkbox" id="semantic-errors" on:input={toggleSemanticErrors} checked="{semanticErrorsEnabled}">
-         <label for="semantic-errors">{$translationStore.APP_SETTINGS_OTHER_SEMANTIC}</label>
-      </div>
-   </div>
+       <div>
+          <input type="checkbox" id="semantic-errors" on:input={toggleSemanticErrors} checked="{semanticErrorsEnabled}">
+          <label for="semantic-errors">{$translationStore.APP_SETTINGS_OTHER_SEMANTIC}</label>
+       </div>
+    </div>
+</div>
+<div class="otherSettings">
+    <div class="title">
+       {$translationStore.APP_SETTINGS_THEME}
+    </div>
+    <div class="options">
+       <div>
+          <input type="radio" id="theme-dracula" name="theme" value="dracula" on:input={selectTheme} checked="{themeId === 'dracula'}">
+          <label for="theme-dracula">{$translationStore.APP_SETTINGS_THEME_DRACULA}</label>
+       </div>
+       <div>
+          <input type="radio" id="theme-monokai" name="theme" value="monokai" on:input={selectTheme} checked="{themeId === 'monokai'}">
+          <label for="theme-monokai">{$translationStore.APP_SETTINGS_THEME_MONOKAI}</label>
+       </div>
+       <div>
+          <input type="radio" id="theme-github-light" name="theme" value="github-light" on:input={selectTheme} checked="{themeId === 'github-light'}">
+          <label for="theme-github-light">{$translationStore.APP_SETTINGS_THEME_GITHUB_LIGHT}</label>
+       </div>
+    </div>
 </div>
 
 <style lang="scss">

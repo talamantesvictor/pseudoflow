@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore, codeWordLang, codeWordStore, APP_VERSION } from "./lib/stores";
+    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore, codeWordLang, codeWordStore, APP_VERSION, themeId } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -17,6 +17,10 @@
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
     import { parsePffFile, serializePffFile, createPffMeta, updatePffMeta, compareVersions } from "./lib/pff";
    import type { PffMeta, ParseResult } from "./lib/pff";
+
+   if (typeof document !== 'undefined') {
+      document.documentElement.dataset.theme = themeId;
+   }
 
    const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
    
