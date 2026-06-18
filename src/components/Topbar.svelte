@@ -239,7 +239,7 @@
               align-items: center;
               justify-content: center;
               margin: 0.4rem;
-              padding: 0 0.3rem;
+              padding: 0 0.5rem;
               width: calc($topbar-height * 0.4);
               height: calc($topbar-height * 0.4);
 
@@ -272,7 +272,7 @@
 
               .btn-icon {
                 margin: 0;
-                padding: 0 0.3rem;
+                padding: 0 0.5rem;
               }
 
               &.mobile-only {
@@ -353,7 +353,7 @@
               justify-content: center;
               width: calc($topbar-height * 0.4);
               height: calc($topbar-height * 0.4);
-              padding: 0 0.5rem;
+            padding: 0 0.5rem;
 
               :global(svg) {
                 width: 100%;
