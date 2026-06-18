@@ -1,5 +1,6 @@
 import type * as atype from "../analyzers/atypes";
 import type Konva from 'konva';
+import type { ChartPalette } from "../themes";
 import { terminatorSymbol, taskSymbol, decisionSymbol, dataSymbol, textLabel, arrowSymbol, autoReturnArrowSymbol, loopArrowSymbol } from "./symbols";
 import { valueBuilder } from "../code/interpreter";
 import { codeWordStore } from "../stores";
@@ -20,8 +21,10 @@ let defaultHorizontalSpace: number;
 let defaultVerticalSpace: number;
 let columnSymbol: Rect[];
 let chartDimensions: Vector;
+let chartPalette: ChartPalette;
 
-export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer, frontLayer: Konva.Layer, size: number) : any {
+export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer, frontLayer: Konva.Layer, size: number, palette: ChartPalette) : any {
+   chartPalette = palette;
    // Clean the canvas
    backLayer.removeChildren();
    frontLayer.removeChildren();
@@ -47,7 +50,7 @@ export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer
       const startSymbol = terminatorSymbol(baseSize, {
          x: baseSize * 0.5,
          y: chartDimensions.y
-      });
+      }, chartPalette.terminator);
       const startRect = addSymbol(startSymbol);
       rootSymbols.push(startRect);
       chartDimensions.y += startRect.y  + defaultVerticalSpace * 0.5;
@@ -70,7 +73,7 @@ export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer
       const endSymbol = terminatorSymbol(baseSize, {
          x: baseSize * 0.5,
          y: chartDimensions.y
-      });
+      }, chartPalette.terminator);
       const endRect = addSymbol(endSymbol);
       rootSymbols.push(endRect);
       addFlow(rootSymbols.at(-2), rootSymbols.at(-1));
@@ -89,7 +92,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
    };
 
    if (node.name === 'PrintNode' || node.name === 'ReadNode') {
-      const color = node.name === 'PrintNode'? '#24a7ff' : '#00ff95';
+      const color = node.name === 'PrintNode'? chartPalette.data : chartPalette.task;
       const dataNode = dataSymbol(baseSize, position, color);
       treeNodeRect = addSymbol(dataNode);
 
@@ -97,13 +100,13 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       treeNodeDimensions.y = treeNodeRect.height * 0.5 + defaultVerticalSpace;
    }
    else if (node.name === 'DeclarationNode' || node.name === 'AssignmentNode') {
-      const taskNode = taskSymbol(baseSize, position);
+      const taskNode = taskSymbol(baseSize, position, chartPalette.task);
       treeNodeRect = addSymbol(taskNode);
 
       let textValue = '';
@@ -121,14 +124,14 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       treeNodeDimensions.y = treeNodeRect.height * 0.5 + defaultVerticalSpace;
    }
    else if (node.name === 'IfNode') {
       // First symbol
-      const decisionNode = decisionSymbol(baseSize, position);
+      const decisionNode = decisionSymbol(baseSize, position, chartPalette.decision);
       treeNodeRect = addSymbol(decisionNode);
 
       // Symbol text
@@ -136,7 +139,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       const yesLabel = textLabel(
@@ -149,7 +152,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(yesLabel);
 
@@ -163,7 +166,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(noLabel);
 
@@ -230,7 +233,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       else {
          bodyHeight = bodyHeight > 0? bodyHeight : treeNodeRect.height + defaultVerticalSpace * 0.5;
          flowLayer.add(autoReturnArrowSymbol(
-            position, defaultVerticalSpace, treeNodeDimensions.x, bodyHeight
+            position, defaultVerticalSpace, treeNodeDimensions.x, bodyHeight, chartPalette.arrow
          ));
       }
 
@@ -240,7 +243,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
    }
    else if (node.name === 'SwitchNode') {
       // First symbol
-      const taskNode = taskSymbol(baseSize, position, '#ffd23e');
+      const taskNode = taskSymbol(baseSize, position, chartPalette.switchTask);
       treeNodeRect = addSymbol(taskNode);
 
       // Symbol text
@@ -248,7 +251,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       // Add vertical space after inserting the first symbol
@@ -267,7 +270,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          const caseNode = decisionSymbol(baseSize, {
             x: position.x,
             y: position.y + treeNodeDimensions.y
-         }, '#ff7070');
+         }, chartPalette.caseDiamond);
 
          const caseRect = addSymbol(caseNode);
          addFlow(lastCaseRect, caseRect);
@@ -283,7 +286,8 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             {
                width: caseRect.width * 0.6,
                height: caseRect.height
-            }
+            },
+            chartPalette.text
          );
          symbolsLayer.add(textNode);
 
@@ -297,7 +301,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
                width: treeNodeRect.width * 0.6,
                height: treeNodeRect.height
             }, 
-            '#ffffff'
+            chartPalette.whiteLabel
          );
          symbolsLayer.add(noLabel);
 
@@ -311,7 +315,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
                width: treeNodeRect.width * 0.6,
                height: treeNodeRect.height
             }, 
-            '#ffffff'
+            chartPalette.whiteLabel
          );
          symbolsLayer.add(yesLabel);
          
@@ -342,7 +346,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             // Add short return
             const lastCaseVector = { x: lastCaseRect.x, y: lastCaseRect.y };
             const totalHeight = lastCaseRect.height + defaultVerticalSpace * 0.5;
-            flowLayer.add(autoReturnArrowSymbol( lastCaseVector, defaultVerticalSpace, 0, totalHeight ));
+            flowLayer.add(autoReturnArrowSymbol( lastCaseVector, defaultVerticalSpace, 0, totalHeight, chartPalette.arrow ));
             treeNodeDimensions.y += lastCaseRect.height + defaultVerticalSpace;
          }
 
@@ -361,7 +365,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       position.y += defaultVerticalSpace * 0.5;
 
       // First symbol
-      const decisionNode = decisionSymbol(baseSize, position, '#ff66e5');
+      const decisionNode = decisionSymbol(baseSize, position, chartPalette.repeatDecision);
       treeNodeRect = addSymbol(decisionNode);
 
       // Symbol text
@@ -370,7 +374,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       const noLabel = textLabel(
@@ -383,7 +387,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(noLabel);
 
@@ -397,7 +401,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(yesLabel);
 
@@ -432,7 +436,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const taskNode = taskSymbol(baseSize, {
          x: position.x + treeNodeDimensions.x,
          y: position.y + treeNodeDimensions.y
-      }, '#ff7070');
+      }, chartPalette.forIncrement);
       const forLoopTask = addSymbol(taskNode);
 
       textValue = node.declaration.identifier + '=' + node.declaration.identifier + '+' + valueBuilder(node.steps, false);
@@ -445,7 +449,8 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          {
             width: forLoopTask.width,
             height: forLoopTask.height
-         }
+         },
+         chartPalette.text
       );
       symbolsLayer.add(textNode);
       addFlow(lastNodeRect, forLoopTask);
@@ -465,7 +470,8 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             {x: treeNodeRect.x, y: treeNodeRect.y},
             treeNodeRect.height,
             baseSize * 0.2,
-            position.x + widerNode + defaultHorizontalSpace * 0.5
+            position.x + widerNode + defaultHorizontalSpace * 0.5,
+            chartPalette.loopArrow
          )
       );
 
@@ -476,7 +482,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       position.y += defaultVerticalSpace * 0.5;
 
       // First symbol
-      const decisionNode = decisionSymbol(baseSize, position, '#ff66e5');
+      const decisionNode = decisionSymbol(baseSize, position, chartPalette.repeatDecision);
       treeNodeRect = addSymbol(decisionNode);
       
       // Symbol text
@@ -484,7 +490,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       const noLabel = textLabel(
@@ -497,7 +503,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(noLabel);
 
@@ -511,7 +517,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(yesLabel);
       
@@ -570,7 +576,8 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             {x: treeNodeRect.x, y: treeNodeRect.y},
             treeNodeRect.height,
             lastRowPosition,
-            position.x + widerNode + defaultHorizontalSpace * 0.5
+            position.x + widerNode + defaultHorizontalSpace * 0.5,
+            chartPalette.loopArrow
          )
       );
    }
@@ -614,7 +621,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       position.y += treeNodeDimensions.y;
 
       // Last symbol
-      const decisionNode = decisionSymbol(baseSize, position, '#ff66e5');
+      const decisionNode = decisionSymbol(baseSize, position, chartPalette.repeatDecision);
       const decisionRect = addSymbol(decisionNode);
       lastNodeRect = lastNodeRect? lastNodeRect : decisionRect;
       treeNodeRect = treeNodeRect? treeNodeRect : decisionRect;
@@ -624,7 +631,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: lastNodeRect.width * 0.6,
          height: lastNodeRect.height
-      });
+      }, chartPalette.text);
       symbolsLayer.add(textNode);
 
       addFlow(lastNodeRect, decisionRect);
@@ -639,7 +646,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: decisionRect.width * 0.6,
             height: decisionRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(noLabel);
 
@@ -655,7 +662,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: decisionRect.width * 0.6,
             height: decisionRect.height
          }, 
-         '#ffffff'
+         chartPalette.whiteLabel
       );
       symbolsLayer.add(yesLabel);
 
@@ -671,8 +678,9 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             {x: decisionRect.x + (decisionRect.width * 0.5 * (hasBodySentences? 1 : 0)), y: decisionRect.y},
             {x: treeNodeRect.x, y: treeNodeRect.y},
             treeNodeRect.height,
-            0.1, // We give a marginal number only to add height at the top
-            position.x + widerNode + defaultHorizontalSpace * 0.5
+            0.1,
+            position.x + widerNode + defaultHorizontalSpace * 0.5,
+            chartPalette.loopArrow
          )
       );
    }
@@ -710,7 +718,8 @@ function addFlow(rect1, rect2) {
       {x: rect1.x, y: rect1.y},
       {x: rect2.x, y: rect2.y},
       {width: rect2.width, height: rect2.height },
-      defaultVerticalSpace
+      defaultVerticalSpace,
+      chartPalette.arrow
    );
 
    flowLayer.add(arrow);
@@ -727,7 +736,8 @@ function setNestedReturnFlows(destPosition) {
                {x: symbol.x, y: symbol.y},
                {x: destPosition.x, y: destPosition.y},
                {width: 0, height: 0 },
-               defaultVerticalSpace
+               defaultVerticalSpace,
+               chartPalette.arrow
             ));
 
             delete columnSymbol[index];
