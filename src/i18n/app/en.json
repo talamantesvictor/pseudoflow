@@ -36,6 +36,7 @@
    "APP_PLACEHOLDER_PRINT": "HELLO WORLD",
     "APP_CHART_TOGGLE": "Flowchart",
     "APP_CHART_AUTOFIT": "Fit to container",
+    "APP_CHART_EXPORT_PNG": "Export PNG",
     "APP_UNDO": "Undo",
     "APP_REDO": "Redo",
     "APP_FILE_LANGUAGE_MISMATCH": "This file uses %s pseudocode.",

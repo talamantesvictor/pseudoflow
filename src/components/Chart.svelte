@@ -53,6 +53,27 @@
       autoFit = !autoFit;
    }
 
+   function exportPng() {
+      if (!konvaStage) return;
+      const textNodes: Array<{ node: Konva.Text; original: string }> = [];
+      symbolsLayer.getChildren().forEach((child) => {
+         if (child instanceof Konva.Text && child.fill() === '#ffffff') {
+            textNodes.push({ node: child, original: '#ffffff' });
+            child.fill('#000000');
+         }
+      });
+      symbolsLayer.draw();
+      const dataUrl = konvaStage.toDataURL({ mimeType: 'image/png' });
+      textNodes.forEach(({ node, original }) => node.fill(original));
+      symbolsLayer.draw();
+      const link = document.createElement('a');
+      link.download = 'flowchart.png';
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+   }
+
    onMount(() => { 
       chartDimensions = {
          x: konvaContainer.offsetWidth,
@@ -80,12 +101,19 @@
          <span>Zoom:</span> {Math.round(userScale)}%
       </div>
       <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
-      <button id="autoFitBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
+      <button id="autoFitBtn" class="scalerBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 3 21 3 21 9" />
             <polyline points="9 21 3 21 3 15" />
             <line x1="21" y1="3" x2="14" y2="10" />
             <line x1="3" y1="21" x2="10" y2="14" />
+         </svg>
+      </button>
+      <button id="exportPngBtn" class="scalerBtn" on:click={exportPng} title={$translationStore.APP_CHART_EXPORT_PNG}>
+         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
          </svg>
       </button>
    </div>
@@ -116,7 +144,7 @@
        display: flex;
        align-items: center;
        justify-content: center;
-       gap: 2.5rem;
+        gap: 1.5rem;
        padding: 0.8rem 1.5rem;
        box-sizing: border-box;
        flex-shrink: 0;
@@ -129,7 +157,7 @@
          flex-shrink: 0;
 
          span {
-            color: rgba(255, 255, 255, 0.5);
+         color: #00bbd3;
          }
       }
 
@@ -180,7 +208,7 @@
          cursor: pointer;
       }
 
-      #autoFitBtn {
+      .scalerBtn {
          width: 36px;
          height: 36px;
          border-radius: 8px;
@@ -190,7 +218,7 @@
          display: flex;
          align-items: center;
          justify-content: center;
-         color: rgba(255, 255, 255, 0.5);
+         color: #00bbd3;
          transition: all 0.2s;
          flex-shrink: 0;
 
@@ -198,7 +226,9 @@
             border-color: #00bbd3;
             color: #00bbd3;
          }
+      }
 
+      #autoFitBtn {
          &.active {
             border-color: #00bbd3;
             background: rgba(0, 187, 211, 0.15);
