@@ -5,26 +5,40 @@ import spanishWords from "../i18n/code/es.json";
 import englishTranslations from "../i18n/app/en.json";
 import spanishTranslations from "../i18n/app/es.json";
 import { chartPalettes } from './themes';
-import type { ChartPalette } from './themes';
 
 declare const __APP_VERSION__: string;
 declare const __FORMAT_VERSION__: string;
 declare const __MIN_FORMAT_VERSION__: string;
 
-export let codeWordLang = 'en';
-export let translationLang = 'en';
-export let isFlowchartVisible = true;
-export let syntaxErrorsEnabled = true;
-export let semanticErrorsEnabled = true;
-export let themeId = (typeof localStorage !== 'undefined' && localStorage.getItem('pseudoflow-theme')) || 'dracula';
+function stored(key: string, fallback: string): string {
+   if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(key) || fallback;
+   }
+   return fallback;
+}
+
+function storedBool(key: string, fallback: boolean): boolean {
+   if (typeof localStorage !== 'undefined') {
+      const val = localStorage.getItem(key);
+      return val !== null ? val === 'true' : fallback;
+   }
+   return fallback;
+}
+
+export let codeWordLang = stored('pseudoflow-code-lang', 'en');
+export let translationLang = stored('pseudoflow-translation', 'en');
+export let isFlowchartVisible = storedBool('pseudoflow-flowchart', true);
+export let syntaxErrorsEnabled = storedBool('pseudoflow-syntax', true);
+export let semanticErrorsEnabled = storedBool('pseudoflow-semantic', true);
+export let themeId = stored('pseudoflow-theme', 'dracula');
 export const APP_VERSION: string = __APP_VERSION__;
 export const FORMAT_VERSION: string = __FORMAT_VERSION__;
 export const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;
 export const defaultName = 'pseudocode.pff';
 export const fileNameStore = writable(defaultName);
 export const pffMetaStore = writable<PffMeta | null>(null);
-export const codeWordStore = writable(englishWords);
-export const translationStore = writable(englishTranslations);
+export const codeWordStore = writable(codeWordLang === 'es' ? spanishWords : englishWords);
+export const translationStore = writable(translationLang === 'es' ? spanishTranslations : englishTranslations);
 export const flowchartDrawingStore = writable(isFlowchartVisible);
 export const syntaxErrorsStore = writable(syntaxErrorsEnabled);
 export const semanticErrorsStore = writable(semanticErrorsEnabled);
@@ -44,6 +58,9 @@ export const changeTranslation = (langCode) => {
          translationStore.set(englishTranslations);
          break;
    }
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-translation', langCode);
+   }
 };
 
 export const changecodeWordsStore = (langCode) => {
@@ -56,21 +73,33 @@ export const changecodeWordsStore = (langCode) => {
          codeWordStore.set(englishWords);
          break;
    }
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-code-lang', langCode);
+   }
 };
 
 export const changeFlowchartVisibility = (isVisible) => {
    isFlowchartVisible = isVisible;
    flowchartDrawingStore.set(isVisible);
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-flowchart', String(isVisible));
+   }
 };
 
 export const changeSyntaxErrors = (isEnabled) => {
    syntaxErrorsEnabled = isEnabled;
    syntaxErrorsStore.set(isEnabled);
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-syntax', String(isEnabled));
+   }
 };
 
 export const changeSemanticErrors = (isEnabled) => {
    semanticErrorsEnabled = isEnabled;
    semanticErrorsStore.set(isEnabled);
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pseudoflow-semantic', String(isEnabled));
+   }
 };
 
 export const changeTheme = (id: string) => {
