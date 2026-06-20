@@ -10,6 +10,7 @@ export default defineConfig({
     __FORMAT_VERSION__: JSON.stringify(pkg.formatVersion),
     __MIN_FORMAT_VERSION__: JSON.stringify(pkg.minFormatVersion),
   },
+   publicDir: 'static',
    clearScreen: false,
    server: {
       strictPort: true,
