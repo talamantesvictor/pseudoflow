@@ -6,9 +6,15 @@
    const cursor = '|';
    let capturedMessage: string = '';
    let capturedInput: number = 0;
+   let hiddenInput: HTMLInputElement;
+
+   $: if (isInputPromptEnabled && hiddenInput) {
+      hiddenInput.focus();
+   }
 
    document.onkeydown = function (event) {
       if (isInputPromptEnabled) {
+         event.preventDefault();
          if (
             event.code.indexOf('Key') == 0      || 
             event.code.indexOf('Digit') == 0    || 
@@ -71,6 +77,13 @@
 </script>
 
 
+<input
+   bind:this={hiddenInput}
+   id="hidden-read-input"
+   type="text"
+   aria-label="input"
+   autocomplete="off"
+/>
 <div id="output-content">
    {@html content}
    {#if isInputPromptEnabled}
@@ -87,6 +100,16 @@
 
 
 <style lang="scss">
+   #hidden-read-input {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+   }
+
    #output-content {
       width: calc(100% - 2rem);
       padding: 1rem;

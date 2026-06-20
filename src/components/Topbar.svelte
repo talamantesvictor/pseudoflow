@@ -536,7 +536,7 @@
       #runButton {
         background-color: var(--color-runbutton-bg, $runbutton-background);
         color: var(--color-runbutton-text, $accent-color);
-        border: 1px solid var(--color-runbutton-text, $accent-color);
+         border: 2px solid var(--color-runbutton-text, $accent-color);
         height: 2rem;
         align-items: center;
         display: flex;
