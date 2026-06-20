@@ -24,7 +24,7 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
     while (parserIndex + 1 < parserTokens.length) {
        const outerLine = parserTokens[parserIndex]?.line
        try {
-          program.body.push(parse());
+           program.body.push(...parse());
           if (parserTokens[parserIndex + 1])
              parserIndex++;
        } catch (e) {
@@ -54,38 +54,38 @@ export const parser = (tokens: Array<atype.Token>): { body: atype.SentencesNode[
    return { body: program.body, errors }
 };
 
-function parse() : atype.SentencesNode {
+function parse() : atype.SentencesNode[] {
    const token = parserTokens[parserIndex];
 
    if (token.name === 'DeclarationToken') {
       return declarationParser();
    }
    else if (token.name === 'IdentifierToken') {
-      return assignmentParser();
+      return [assignmentParser()];
    }
    else if (token.name === 'PrintToken') {
-      return printParser();
+      return [printParser()];
    }
    else if (token.name === 'ReadToken') {
       return readParser();
    }
    else if (token.name === 'OpenIfToken') {
-      return ifParser();
+      return [ifParser()];
    }
    else if (token.name === 'OpenSwitchToken') {
-      return switchParser();
+      return [switchParser()];
    }
    else if (token.name === 'OpenRepeatToken') {
-      return repeatParser();
+      return [repeatParser()];
    }
    else if (token.name === 'OpenWhileToken') {
-      return whileParser();
+      return [whileParser()];
    }
    else if (token.name === 'OpenDowhileToken') {
-      return dowhileParser();
+      return [dowhileParser()];
    }
 
-    throw new SyntaxError(`Unexpected '${token.value || token.name}'. A statement like declare, if, while, or an identifier was expected here.`);
+   throw new SyntaxError(`Unexpected '${token.value || token.name}'. A statement like declare, if, while, or an identifier was expected here.`);
 }
 
 function nextIndex() {
@@ -200,27 +200,42 @@ function expressionParser(minPrecedence: number = 0): atype.Node {
 }
 
 
-function declarationParser() : atype.DeclarationNode {
-   nextIndex();
-   const identifier = parserTokens[parserIndex];
-    let value: any;
-    if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
-       nextIndex();
-       nextIndex();
-       value = expressionParser();
-    }
-    else if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'RelationalToken' && parserTokens[parserIndex+1].value === '==') {
-       throw new SyntaxError(`Expected '=' after '${identifier.value}' but found '=='. Use '=' for assignment, '==' only for comparison.`);
-    }
-    else {
-       value = { name: 'StringNode', value: undefined };
-    }
+function declarationParser() : atype.DeclarationNode[] {
+   const declarations: atype.DeclarationNode[] = [];
 
-   return { 
-      name: 'DeclarationNode',
-      identifier: identifier.value!,
-      value: value
-   };
+   while (true) {
+      nextIndex();
+      const identifier = parserTokens[parserIndex];
+      let value: any;
+      if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
+         nextIndex();
+         nextIndex();
+         value = expressionParser();
+      }
+      else if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'RelationalToken' && parserTokens[parserIndex+1].value === '==') {
+         throw new SyntaxError(`Expected '=' after '${identifier.value}' but found '=='. Use '=' for assignment, '==' only for comparison.`);
+      }
+      else {
+         value = { name: 'StringNode', value: undefined };
+      }
+
+      declarations.push({
+         name: 'DeclarationNode',
+         identifier: identifier.value!,
+         value: value
+      });
+
+      if (parserTokens[parserIndex + 1]?.name === 'CommaToken') {
+         nextIndex();
+         if (parserTokens[parserIndex + 1]?.name !== 'IdentifierToken') {
+            throw new SyntaxError('Expected an identifier after comma in declaration.');
+         }
+         continue;
+      }
+      break;
+   }
+
+   return declarations;
 }
 
 function assignmentParser(): atype.AssignmentNode {
@@ -266,14 +281,29 @@ function printParser() : atype.PrintNode {
    }
 }
 
-function readParser() : atype.ReadNode {
-   nextIndex();
-   let identifier = parserTokens[parserIndex] as atype.IdentifierToken
+function readParser() : atype.ReadNode[] {
+   const reads: atype.ReadNode[] = [];
 
-   return {
-      name: 'ReadNode',
-      identifier: identifier
+   while (true) {
+      nextIndex();
+      const identifier = parserTokens[parserIndex] as atype.IdentifierToken;
+
+      reads.push({
+         name: 'ReadNode',
+         identifier: identifier
+      });
+
+      if (parserTokens[parserIndex + 1]?.name === 'CommaToken') {
+         nextIndex();
+         if (parserTokens[parserIndex + 1]?.name !== 'IdentifierToken') {
+            throw new SyntaxError('Expected an identifier after comma in read statement.');
+         }
+         continue;
+      }
+      break;
    }
+
+   return reads;
 }
 
 function ifParser() : atype.IfNode {
@@ -300,12 +330,12 @@ function ifParser() : atype.IfNode {
           storeSentencesInBody = false;
        }
       else {
-         if (storeSentencesInBody) {
-            body.push(parse());
-         }
-         else {
-            alternative.push(parse());
-         }
+            if (storeSentencesInBody) {
+               body.push(...parse());
+            }
+            else {
+               alternative.push(...parse());
+            }
       }
 
       nextIndex();
@@ -352,7 +382,7 @@ function switchParser() : atype.SwitchNode {
    
       let caseSentences = new Array<atype.SentencesNode>;
       while (parserTokens[parserIndex].name !== 'CloseCaseToken') {
-         caseSentences.push(parse());
+         caseSentences.push(...parse());
          nextIndex();
       }
       nextIndex();
@@ -381,7 +411,7 @@ function repeatParser() : atype.RepeatNode {
          parserTokens[parserIndex].name !== 'DeclarationToken') {
       throw new SyntaxError(`Expected '${reservedWords.CODE_REPEATDECLARE}' or 'declare' after '('. A repeat loop needs a counter variable.`);
    }
-   let declaration = declarationParser();
+   let declaration = declarationParser()[0];
    nextIndex();
    if (parserTokens[parserIndex].value !== reservedWords.CODE_REPEATTO) {
       throw new SyntaxError(`Expected '${reservedWords.CODE_REPEATTO}' to set the upper limit of the loop.`);
@@ -402,7 +432,7 @@ function repeatParser() : atype.RepeatNode {
 
    let forSentences = new Array<atype.SentencesNode>;
    while (parserTokens[parserIndex].name !== 'CloseRepeatToken') {
-      forSentences.push(parse());
+      forSentences.push(...parse());
       nextIndex();
    }
 
@@ -430,7 +460,7 @@ function whileParser() : atype.WhileNode {
 
    let whileSentences = new Array<atype.SentencesNode>;
    while (parserTokens[parserIndex].name !== 'CloseWhileToken') {
-      whileSentences.push(parse());
+      whileSentences.push(...parse());
       nextIndex();
    }
 
@@ -456,7 +486,7 @@ function dowhileParser() : atype.DowhileNode {
 
    let dowhileSentences = new Array<atype.SentencesNode>;
    while (parserTokens[parserIndex].name !== 'CloseDowhileToken') {
-      dowhileSentences.push(parse());
+      dowhileSentences.push(...parse());
       nextIndex();
    }
 
