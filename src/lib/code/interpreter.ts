@@ -128,15 +128,11 @@ function intepretTreeNode(node: atype.SentencesNode) {
       const toValue = safeEval(valueBuilder(node.to));
       let stepsValue = safeEval(valueBuilder(node.steps));
       stepsValue = Math.abs(stepsValue);
-      
-      let newUntilValue = Math.abs(toValue - declarationValue);
 
-      let operator = '+';
-      if (declarationValue > toValue) {
-         operator = '-'
-      }
+      const ascending = declarationValue <= toValue;
+      const nextValue = ascending ? declarationValue + stepsValue : declarationValue - stepsValue;
 
-      if (newUntilValue > 0) {
+      if (ascending ? nextValue <= toValue : nextValue >= toValue) {
          addSentence({
             body: node.body,
             declaration: {
@@ -144,7 +140,7 @@ function intepretTreeNode(node: atype.SentencesNode) {
                identifier: node.declaration.identifier,
                value: {
                   name: 'NumericNode',
-                  value: safeEval(declarationValue + operator + '(' + stepsValue + ')')
+                  value: nextValue
                } as any
             },
             name: node.name,
