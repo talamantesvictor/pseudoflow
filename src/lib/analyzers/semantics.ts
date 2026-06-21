@@ -114,7 +114,7 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
             return sym?.type
          }
          case 'ArrayIndexNode':
-            return 'string'
+            return undefined
          case 'PropertyAccessNode':
             return 'number'
          case 'ExpressionNode': {
