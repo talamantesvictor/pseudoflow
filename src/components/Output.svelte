@@ -119,6 +119,7 @@
 
       #dynamic-wrapper {
          position: relative;
+         min-height: 24px;
 
          .dynamic-content {
             width: 100% !important;
