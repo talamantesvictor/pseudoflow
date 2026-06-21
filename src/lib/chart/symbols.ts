@@ -211,13 +211,14 @@ export function textLabel(
    label: string, 
    position: { x: number, y: number }, 
    dimensions: { width: number, height: number },
-   color: string = '#000000'
+   color: string = '#000000',
+   fontSize: number = 30
 ) {
    return new Konva.Text({
       x: position.x,
       y: position.y,
       text: label,
-      fontSize: 30,
+      fontSize,
       fontFamily: 'Roboto',
       align: 'center',
       verticalAlign: 'middle',

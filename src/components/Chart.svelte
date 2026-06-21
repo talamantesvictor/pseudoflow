@@ -105,7 +105,7 @@
       <div>
          <span>Zoom:</span> {Math.round(userScale)}%
       </div>
-      <input type="range" min="5" max="100" bind:value={userScale} on:input={disableAutoFit} />
+      <input type="range" min="10" max="100" bind:value={userScale} on:input={disableAutoFit} />
       <button id="autoFitBtn" class="scalerBtn" class:active={autoFit} on:click={toggleAutoFit} title={$translationStore.APP_CHART_AUTOFIT}>
          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 3 21 3 21 9" />

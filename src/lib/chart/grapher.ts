@@ -17,6 +17,7 @@ let flowLayer: Konva.Layer;
 let symbolsLayer: Konva.Layer;
 let runningSentences: atype.SentencesNode[];
 let baseSize: number;
+let chartFontSize: number;
 let defaultHorizontalSpace: number;
 let defaultVerticalSpace: number;
 let columnSymbol: Rect[];
@@ -36,6 +37,7 @@ export function grapher(sentences: atype.SentencesNode[], backLayer: Konva.Layer
    baseSize = size;
    defaultVerticalSpace = baseSize * 0.2;
    defaultHorizontalSpace = baseSize * 0.7;
+   chartFontSize = Math.max(12, Math.min(32, Math.round(baseSize * 0.04)));
    columnSymbol = [];
 
    chartDimensions = {
@@ -100,7 +102,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       treeNodeDimensions.y = treeNodeRect.height * 0.5 + defaultVerticalSpace;
@@ -124,7 +126,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       treeNodeDimensions.y = treeNodeRect.height * 0.5 + defaultVerticalSpace;
@@ -139,7 +141,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       const yesLabel = textLabel(
@@ -152,7 +154,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(yesLabel);
 
@@ -166,7 +168,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(noLabel);
 
@@ -251,7 +253,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       const textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       // Add vertical space after inserting the first symbol
@@ -301,7 +303,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
                width: treeNodeRect.width * 0.6,
                height: treeNodeRect.height
             }, 
-            chartPalette.whiteLabel
+            chartPalette.whiteLabel, chartFontSize
          );
          symbolsLayer.add(noLabel);
 
@@ -315,7 +317,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
                width: treeNodeRect.width * 0.6,
                height: treeNodeRect.height
             }, 
-            chartPalette.whiteLabel
+            chartPalette.whiteLabel, chartFontSize
          );
          symbolsLayer.add(yesLabel);
          
@@ -374,7 +376,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       const noLabel = textLabel(
@@ -387,7 +389,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(noLabel);
 
@@ -401,7 +403,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(yesLabel);
 
@@ -490,7 +492,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: treeNodeRect.width * 0.6,
          height: treeNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       const noLabel = textLabel(
@@ -503,7 +505,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(noLabel);
 
@@ -517,7 +519,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: treeNodeRect.width * 0.6,
             height: treeNodeRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(yesLabel);
       
@@ -631,7 +633,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
       let textNode = textLabel(textValue, position, {
          width: lastNodeRect.width * 0.6,
          height: lastNodeRect.height
-      }, chartPalette.text);
+      }, chartPalette.text, chartFontSize);
       symbolsLayer.add(textNode);
 
       addFlow(lastNodeRect, decisionRect);
@@ -646,7 +648,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: decisionRect.width * 0.6,
             height: decisionRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(noLabel);
 
@@ -662,7 +664,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
             width: decisionRect.width * 0.6,
             height: decisionRect.height
          }, 
-         chartPalette.whiteLabel
+         chartPalette.whiteLabel, chartFontSize
       );
       symbolsLayer.add(yesLabel);
 
