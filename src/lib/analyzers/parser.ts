@@ -207,6 +207,7 @@ function declarationParser() : atype.DeclarationNode[] {
       nextIndex();
       const identifier = parserTokens[parserIndex];
       let value: any;
+      let autoFlag = false;
       if (parserTokens[parserIndex+1] && parserTokens[parserIndex+1].name === 'AssignmentToken') {
          nextIndex();
          nextIndex();
@@ -216,13 +217,15 @@ function declarationParser() : atype.DeclarationNode[] {
          throw new SyntaxError(`Expected '=' after '${identifier.value}' but found '=='. Use '=' for assignment, '==' only for comparison.`);
       }
       else {
-         value = { name: 'StringNode', value: undefined };
+         value = { name: 'NumericNode', value: '0' };
+         autoFlag = true;
       }
 
       declarations.push({
          name: 'DeclarationNode',
          identifier: identifier.value!,
-         value: value
+         value: value,
+         autoInitialized: autoFlag
       });
 
       if (parserTokens[parserIndex + 1]?.name === 'CommaToken') {

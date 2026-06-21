@@ -16,7 +16,7 @@ export function semanticAnalyzer(program: { body: atype.SentencesNode[] }): Anal
          case 'DeclarationNode': {
             checkRedeclared(node.identifier)
             let type: ValueType | undefined
-            if (node.value && node.value.name !== 'StringNode' || node.value?.value !== undefined) {
+            if (!node.autoInitialized && (node.value && node.value.name !== 'StringNode' || node.value?.value !== undefined)) {
                type = inferType(node.value)
             }
             symbols.push({ name: node.identifier, type })

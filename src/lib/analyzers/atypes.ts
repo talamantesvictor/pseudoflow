@@ -91,7 +91,7 @@ export type Token = { line?: number } & (
 // Nodes
 // *******************************************
 
-export type DeclarationNode =          { name: 'DeclarationNode', identifier: string, value: Node };
+export type DeclarationNode =          { name: 'DeclarationNode', identifier: string, value: Node, autoInitialized?: boolean };
 export type AssignmentNode =           { name: 'AssignmentNode', identifier: IdentifierNode | ArrayIndexNode, value: Node };
 export type PrintNode =                { name: 'PrintNode', value: Node };
 export type ReadNode =                 { name: 'ReadNode', identifier: IdentifierToken };
