@@ -118,7 +118,7 @@ function readTreeNode(node: atype.SentencesNode, position: Vector): any {
          textValue = node.identifier.array.value + '[' + valueBuilder(node.identifier.index, false) + ']';
       }
       let builtValue = valueBuilder(node.value, false);
-      if (builtValue !== undefined) {
+      if (!node.autoInitialized && builtValue !== undefined) {
          textValue += '=' + builtValue;
       }
       const textNode = textLabel(textValue, position, {
