@@ -275,9 +275,14 @@
        e.preventDefault();
        const text = e.clipboardData?.getData('text/plain');
        if (!text) return;
+       const sel = window.getSelection();
+       const cursorOffset = sel && sel.isCollapsed ? getCursorOffset() : -1;
        document.execCommand('insertHTML', false, text.replace(/\n/g, '<br>'));
        editorElement.textContent = editorElement.innerText;
        undoer.setLastSnapshot(editorElement.innerText);
+       if (cursorOffset >= 0) {
+          restoreCursorAt(cursorOffset + text.length);
+       }
        beautifyCode();
     }
 
