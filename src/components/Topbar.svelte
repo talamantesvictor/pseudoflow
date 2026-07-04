@@ -69,6 +69,10 @@
     onInfoButtonClick();
   };
 
+  const keydownActivate = (fn: () => void) => (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') fn();
+  };
+
   $: executeButtonImage = isProgramRunning ? stopButton : playButton;
 
   function selectFileName(e: Event | HTMLInputElement) {
@@ -103,7 +107,7 @@
         <li
           class="tooltip"
           on:click={newButtonClick}
-          on:keydown={newButtonClick}
+          on:keydown={keydownActivate(newButtonClick)}
         >
           <span class="btn-icon">{@html newButton}</span>
           <span class="tooltiptext">{$translationStore.APP_NEW}</span>
@@ -111,7 +115,7 @@
         <li
           class="tooltip"
           on:click={importButtonClick}
-          on:keydown={importButtonClick}
+          on:keydown={keydownActivate(importButtonClick)}
         >
           <span class="btn-icon">{@html openButton}</span>
           <span class="tooltiptext">{$translationStore.APP_OPEN}</span>
@@ -119,7 +123,7 @@
         <li
           class="tooltip"
           on:click={exportButtonClick}
-          on:keydown={exportButtonClick}
+          on:keydown={keydownActivate(exportButtonClick)}
         >
           <span class="btn-icon">{@html saveButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SAVE}</span>
@@ -127,7 +131,7 @@
         <li
           class="tooltip mobile-only"
           on:click={settingsButtonClick}
-          on:keydown={settingsButtonClick}
+          on:keydown={keydownActivate(settingsButtonClick)}
         >
           <span class="btn-icon">{@html settingsButton}</span>
           <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span
@@ -136,7 +140,7 @@
         <li
           class="tooltip mobile-only"
           on:click={infoButtonClick}
-          on:keydown={infoButtonClick}
+          on:keydown={keydownActivate(infoButtonClick)}
         >
           <span class="btn-icon">{@html infoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
@@ -148,7 +152,7 @@
           role="button"
           tabindex="-1"
           on:click={onLabelClick}
-          on:keydown={onLabelClick}>{$translationStore.APP_FILE}</span
+          on:keydown={keydownActivate(onLabelClick)}>{$translationStore.APP_FILE}</span
         >
         <input
           id="fileinfo-name"
@@ -165,7 +169,7 @@
           role="button"
           tabindex="0"
           on:click={() => $canUndoStore && onUndoClick()}
-          on:keydown={() => $canUndoStore && onUndoClick()}
+          on:keydown={keydownActivate(() => $canUndoStore && onUndoClick())}
         >
           <span class="btn-icon">{@html undoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_UNDO} (Ctrl+Z)</span>
@@ -176,7 +180,7 @@
           role="button"
           tabindex="0"
           on:click={() => $canRedoStore && onRedoClick()}
-          on:keydown={() => $canRedoStore && onRedoClick()}
+          on:keydown={keydownActivate(() => $canRedoStore && onRedoClick())}
         >
           <span class="btn-icon">{@html redoButton}</span>
           <span class="tooltiptext">{$translationStore.APP_REDO} (Ctrl+Y)</span>
@@ -191,7 +195,7 @@
         role="button"
         tabindex="0"
         on:click={settingsButtonClick}
-        on:keydown={settingsButtonClick}
+        on:keydown={keydownActivate(settingsButtonClick)}
       >
         <span class="btn-icon">{@html settingsButton}</span>
         <span class="tooltiptext">{$translationStore.APP_SETTINGS_TITLE}</span>
@@ -201,7 +205,7 @@
         role="button"
         tabindex="0"
         on:click={infoButtonClick}
-        on:keydown={infoButtonClick}
+        on:keydown={keydownActivate(infoButtonClick)}
       >
         <span class="btn-icon">{@html infoButton}</span>
         <span class="tooltiptext">{$translationStore.APP_INFO_TITLE}</span>
@@ -213,7 +217,7 @@
         role="button"
         tabindex="0"
         on:click={chartToggleClick}
-        on:keydown={chartToggleClick}
+        on:keydown={keydownActivate(chartToggleClick)}
         class:active={isChartVisible}
       >
         {$translationStore.APP_CHART_TOGGLE}
@@ -224,7 +228,7 @@
       role="button"
       tabindex="0"
       on:click={runButtonClick}
-      on:keydown={runButtonClick}
+      on:keydown={keydownActivate(runButtonClick)}
       class:blocked={hasSyntaxErrors && !isProgramRunning}
       class:shake={shakeButton}
     >
