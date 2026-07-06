@@ -371,7 +371,7 @@
 <div id="wrapper" on:mousedown={generateTree}>
    {#if $flowchartDrawingStore}
    <div id="flowchart-area" class:active={isChartVisible}>
-      <Chart sintaxTree="{syntaxTree['body']}"></Chart>
+      <Chart syntaxTree="{syntaxTree['body']}"></Chart>
    </div>
    {/if}
    <div id="output-area" class:active="{isProgramRunning}" class:twoColumnLayout="{$flowchartDrawingStore}">

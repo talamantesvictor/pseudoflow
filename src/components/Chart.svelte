@@ -6,7 +6,7 @@
    import { translationStore, chartPaletteStore } from "../lib/stores";
    import type { ChartPalette } from "../lib/themes";
 
-   export let sintaxTree: SentencesNode[];
+   export let syntaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
    let userScale = 50;
    let konvaScale = 0.5;
@@ -18,8 +18,8 @@
 
    $: palette = $chartPaletteStore;
    
-   $: if (sintaxTree && konvaContainer && palette) {
-      chartDimensions = grapher(sintaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8, palette);
+   $: if (syntaxTree && konvaContainer && palette) {
+      chartDimensions = grapher(syntaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8, palette);
    }
 
    $: if (autoFit && chartDimensions && konvaContainer) {

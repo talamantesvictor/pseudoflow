@@ -2,7 +2,7 @@
     import { 
        translationStore, 
        changeTranslation, 
-       changecodeWordsStore, 
+       changeCodeWordsStore, 
        codeWordLang, 
        translationLang, 
        changeFlowchartVisibility, 
@@ -22,7 +22,7 @@
    }
 
    function selectcodeWordsStore(e: Event) {
-      changecodeWordsStore((e.srcElement as HTMLInputElement)['value']);
+      changeCodeWordsStore((e.srcElement as HTMLInputElement)['value']);
    }
 
     function toggleFlowchart(e: Event) {

@@ -40,7 +40,7 @@ export const beautifier = (code: string, reservedWords: object, highlightedRow: 
       lines[index] = lines[index].replace(/ /g, "&nbsp;");
       // Temporary replace comments to avoid 
       // issues with styling of reserved words
-      let comments = lines[index].match(/\/\/.*/g);;
+      let comments = lines[index].match(/\/\/.*/g);
       if (comments) {
          lines[index] = lines[index].replace(comments[0],'<##pf-comment$!>');
       }

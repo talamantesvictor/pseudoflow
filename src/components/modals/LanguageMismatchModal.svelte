@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { translationStore, changecodeWordsStore, changeTranslation } from "../../lib/stores";
+  import { translationStore, changeCodeWordsStore, changeTranslation } from "../../lib/stores";
   import { createEventDispatcher } from "svelte";
 
   export let fileLang: "en" | "es";
@@ -7,7 +7,7 @@
   const dispatch = createEventDispatcher();
 
   const switchLang = () => {
-    changecodeWordsStore(fileLang);
+    changeCodeWordsStore(fileLang);
     changeTranslation(fileLang);
     dispatch("closeModal");
   };

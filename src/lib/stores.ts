@@ -63,7 +63,7 @@ export const changeTranslation = (langCode) => {
    }
 };
 
-export const changecodeWordsStore = (langCode) => {
+export const changeCodeWordsStore = (langCode) => {
    switch (codeWordLang = langCode) {
       case 'es':
          codeWordStore.set(spanishWords);

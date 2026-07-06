@@ -23,7 +23,7 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
          break;
       }
 
-      const newNode = intepretTreeNode(node);
+      const newNode = interpretTreeNode(node);
       interpreterPrints += newNode!.print;
    }
 
@@ -46,7 +46,7 @@ export function addSentence(sentence: atype.SentencesNode, index: number) {
    runningSentences.splice(index, 0, sentence);
 }
 
-function intepretTreeNode(node: atype.SentencesNode) {
+function interpretTreeNode(node: atype.SentencesNode) {
    if (node.name === 'DeclarationNode') {
       const builtValue = valueBuilder(node.value);
       const value = safeEval(builtValue);
