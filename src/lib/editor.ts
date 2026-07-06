@@ -8,7 +8,7 @@ export const getLineNumbers = (rows: number) : string => {
    return rowsHtml;
 }
 
-export const insertTab = () => {
+export const insertTab = (): void => {
    const sel = window.getSelection();
    if (!sel || !sel.rangeCount) return;
    const range = sel.getRangeAt(0);
@@ -82,7 +82,7 @@ export const outdentLines = (element: HTMLElement): string | null => {
    return changed ? range.lines.join('\n') : null;
 }
 
-export const insertTemplate = (template: string) => {
+export const insertTemplate = (template: string): void => {
    const templateArray = template.split('\n');
    templateArray.forEach(element => {
       document.execCommand("InsertHTML", false, element);
@@ -90,7 +90,7 @@ export const insertTemplate = (template: string) => {
    });
 }
 
-export const insertLineBreak = (selection: Selection) => {
+export const insertLineBreak = (selection: Selection): void => {
    if (!selection.anchorNode) return;
    const currentLine = getActiveRowNumber(selection);
    const fullText = selection.anchorNode.parentNode?.['innerText'] || '';
@@ -107,7 +107,7 @@ export const insertLineBreak = (selection: Selection) => {
    }
 }
 
-export const unselectText = (selection: Selection) => {
+export const unselectText = (selection: Selection): void => {
    const range = selection.getRangeAt(0);
    range.setStart(range.endContainer, range.endOffset);
 }
@@ -172,7 +172,7 @@ export const getSelectedLines = (element: HTMLElement): SelectedRange | null => 
    } catch { return null; }
 }
 
-export const getActiveRowNumber = (selection: Selection, element: any = false) : number => {
+export const getActiveRowNumber = (selection: Selection, element?: HTMLElement): number => {
    if (element) {
       if (element !== document.activeElement) return -1;
       try {

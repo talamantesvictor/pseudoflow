@@ -1,12 +1,12 @@
 import type * as atype from "../analyzers/atypes";
 
 let interpreterPrints: string;
-let interpreterVariables: Array<Object>;
+let interpreterVariables: Array<{identifier: string, value: unknown}>;
 let shouldReadInput: boolean;
 let runningSentences: atype.SentencesNode[];
 let lastNode: atype.SentencesNode;
 
-export function interpreter(sentences: atype.SentencesNode[] = runningSentences) {
+export function interpreter(sentences: atype.SentencesNode[] = runningSentences): {prints: string, interruptedForInput: boolean, pendingSentences: atype.SentencesNode[], lastNode: atype.SentencesNode | undefined} {
    interpreterPrints = '';
    shouldReadInput = false;
    runningSentences = [...sentences];
@@ -35,18 +35,18 @@ export function interpreter(sentences: atype.SentencesNode[] = runningSentences)
    };
 }
 
-export function interpreterReset() {
+export function interpreterReset(): void {
    interpreterPrints = '';
    shouldReadInput = false;
    interpreterVariables = [];
    runningSentences = [];
 }
 
-export function addSentence(sentence: atype.SentencesNode, index: number) {
+export function addSentence(sentence: atype.SentencesNode, index: number): void {
    runningSentences.splice(index, 0, sentence);
 }
 
-function interpretTreeNode(node: atype.SentencesNode) {
+function interpretTreeNode(node: atype.SentencesNode): {print: string} {
    if (node.name === 'DeclarationNode') {
       const builtValue = valueBuilder(node.value);
       const value = safeEval(builtValue);
@@ -201,7 +201,7 @@ function interpretTreeNode(node: atype.SentencesNode) {
    }
 }
 
-function groupBuilder(groupNode: atype.GroupNode, enableVariables = true) {
+function groupBuilder(groupNode: atype.GroupNode, enableVariables: boolean = true): string {
    let groupExpression = '(';
 
    if (groupNode.body.name === 'ExpressionNode') {
@@ -214,7 +214,7 @@ function groupBuilder(groupNode: atype.GroupNode, enableVariables = true) {
    return groupExpression += ')';
 }
 
-function expressionBuilder(node: atype.ExpressionNode, enableVariables = true) {
+function expressionBuilder(node: atype.ExpressionNode, enableVariables: boolean = true): string {
    let expression: string;
 
    if (node.left.name === 'GroupNode') {
@@ -501,7 +501,7 @@ function tokenize(expr: string): { type: string; value: string }[] {
    return tokens;
 }
 
-export function valueBuilder(node, enableVariables = true) {
+export function valueBuilder(node: atype.Node, enableVariables: boolean = true): unknown {
    let value: any;
 
    if (node.name === 'IdentifierNode' && enableVariables && interpreterVariables) {

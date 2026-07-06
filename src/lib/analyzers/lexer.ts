@@ -1,10 +1,9 @@
 import type * as atype from "./atypes"
 import { codeWordStore } from "../stores";
+import englishWords from "../../i18n/code/en.json";
 
-let tokenStringMap: Array<atype.Token>;
-
-codeWordStore.subscribe(word => {
-   tokenStringMap = [
+function buildTokenMap(word: typeof englishWords): Array<atype.Token> {
+   return [
       { name: 'DeclarationToken',         rule: new RegExp('^' + word.CODE_VAR + '$', 'g') },
       { name: 'PrintToken',               rule: new RegExp('^' + word.CODE_PRINT + '$', 'g') },
       { name: 'ReadToken',                rule: new RegExp('^' + word.CODE_READ + '$', 'g') },
@@ -35,11 +34,17 @@ codeWordStore.subscribe(word => {
       { name: 'NumericToken',             rule: /^\-?(\d?)+\.?\d+$/g },
       { name: 'IdentifierToken',          rule: /\w+/g },
       { name: 'OpenBracketToken',         rule: /^\[$/g },
-      { name: 'CloseBracketToken',        rule: /^\]$/g }, 
-      { name: 'CommaToken',               rule: /^\,$/g }, 
-      { name: 'DotToken',                 rule: /^\.$/g }, 
+      { name: 'CloseBracketToken',        rule: /^\]$/g },
+      { name: 'CommaToken',               rule: /^\,$/g },
+      { name: 'DotToken',                 rule: /^\.$/g },
       { name: 'OtherToken',               rule: /./g }
    ];
+}
+
+let tokenStringMap: Array<atype.Token> = buildTokenMap(englishWords);
+
+codeWordStore.subscribe(word => {
+   tokenStringMap = buildTokenMap(word);
 });
 
 export const lexer = (code: string) : Array<atype.Token> => {

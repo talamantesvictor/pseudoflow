@@ -3,7 +3,7 @@ import type { SelectedRange } from "../editor";
 // Highlight the code by injecting spans
 // with the corresponding classes and
 // takes care of spaces and tabs
-export const beautifier = (code: string, reservedWords: object, highlightedRow: number, selectedLines: SelectedRange | null = null) : string => {
+export const beautifier = (code: string, reservedWords: Record<string, string>, highlightedRow: number, selectedLines: SelectedRange | null = null): string => {
    // Calculate needed spaces to replace all tabs 
    // and maintain columns aligned   
    let tabsArray: number[] = [];
