@@ -25,6 +25,12 @@ function storedBool(key: string, fallback: boolean): boolean {
    return fallback;
 }
 
+function persistValue(key: string, value: string): void {
+   if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, value);
+   }
+}
+
 export let codeWordLang = stored('pseudoflow-code-lang', 'en');
 export let translationLang = stored('pseudoflow-translation', 'en');
 export let isFlowchartVisible = storedBool('pseudoflow-flowchart', true);
@@ -58,9 +64,7 @@ export const changeTranslation = (langCode) => {
          translationStore.set(englishTranslations);
          break;
    }
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-translation', langCode);
-   }
+   persistValue('pseudoflow-translation', langCode);
 };
 
 export const changeCodeWordsStore = (langCode) => {
@@ -73,41 +77,31 @@ export const changeCodeWordsStore = (langCode) => {
          codeWordStore.set(englishWords);
          break;
    }
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-code-lang', langCode);
-   }
+   persistValue('pseudoflow-code-lang', langCode);
 };
 
 export const changeFlowchartVisibility = (isVisible) => {
    isFlowchartVisible = isVisible;
    flowchartDrawingStore.set(isVisible);
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-flowchart', String(isVisible));
-   }
+   persistValue('pseudoflow-flowchart', String(isVisible));
 };
 
 export const changeSyntaxErrors = (isEnabled) => {
    syntaxErrorsEnabled = isEnabled;
    syntaxErrorsStore.set(isEnabled);
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-syntax', String(isEnabled));
-   }
+   persistValue('pseudoflow-syntax', String(isEnabled));
 };
 
 export const changeSemanticErrors = (isEnabled) => {
    semanticErrorsEnabled = isEnabled;
    semanticErrorsStore.set(isEnabled);
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-semantic', String(isEnabled));
-   }
+   persistValue('pseudoflow-semantic', String(isEnabled));
 };
 
 export const changeTheme = (id: string) => {
    themeId = id;
    themeStore.set(id);
-   if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('pseudoflow-theme', id);
-   }
+   persistValue('pseudoflow-theme', id);
    if (typeof document !== 'undefined') {
       document.documentElement.dataset.theme = id;
    }
