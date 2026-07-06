@@ -409,11 +409,6 @@
          position: absolute; top: 0; left: 76px; right: 0;
          outline: 0px solid transparent; pointer-events: all; white-space: pre;
          line-height: 22px; color: transparent; caret-color: var(--color-accent, white);
-      }
-   }
-
-   .line-num {
-      display: inline-block; min-width: 36px; text-align: right;
-      padding-right: 20px; color: $linenumbers-foreground; user-select: none;
+       }
    }
 </style>
