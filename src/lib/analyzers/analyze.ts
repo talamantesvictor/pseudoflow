@@ -6,11 +6,7 @@ import type { AnalysisResult } from './atypes'
 export function analyze(code: string): AnalysisResult {
    const tokens = lexer(code)
    const { body, errors } = parser(tokens)
-
-   if (errors.length === 0) {
-      const semanticErrors = semanticAnalyzer({ body })
-      errors.push(...semanticErrors)
-   }
+   errors.push(...semanticAnalyzer({ body }))
 
    return { program: { body }, errors }
 }
