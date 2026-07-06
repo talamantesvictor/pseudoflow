@@ -37,6 +37,9 @@ export let isFlowchartVisible = storedBool('pseudoflow-flowchart', true);
 export let syntaxErrorsEnabled = storedBool('pseudoflow-syntax', true);
 export let semanticErrorsEnabled = storedBool('pseudoflow-semantic', true);
 export let themeId = stored('pseudoflow-theme', 'dracula');
+if (typeof document !== 'undefined') {
+   document.documentElement.dataset.theme = themeId;
+}
 export const APP_VERSION: string = __APP_VERSION__;
 export const FORMAT_VERSION: string = __FORMAT_VERSION__;
 export const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;

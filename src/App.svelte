@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore, codeWordLang, codeWordStore, APP_VERSION, themeId } from "./lib/stores";
+    import { translationStore, defaultName, fileNameStore, flowchartDrawingStore, errorStore, syntaxErrorsStore, codeWordLang, codeWordStore, APP_VERSION } from "./lib/stores";
    import type * as atype from "./lib/analyzers/atypes"
    import Topbar from "./components/Topbar.svelte";
    import Editor from "./components/Editor.svelte";
@@ -16,13 +16,9 @@
    import { analyze } from "./lib/analyzers/analyze";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
     import { parsePffFile, serializePffFile, createPffMeta, updatePffMeta, compareVersions } from "./lib/pff";
-   import type { PffMeta, ParseResult } from "./lib/pff";
+    import type { PffMeta, ParseResult } from "./lib/pff";
 
-   if (typeof document !== 'undefined') {
-      document.documentElement.dataset.theme = themeId;
-   }
-
-   const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
+    const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
    
     let modal: any;
    let isProgramRunning: boolean = false;
@@ -44,25 +40,24 @@
     let pointerStartX, rightColumnStartWidth;
     let editorRef: any;
 
-    // Shortcut key handling
-   window.onkeydown = function (event) {
-      clearTimeout(timeoutToParse);
-      timeoutToParse = setTimeout(generateTree, 350);
+    function handleWindowKeydown(event: KeyboardEvent) {
+       clearTimeout(timeoutToParse);
+       timeoutToParse = setTimeout(generateTree, 350);
 
-      if (event.code === 'F5') {
-         event.preventDefault();
-         if (!isProgramRunning) {
-            isProgramRunning = true;
-            prepareExecution();
-         }
-      } else if (event.code === 'Escape' && isProgramRunning) {
-         interpreterReset();
-         enableUserInput = false;
-         isProgramRunning = false;
-      } else if (event.code === 'Escape' && modal) {
-         closeModal();
-      }
-   }
+       if (event.code === 'F5') {
+          event.preventDefault();
+          if (!isProgramRunning) {
+             isProgramRunning = true;
+             prepareExecution();
+          }
+       } else if (event.code === 'Escape' && isProgramRunning) {
+          interpreterReset();
+          enableUserInput = false;
+          isProgramRunning = false;
+       } else if (event.code === 'Escape' && modal) {
+          closeModal();
+       }
+    }
 
    // Fix modal title not updating after language change
    translationStore.subscribe((translations) => {
@@ -345,6 +340,7 @@
 
 </script>
 
+<svelte:window on:keydown={handleWindowKeydown} />
 
 <Topbar 
    onRunButtonClick={runButtonClick}
