@@ -166,15 +166,16 @@
 
    // Import code from a file using an input element in HTML
     function importDataFromFile(e: Event) {
-       const target = e.target as HTMLInputElement;
-      const fileName = target.files[0].name;
+        const target = e.target as HTMLInputElement;
+       if (!target.files || !target.files[0]) return;
+       const fileName = target.files[0].name;
 
-      const reader = new FileReader();
+       const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
-         loadFileContent(event.target.result.toString(), fileName);
+          loadFileContent(event.target.result.toString(), fileName);
 		});
 		reader.readAsText(e.target.files[0], "UTF-8");
-   }
+    }
 
    // Handle "New Page" button in top bar
    function newButtonClick() {
