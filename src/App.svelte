@@ -70,7 +70,7 @@
    codeWordStore.subscribe(() => {
       lastPseudocode = '';
       clearTimeout(timeoutToParse);
-      generateTree();
+      timeoutToParse = setTimeout(generateTree, 350);
    });
 
    // Generate tree and perform pre-execution tasks on run button press
