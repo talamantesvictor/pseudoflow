@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { createEventDispatcher } from 'svelte';
+   import { createEventDispatcher, onDestroy } from 'svelte';
    export let content: string;
    export let isInputPromptEnabled: boolean;
    const dispatch = createEventDispatcher();
@@ -12,67 +12,77 @@
       hiddenInput.focus();
    }
 
-   document.onkeydown = function (event) {
-      if (isInputPromptEnabled) {
-         event.preventDefault();
-         if (
-            event.code.indexOf('Key') == 0      || 
-            event.code.indexOf('Digit') == 0    || 
-            event.code === 'NumpadMultiply'     || 
-            event.code === 'NumpadAdd'          || 
-            event.code === 'NumpadSubtract'     || 
-            event.code === 'NumpadDecimal'      || 
-            event.code === 'NumpadDivide'       || 
-            event.code === 'Semicolon'          || 
-            event.code === 'Equal'              || 
-            event.code === 'Comma'              || 
-            event.code === 'Minus'              || 
-            event.code === 'Period'             || 
-            event.code === 'Slash'              || 
-            event.code === 'Backquote'          || 
-            event.code === 'BracketLeft'        || 
-            event.code === 'Backslash'          || 
-            event.code === 'BracketRight'
-            ) {
-               if (event.key !== 'Dead') {
-                  capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
-                  capturedInput++;
-               }
-         }
-         else if (event.code === 'Space') {
-            capturedMessage = capturedMessage.slice(0, capturedInput) + ' ' + capturedMessage.slice(capturedInput);
-            capturedInput++;
-         }
-         else if (event.code === 'Backspace') {
-            const newPrompt = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
-            capturedMessage = capturedMessage.slice(0, newPrompt) + capturedMessage.slice(capturedInput);
-            capturedInput = newPrompt;
-         }
-         else if (event.code === 'Delete') {
-            capturedMessage = capturedMessage.slice(0, capturedInput) + capturedMessage.slice(capturedInput + 1);
-         }
-         else if (event.code === 'ArrowLeft') {
-            capturedInput = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
-         }
-         else if (event.code === 'ArrowRight') {
-            capturedInput = capturedInput + 1 < capturedMessage.length ? capturedInput + 1 : capturedMessage.length;
-         }
-         else if (event.code === 'Home' || event.code === 'ArrowUp') {
-            capturedInput = 0;
-         }
-         else if (event.code === 'End' || event.code === 'ArrowDown') {
-            capturedInput = capturedMessage.length;
-         }
-         else if (event.code === 'Enter') {
-            dispatch('message', {
-               text: capturedMessage
-            });
-            capturedMessage = '';
-            capturedInput = 0;
-         }
-         
+   function handleReadInput(event: KeyboardEvent) {
+      if (!isInputPromptEnabled) return;
+      event.preventDefault();
+      if (
+         event.code.indexOf('Key') == 0      || 
+         event.code.indexOf('Digit') == 0    || 
+         event.code === 'NumpadMultiply'     || 
+         event.code === 'NumpadAdd'          || 
+         event.code === 'NumpadSubtract'     || 
+         event.code === 'NumpadDecimal'      || 
+         event.code === 'NumpadDivide'       || 
+         event.code === 'Semicolon'          || 
+         event.code === 'Equal'              || 
+         event.code === 'Comma'              || 
+         event.code === 'Minus'              || 
+         event.code === 'Period'             || 
+         event.code === 'Slash'              || 
+         event.code === 'Backquote'          || 
+         event.code === 'BracketLeft'        || 
+         event.code === 'Backslash'          || 
+         event.code === 'BracketRight'
+         ) {
+            if (event.key !== 'Dead') {
+               capturedMessage = capturedMessage.slice(0, capturedInput) + event.key + capturedMessage.slice(capturedInput);
+               capturedInput++;
+            }
       }
-   };
+      else if (event.code === 'Space') {
+         capturedMessage = capturedMessage.slice(0, capturedInput) + ' ' + capturedMessage.slice(capturedInput);
+         capturedInput++;
+      }
+      else if (event.code === 'Backspace') {
+         const newPrompt = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
+         capturedMessage = capturedMessage.slice(0, newPrompt) + capturedMessage.slice(capturedInput);
+         capturedInput = newPrompt;
+      }
+      else if (event.code === 'Delete') {
+         capturedMessage = capturedMessage.slice(0, capturedInput) + capturedMessage.slice(capturedInput + 1);
+      }
+      else if (event.code === 'ArrowLeft') {
+         capturedInput = capturedInput - 1 >=0 ? capturedInput - 1 : 0;
+      }
+      else if (event.code === 'ArrowRight') {
+         capturedInput = capturedInput + 1 < capturedMessage.length ? capturedInput + 1 : capturedMessage.length;
+      }
+      else if (event.code === 'Home' || event.code === 'ArrowUp') {
+         capturedInput = 0;
+      }
+      else if (event.code === 'End' || event.code === 'ArrowDown') {
+         capturedInput = capturedMessage.length;
+      }
+      else if (event.code === 'Enter') {
+         dispatch('message', {
+            text: capturedMessage
+         });
+         capturedMessage = '';
+         capturedInput = 0;
+      }
+   }
+
+   $: {
+      if (isInputPromptEnabled) {
+         document.addEventListener('keydown', handleReadInput);
+      } else {
+         document.removeEventListener('keydown', handleReadInput);
+      }
+   }
+
+   onDestroy(() => {
+      document.removeEventListener('keydown', handleReadInput);
+   });
 
 </script>
 
