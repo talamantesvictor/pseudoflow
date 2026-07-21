@@ -120,8 +120,8 @@
    <div id="placeholder">
       <div class="placeholder-content">
          <div class="placeholder-icon">{@html placeholderIcon}</div>
-         <p class="placeholder-title">Start writing your algorithm</p>
-         <p class="placeholder-sub">Your flowchart will be rendered automatically as you type.</p>
+          <p class="placeholder-title">{$translationStore.APP_CHART_PLACEHOLDER_TITLE}</p>
+          <p class="placeholder-sub">{$translationStore.APP_CHART_PLACEHOLDER_SUB}</p>
       </div>
    </div>
    {/if}

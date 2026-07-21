@@ -50,5 +50,7 @@
     "APP_FILE_NEW_VERSION": "Este archivo fue creado con una versión más reciente de PseudoFlow.",
     "APP_FILE_OLD_FORMAT": "Este archivo usa un formato antiguo que ya no es compatible.",
     "APP_FILE_OLD_FORMAT_DESC": "Por favor descarga la última versión de PseudoFlow para abrir este archivo.",
-    "APP_FILE_OLD_FORMAT_DISMISS": "OK"
+    "APP_FILE_OLD_FORMAT_DISMISS": "OK",
+    "APP_CHART_PLACEHOLDER_TITLE": "Empieza a escribir tu algoritmo",
+    "APP_CHART_PLACEHOLDER_SUB": "Tu diagrama de flujo se renderizará automáticamente mientras escribes."
 }

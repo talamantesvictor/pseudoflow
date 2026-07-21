@@ -50,5 +50,7 @@
     "APP_FILE_NEW_VERSION": "This file was created with a newer version of PseudoFlow.",
     "APP_FILE_OLD_FORMAT": "This file uses an older format that is no longer supported.",
     "APP_FILE_OLD_FORMAT_DESC": "Please download the latest version of PseudoFlow to open this file.",
-    "APP_FILE_OLD_FORMAT_DISMISS": "OK"
+    "APP_FILE_OLD_FORMAT_DISMISS": "OK",
+    "APP_CHART_PLACEHOLDER_TITLE": "Start writing your algorithm",
+    "APP_CHART_PLACEHOLDER_SUB": "Your flowchart will be rendered automatically as you type."
 }
