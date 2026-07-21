@@ -5,6 +5,7 @@
    import type { SentencesNode } from "src/lib/analyzers/atypes";
    import { translationStore, chartPaletteStore } from "../lib/stores";
    import type { ChartPalette } from "../lib/themes";
+   import placeholderIcon from "../images/flowchart-placeholder.svg?raw";
 
    export let syntaxTree: SentencesNode[];
    let konvaContainer, konvaStage;
@@ -119,19 +120,7 @@
    {#if !syntaxTree || syntaxTree.length === 0}
    <div id="placeholder">
       <div class="placeholder-content">
-         <svg class="placeholder-icon" viewBox="0 0 120 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="30" y="5" width="60" height="24" rx="6" class="ph-icon-outline" />
-            <line x1="60" y1="29" x2="60" y2="35" class="ph-icon-outline" />
-            <polygon points="50,35 70,35 75,43 45,43" class="ph-icon-outline" />
-            <line x1="60" y1="43" x2="60" y2="49" class="ph-icon-outline" />
-            <rect x="30" y="49" width="60" height="24" rx="6" class="ph-icon-outline" />
-            <line x1="60" y1="73" x2="60" y2="79" class="ph-icon-outline" />
-            <ellipse cx="60" cy="88" rx="30" ry="12" class="ph-icon-outline" />
-            <line x1="10" y1="17" x2="26" y2="17" class="ph-icon-arrow" />
-            <polygon points="26,13 26,21 30,17" class="ph-icon-arrow" />
-            <line x1="110" y1="61" x2="94" y2="61" class="ph-icon-arrow" />
-            <polygon points="94,57 94,65 90,61" class="ph-icon-arrow" />
-         </svg>
+         <div class="placeholder-icon">{@html placeholderIcon}</div>
          <p class="placeholder-title">Start writing your algorithm</p>
          <p class="placeholder-sub">Your flowchart will be rendered automatically as you type.</p>
       </div>
@@ -193,25 +182,35 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.25rem;
           max-width: 320px;
           text-align: center;
           user-select: none;
        }
 
        .placeholder-icon {
-          width: 100px;
+          width: 220px;
           height: auto;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0;
           opacity: 0.5;
-       }
 
-       .ph-icon-outline {
-          stroke: $linenumbers-foreground;
-       }
+          :global(.ph-shape) {
+             stroke: $linenumbers-foreground;
+             fill: none;
+             stroke-width: 2;
+          }
 
-       .ph-icon-arrow {
-          stroke: $accent-color;
+          :global(.ph-terminator) {
+             stroke: $linenumbers-foreground;
+             fill: none;
+             stroke-width: 1.5;
+          }
+
+          :global(.ph-arrow) {
+             stroke: $accent-color;
+             fill: $accent-color;
+             stroke-width: 1.5;
+          }
        }
 
        .placeholder-title {

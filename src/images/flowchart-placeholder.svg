@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="75" y="5" width="40" height="15" rx="4" class="ph-terminator" />
+  <line x1="95" y1="20" x2="95" y2="33" class="ph-arrow" />
+  <polygon points="92,33 98,33 95,37" class="ph-arrow" />
+  <polygon points="55,37 145,37 135,62 45,62" class="ph-shape" />
+  <line x1="95" y1="62" x2="95" y2="75" class="ph-arrow" />
+  <polygon points="92,75 98,75 95,79" class="ph-arrow" />
+  <rect x="75" y="79" width="40" height="15" rx="4" class="ph-terminator" />
+</svg>
