@@ -338,8 +338,8 @@
           margin-left: 1rem;
 
           #fileinfo-label {
-            background-color: $accent-color;
-            color: black;
+             background-color: $accent-color;
+             color: $fileinfo-label-text;
             font-weight: bold;
             font-size: 0.75rem;
             height: 100%;
