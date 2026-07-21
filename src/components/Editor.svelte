@@ -207,7 +207,7 @@
          case "Enter":
             e.preventDefault();
             insertLineBreak(window.getSelection());
-            var isChromium = !!window.CSS && window.CSS.supports && window.CSS.supports("(-webkit-appearance:none)");
+            const isChromium = !!window.CSS && window.CSS.supports && window.CSS.supports("(-webkit-appearance:none)");
             if (isChromium) { editorDynamicArea.scrollTop += 22; editorDynamicArea.scrollLeft = 0; }
             break;
          case "Escape":
