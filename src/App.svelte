@@ -193,7 +193,7 @@
    // Handle "Open" button in top bar
    function importButtonClick() {
       if (isTauri) {
-         import("@tauri-apps/api/dialog").then(async ({ open }) => {
+          import("@tauri-apps/api/dialog").then(async ({ open }) => {
             const { readTextFile } = await import("@tauri-apps/api/fs");
             const filePath = await open({ defaultPath: $fileNameStore });
             if (filePath) {
@@ -203,7 +203,7 @@
                   (filePath as string).split(/(\\|\/)/g).pop()
                );
             }
-         });
+          }).catch(err => console.error('Tauri API error:', err));
       } else {
          document.getElementById("file-import").click();
       }
@@ -221,7 +221,7 @@
       const fileContents = serializePffFile(meta, pseudocode);
 
       if (isTauri) {
-         import("@tauri-apps/api/dialog").then(async ({ save }) => {
+          import("@tauri-apps/api/dialog").then(async ({ save }) => {
             const { invoke } = await import("@tauri-apps/api/tauri");
             const filePath = await save({ defaultPath: $fileNameStore });
             if (filePath) {
@@ -230,8 +230,8 @@
                savedPseudocode = pseudocode;
                pffMeta = meta;
             }
-         });
-         return false;
+          }).catch(err => console.error('Tauri API error:', err));
+          return false;
       }
       let textBlob = new Blob([fileContents], {type: 'text/plain'});
       let tempLink = document.createElement("a");
