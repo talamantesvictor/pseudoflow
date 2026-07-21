@@ -301,8 +301,9 @@
       lastExecutedSentence = null;
       clearTimeout(timeoutToParse);
       errorStore.set([]);
-      fileNameStore.set(defaultName);
-      pffMeta = null;
+      interpreterReset();
+       fileNameStore.set(defaultName);
+       pffMeta = null;
       clearInterval(versionWarningTimer);
       showNewVersionWarning = false;
       editorRef?.resetUndo();
