@@ -19,9 +19,9 @@
 
    $: palette = $chartPaletteStore;
    
-   $: if (syntaxTree && konvaContainer && palette) {
-      chartDimensions = grapher(syntaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8, palette);
-   }
+    $: if (syntaxTree && syntaxTree.length > 0 && konvaContainer && palette) {
+       chartDimensions = grapher(syntaxTree, arrowsLayer, symbolsLayer, konvaContainer.offsetWidth * 0.8, palette);
+    }
 
    $: if (autoFit && chartDimensions && konvaContainer) {
       const containerW = konvaContainer.offsetWidth;
@@ -114,7 +114,6 @@
 
 </script>
 
-
 <div id="chart-wrapper">
    <div id="konvaContainer" bind:this={konvaContainer} />
    {#if !syntaxTree || syntaxTree.length === 0}
@@ -148,7 +147,6 @@
       </button>
    </div>
 </div>
-
 
 <style lang="scss">
    @use "../styles/variables.scss" as *;
