@@ -5,10 +5,7 @@ import spanishWords from "../i18n/code/es.json";
 import englishTranslations from "../i18n/app/en.json";
 import spanishTranslations from "../i18n/app/es.json";
 import { chartPalettes } from './themes';
-
-declare const __APP_VERSION__: string;
-declare const __FORMAT_VERSION__: string;
-declare const __MIN_FORMAT_VERSION__: string;
+import { APP_VERSION, FORMAT_VERSION, MIN_FORMAT_VERSION } from './version';
 
 function stored(key: string, fallback: string): string {
    if (typeof localStorage !== 'undefined') {
@@ -40,9 +37,7 @@ export let themeId = stored('pseudoflow-theme', 'dracula');
 if (typeof document !== 'undefined') {
    document.documentElement.dataset.theme = themeId;
 }
-export const APP_VERSION: string = __APP_VERSION__;
-export const FORMAT_VERSION: string = __FORMAT_VERSION__;
-export const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;
+export { APP_VERSION, FORMAT_VERSION, MIN_FORMAT_VERSION };
 export const defaultName = 'pseudocode.pff';
 export const fileNameStore = writable(defaultName);
 export const pffMetaStore = writable<PffMeta | null>(null);

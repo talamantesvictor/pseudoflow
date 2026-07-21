@@ -1,8 +1,4 @@
-declare const __FORMAT_VERSION__: string;
-declare const __MIN_FORMAT_VERSION__: string;
-
-const FORMAT_VERSION: string = __FORMAT_VERSION__;
-const MIN_FORMAT_VERSION: string = __MIN_FORMAT_VERSION__;
+import { FORMAT_VERSION, MIN_FORMAT_VERSION } from './version';
 
 export interface PffMeta {
   format: "pseudoflow";
