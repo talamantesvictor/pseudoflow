@@ -58,19 +58,34 @@
    }
 
    function exportPng() {
-      if (!konvaStage || !palette) return;
+      if (!konvaStage || !palette || !chartDimensions) return;
+      const tempDiv = document.createElement('div');
+      tempDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px';
+      document.body.appendChild(tempDiv);
+      const tempStage = new Konva.Stage({
+         container: tempDiv,
+         width: chartDimensions.x,
+         height: chartDimensions.y,
+      });
+      const tempArrows = arrowsLayer.clone();
+      const tempSymbols = symbolsLayer.clone();
+      tempArrows.scale({ x: 1, y: 1 });
+      tempSymbols.scale({ x: 1, y: 1 });
+      tempStage.add(tempArrows, tempSymbols);
       const whiteLabel = palette.whiteLabel;
       const textNodes: Array<{ node: Konva.Text; original: string }> = [];
-      symbolsLayer.getChildren().forEach((child) => {
+      tempSymbols.getChildren().forEach((child) => {
          if (child instanceof Konva.Text && child.fill() === whiteLabel) {
             textNodes.push({ node: child, original: whiteLabel });
             child.fill(palette.text);
          }
       });
-      symbolsLayer.draw();
-      const dataUrl = konvaStage.toDataURL({ mimeType: 'image/png' });
+      tempSymbols.draw();
+      tempArrows.draw();
+      const dataUrl = tempStage.toDataURL({ mimeType: 'image/png', pixelRatio: 2 });
       textNodes.forEach(({ node, original }) => node.fill(original));
-      symbolsLayer.draw();
+      tempStage.destroy();
+      document.body.removeChild(tempDiv);
       const link = document.createElement('a');
       link.download = 'flowchart.png';
       link.href = dataUrl;
