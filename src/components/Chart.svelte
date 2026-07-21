@@ -116,6 +116,27 @@
 
 <div id="chart-wrapper">
    <div id="konvaContainer" bind:this={konvaContainer} />
+   {#if !syntaxTree || syntaxTree.length === 0}
+   <div id="placeholder">
+      <div class="placeholder-content">
+         <svg class="placeholder-icon" viewBox="0 0 120 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="30" y="5" width="60" height="24" rx="6" class="ph-icon-outline" />
+            <line x1="60" y1="29" x2="60" y2="35" class="ph-icon-outline" />
+            <polygon points="50,35 70,35 75,43 45,43" class="ph-icon-outline" />
+            <line x1="60" y1="43" x2="60" y2="49" class="ph-icon-outline" />
+            <rect x="30" y="49" width="60" height="24" rx="6" class="ph-icon-outline" />
+            <line x1="60" y1="73" x2="60" y2="79" class="ph-icon-outline" />
+            <ellipse cx="60" cy="88" rx="30" ry="12" class="ph-icon-outline" />
+            <line x1="10" y1="17" x2="26" y2="17" class="ph-icon-arrow" />
+            <polygon points="26,13 26,21 30,17" class="ph-icon-arrow" />
+            <line x1="110" y1="61" x2="94" y2="61" class="ph-icon-arrow" />
+            <polygon points="94,57 94,65 90,61" class="ph-icon-arrow" />
+         </svg>
+         <p class="placeholder-title">Start writing your algorithm</p>
+         <p class="placeholder-sub">Your flowchart will be rendered automatically as you type.</p>
+      </div>
+   </div>
+   {/if}
    <div id="scaler">
       <div>
          <span>Zoom:</span> {Math.round(userScale)}%
@@ -149,12 +170,64 @@
        display: flex;
        flex-direction: column;
        overflow: hidden;
+       position: relative;
     }
 
     #konvaContainer {
        width: 100%;
        flex: 1;
        overflow: auto;
+    }
+
+    #placeholder {
+       position: absolute;
+       inset: 0;
+       bottom: 4rem;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background: $flowchart-background;
+       z-index: 1;
+
+       .placeholder-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          max-width: 320px;
+          text-align: center;
+          user-select: none;
+       }
+
+       .placeholder-icon {
+          width: 100px;
+          height: auto;
+          margin-bottom: 0.5rem;
+          opacity: 0.5;
+       }
+
+       .ph-icon-outline {
+          stroke: $linenumbers-foreground;
+       }
+
+       .ph-icon-arrow {
+          stroke: $accent-color;
+       }
+
+       .placeholder-title {
+          margin: 0;
+          color: $linenumbers-foreground;
+          font-size: 1rem;
+          font-weight: 600;
+       }
+
+       .placeholder-sub {
+          margin: 0;
+          color: $linenumbers-foreground;
+          font-size: 0.8rem;
+          opacity: 0.65;
+          line-height: 1.4;
+       }
     }
 
     #scaler {
