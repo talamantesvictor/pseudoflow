@@ -3,7 +3,7 @@
    import { createEventDispatcher } from "svelte";
    import { scale, fade } from "svelte/transition";
    import { quintOut } from "svelte/easing";
-   import closeButton from '../../static/images/close_button.svg?raw';
+   import closeButton from '../images/close_button.svg?raw';
 
    const topbarDispatcher = createEventDispatcher();
    export let title: string = 'Modal';

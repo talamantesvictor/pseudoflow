@@ -8,15 +8,15 @@
     canRedoStore,
     syntaxErrorsStore,
   } from "../lib/stores";
-  import newButton from "../../static/images/new_button.svg?raw";
-  import openButton from "../../static/images/open_button.svg?raw";
-  import saveButton from "../../static/images/save_button.svg?raw";
-  import settingsButton from "../../static/images/settings_button.svg?raw";
-  import infoButton from "../../static/images/info_button.svg?raw";
-  import playButton from "../../static/images/play_button.svg?raw";
-  import stopButton from "../../static/images/stop_button.svg?raw";
-  import undoButton from "../../static/images/undo_button.svg?raw";
-  import redoButton from "../../static/images/redo_button.svg?raw";
+   import newButton from "../images/new_button.svg?raw";
+   import openButton from "../images/open_button.svg?raw";
+   import saveButton from "../images/save_button.svg?raw";
+   import settingsButton from "../images/settings_button.svg?raw";
+   import infoButton from "../images/info_button.svg?raw";
+   import playButton from "../images/play_button.svg?raw";
+   import stopButton from "../images/stop_button.svg?raw";
+   import undoButton from "../images/undo_button.svg?raw";
+   import redoButton from "../images/redo_button.svg?raw";
 
   export let isProgramRunning: boolean;
   export let isChartVisible: boolean;

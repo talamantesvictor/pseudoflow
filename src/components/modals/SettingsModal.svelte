@@ -13,9 +13,9 @@
        semanticErrorsEnabled,
         themeStore,
         changeTheme } from "../../lib/stores";
-   import draculaThumb from "../../../static/themes/dracula.webp";
-   import monokaiThumb from "../../../static/themes/monokai.webp";
-   import lightThumb from "../../../static/themes/light.webp";
+    import draculaThumb from "../../themes/dracula.webp";
+    import monokaiThumb from "../../themes/monokai.webp";
+    import lightThumb from "../../themes/light.webp";
 
     function selectTranslation(e: Event) {
       changeTranslation((e.srcElement as HTMLInputElement)['value']);
