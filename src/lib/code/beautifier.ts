@@ -35,23 +35,54 @@ export const beautifier = (code: string, reservedWords: Record<string, string>, 
    });
 
    let lines = code.split('\n');
+   let inMultilineComment = false;
    for (let index = 0; index < lines.length; index++) {
       // Actual spaces should be replaced with HTML too
       lines[index] = lines[index].replace(/ /g, "&nbsp;");
-      // Temporary replace comments to avoid 
-      // issues with styling of reserved words
-      let comments = lines[index].match(/\/\/.*/g);
-      if (comments) {
-         lines[index] = lines[index].replace(comments[0],'<##pf-comment$!>');
-      }
 
       // Temporary replace strings to avoid
       // issues with styling of reserved words
+      // (must come before comment detection so /* or // inside strings aren't mistaken)
       let strings = lines[index].match(/(["'])(?:(?=(\\?))\2.)*?\1/g);
       if (strings) {
          for (let stringsIndex = 0; stringsIndex < strings.length; stringsIndex++) {
             lines[index] = lines[index].replace(strings[stringsIndex],'<##pf-string$!>');
          }
+      }
+
+      // Temporary replace multi-line comments to avoid
+      // issues with styling of reserved words
+      let multilineCommentText = '';
+      if (inMultilineComment) {
+         const endIdx = lines[index].indexOf('*/');
+         if (endIdx !== -1) {
+            inMultilineComment = false;
+            multilineCommentText = lines[index].substring(0, endIdx + 2);
+            lines[index] = lines[index].replace(multilineCommentText, '<##pf-multicomment$!>');
+         } else {
+            multilineCommentText = lines[index];
+            lines[index] = '<##pf-multicomment$!>';
+         }
+      } else {
+         const startIdx = lines[index].indexOf('/*');
+         if (startIdx !== -1) {
+            const endIdx = lines[index].indexOf('*/', startIdx + 2);
+            if (endIdx !== -1) {
+               multilineCommentText = lines[index].substring(startIdx, endIdx + 2);
+               lines[index] = lines[index].replace(multilineCommentText, '<##pf-multicomment$!>');
+            } else {
+               inMultilineComment = true;
+               multilineCommentText = lines[index].substring(startIdx);
+               lines[index] = lines[index].replace(multilineCommentText, '<##pf-multicomment$!>');
+            }
+         }
+      }
+
+      // Temporary replace single-line comments to avoid
+      // issues with styling of reserved words
+      let comments = lines[index].match(/\/\/.*/g);
+      if (comments) {
+         lines[index] = lines[index].replace(comments[0],'<##pf-comment$!>');
       }
 
       // Highlight reserved words
@@ -62,6 +93,14 @@ export const beautifier = (code: string, reservedWords: Record<string, string>, 
             '<span class="hl-'+className+'">'+value+'</span>'
          );
       };
+
+      // Replace back the multi-line comments
+      if (multilineCommentText) {
+         lines[index] = lines[index].replace(
+            '<##pf-multicomment$!>',
+            '<span class="hl-comments">' + multilineCommentText + '</span>'
+         );
+      }
 
       // Replace back the comments
       if (comments) {
