@@ -53,6 +53,6 @@
     "APP_FILE_OLD_FORMAT_DISMISS": "OK",
     "APP_CHART_PLACEHOLDER_TITLE": "Empieza a escribir tu algoritmo",
     "APP_CHART_PLACEHOLDER_SUB": "Tu diagrama de flujo se renderizará automáticamente mientras escribes.",
-    "APP_INFO_PRIVACY": "Privacidad: Esta app usa analíticas anónimas (sin cookies, sin datos personales) para contar visitas.",
+    "APP_INFO_PRIVACY": "Esta app usa analíticas anónimas (sin cookies, sin datos personales).",
     "APP_INFO_PRIVACY_LINK": "Política de Privacidad"
 }

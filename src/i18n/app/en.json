@@ -53,6 +53,6 @@
     "APP_FILE_OLD_FORMAT_DISMISS": "OK",
     "APP_CHART_PLACEHOLDER_TITLE": "Start writing your algorithm",
     "APP_CHART_PLACEHOLDER_SUB": "Your flowchart will be rendered automatically as you type.",
-    "APP_INFO_PRIVACY": "Privacy: This app uses anonymous analytics (no cookies, no personal data) to count visits.",
+    "APP_INFO_PRIVACY": "This app uses anonymous analytics (no cookies, no personal data).",
     "APP_INFO_PRIVACY_LINK": "Privacy Policy"
 }
