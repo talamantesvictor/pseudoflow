@@ -52,5 +52,7 @@
     "APP_FILE_OLD_FORMAT_DESC": "Por favor descarga la última versión de PseudoFlow para abrir este archivo.",
     "APP_FILE_OLD_FORMAT_DISMISS": "OK",
     "APP_CHART_PLACEHOLDER_TITLE": "Empieza a escribir tu algoritmo",
-    "APP_CHART_PLACEHOLDER_SUB": "Tu diagrama de flujo se renderizará automáticamente mientras escribes."
+    "APP_CHART_PLACEHOLDER_SUB": "Tu diagrama de flujo se renderizará automáticamente mientras escribes.",
+    "APP_INFO_PRIVACY": "Privacy: This app uses anonymous analytics (no cookies, no personal data) to count visits.",
+    "APP_INFO_PRIVACY_LINK": "Privacy Policy"
 }

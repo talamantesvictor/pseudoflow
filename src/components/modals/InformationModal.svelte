@@ -9,6 +9,9 @@
 {$translationStore.APP_INFO_DESCRIPTION}<br><br>
 
 <a href="https://www.pseudoflow.app" target="_blank">pseudoflow.app</a>
+<br><br>
+{$translationStore.APP_INFO_PRIVACY}<br>
+<a href="https://github.com/talamantesvictor/pseudoflow/blob/main/PRIVACY.md" target="_blank">{$translationStore.APP_INFO_PRIVACY_LINK}</a>
 
 <style lang="scss">
   .logo {
