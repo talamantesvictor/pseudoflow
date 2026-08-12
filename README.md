@@ -4,7 +4,7 @@ A free and open source software developed to help programming students learn abo
 
 [Visit the site](https://www.pseudoflow.app)
 
-![PseudoFlow App](https://www.pseudoflow.app/assets/images/pseudoflow-screenshot.png)
+![PseudoFlow App](https://www.pseudoflow.app/images/pseudoflow-en.webp)
 
 ## Features
 
