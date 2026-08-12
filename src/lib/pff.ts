@@ -85,3 +85,16 @@ export function compareVersions(a: string, b: string): number {
   }
   return 0;
 }
+
+const SPANISH_KEYWORDS = /\b(declarar|imprimir|leer|finsi|finseleccion|finrepite|finmientras|finhacermientras|sino|hasta|pasos)\b/;
+const ENGLISH_KEYWORDS = /\b(declare|endif|endswitch|endrepeat|endwhile|enddowhile|dowhile)\b/;
+
+export function detectLanguage(content: string): string | null {
+  if (SPANISH_KEYWORDS.test(content)) {
+    return 'es';
+  }
+  if (ENGLISH_KEYWORDS.test(content)) {
+    return 'en';
+  }
+  return null;
+}

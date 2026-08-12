@@ -45,7 +45,7 @@
     "APP_REDO": "Rehacer",
     "APP_FILE_LANGUAGE_MISMATCH": "Este archivo usa pseudocódigo en %s.",
     "APP_FILE_LANGUAGE_MISMATCH_DESC": "¿Quieres cambiar el editor para que coincida?",
-    "APP_FILE_LANGUAGE_MISMATCH_SWITCH": "Cambiar",
+    "APP_FILE_LANGUAGE_MISMATCH_SWITCH": "Sí, cambiar",
     "APP_FILE_LANGUAGE_MISMATCH_KEEP": "Mantener actual",
     "APP_FILE_NEW_VERSION": "Este archivo fue creado con una versión más reciente de PseudoFlow.",
     "APP_FILE_OLD_FORMAT": "Este archivo usa un formato antiguo que ya no es compatible.",

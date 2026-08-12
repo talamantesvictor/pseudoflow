@@ -15,7 +15,7 @@
 
    import { analyze } from "./lib/analyzers/analyze";
    import { interpreter, interpreterReset, addSentence } from "./lib/code/interpreter";
-    import { parsePffFile, serializePffFile, createPffMeta, updatePffMeta, compareVersions } from "./lib/pff";
+    import { parsePffFile, serializePffFile, createPffMeta, updatePffMeta, compareVersions, detectLanguage } from "./lib/pff";
     import type { PffMeta, ParseResult } from "./lib/pff";
 
     const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
@@ -140,6 +140,17 @@
             component: FormatVersionModal,
          };
          return;
+      }
+
+      if (!parsed.meta) {
+         const detected = detectLanguage(parsed.content);
+         if (detected && detected !== codeWordLang) {
+            modal = {
+               title: '',
+               component: LanguageMismatchModal,
+               componentProps: { fileLang: detected }
+            };
+         }
       }
 
       if (parsed.meta && parsed.meta.lang !== codeWordLang) {
