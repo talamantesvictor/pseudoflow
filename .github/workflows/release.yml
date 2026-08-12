@@ -43,7 +43,7 @@ jobs:
         run: npm install
 
       - name: Update time crate (fix Rust compat)
-        run: cargo update -p time
+        run: cargo update --manifest-path src-tauri/Cargo.toml -p time
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0.6
