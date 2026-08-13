@@ -1,8 +1,10 @@
 const PROJECT_ID = '9zqu2MOUVl9b';
 
-if (window.swetrix) {
+function initSwetrix() {
+  if (!window.swetrix) return;
+
   window.swetrix.init(PROJECT_ID, {
-    apiURL: 'https://swetrix.app.prod.binmatter.com/log',
+    apiURL: 'https://swetrix.api.prod.binmatter.com/log',
   });
 
   const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
@@ -11,3 +13,10 @@ if (window.swetrix) {
     meta: { tauri: isTauri },
   });
 }
+
+const script = document.createElement('script');
+script.src = 'https://swetrix.org/swetrix.js';
+script.async = true;
+script.onload = initSwetrix;
+script.onerror = () => {};
+document.head.appendChild(script);
