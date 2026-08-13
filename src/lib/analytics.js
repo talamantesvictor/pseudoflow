@@ -7,6 +7,8 @@ function initSwetrix() {
     apiURL: 'https://swetrix.api.prod.binmatter.com/log',
   });
 
+  window.swetrix.trackViews();
+
   const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
   window.swetrix.track({
     ev: 'platform',
