@@ -10,7 +10,7 @@ function initSwetrix() {
   const isTauri = typeof import.meta.env.TAURI_PLATFORM !== 'undefined';
   window.swetrix.track({
     ev: 'platform',
-    meta: { tauri: isTauri },
+    meta: { tauri: String(isTauri) },
   });
 }
 
